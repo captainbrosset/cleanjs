@@ -8,6 +8,7 @@ misc
 	- Need to track line number in error messages
 	- Add appender/filter like functionality on the report (via command line arguments)
 	- Sort messages per category
+	- pre-pad report with spaces so that all report lines are aligned
 
 comments
 	- nb of // comment lines per function,
