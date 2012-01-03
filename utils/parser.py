@@ -21,6 +21,7 @@ class Parser():
 		return re.findall(Parser.SIGNATURE_PATTERN, src)
 	
 	def _parse_bodies(self, src, pattern):
+		# FIXME: the parser fails to understand nested functions (a function inside another function)
 		bodies = []
 		processed_src = re.sub(pattern, Parser.FUNCTIONS_BODY_PROCESSOR_SEP, src)
 		src_split_by_first_occurence = processed_src.split(Parser.FUNCTIONS_BODY_PROCESSOR_SEP, 1)

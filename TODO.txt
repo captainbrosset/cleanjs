@@ -13,8 +13,6 @@ misc
 	- Make it possible for users to define more custom parsers, by configuration (from a different directory)
 
 comments
-	- nb of // comment lines per function,
-	if the ratio is too big, or if there are more than 1 // lines in a row, then it means we're trying to explain something complex
 	- check for stuff like } //endif } //endfor , ... they mean the statement blocks are too long
 
 codesize
