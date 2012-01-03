@@ -4,7 +4,6 @@ misc
 	- Website to run this on a textarea containing js code
 	- Give listof msgs at the end + a grade with funny random sentence. Offer animated gif if class passed all reviewers.
 	- Run stats on the overall code quality of all submitted code.
-	- Separate atjs stuff in different reviewer folder, and open source the rest
 	- Make reviewer expose configs so this can be configured before running
 	- Need to track line number in error messages
 
