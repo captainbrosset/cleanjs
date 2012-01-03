@@ -6,7 +6,7 @@ class Reviewer(BaseReviewer):
 	MAX_CODE_COMMENT_RATIO_IN_FUNCTION = 0.3
 
 	def review_multiple_comment_lines(self, content, message_bag):
-		multi_comments_matches = re.finditer("^[\s]*//.*\n^[\s]*//.*", content, flags=re.MULTILINE)
+		multi_comments_matches = re.finditer("^[\s]*//.*\n^[\s]*//.*\n^[\s]*//.*", content, flags=re.MULTILINE)
 		for match in multi_comments_matches:
 			line_nb = self.get_line_nb_for_match_in_str(content, match)
 			message_bag.add_warning(self, "It seems you have at least one block of // comments spanning over several lines. Are you trying to explain something complex?", line_nb)

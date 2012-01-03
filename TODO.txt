@@ -10,6 +10,8 @@ misc
 	- pre-pad report with spaces so that all report lines are aligned
 	- Make it possible for users to define more custom reviewer, by configuration (from a different directory)
 	- Make it possible for users to define more custom parsers, by configuration (from a different directory)
+	- The table-like console output for messages is fun, but not very useful, and code isn't clean. Extract this into an appender
+		- possibility to add other appenders (for the website for instance)
 
 codesize
 	- Length of this. variables

@@ -28,4 +28,4 @@ for reviewer_file_name in os.listdir("reviewers"):
         reviewer = reviewerloader.load_from_file("reviewers/" + reviewer_file_name, "Reviewer")
         reviewer.review(file_data, review_message_bag)
 
-print review_message_bag.report_messages(src_file_name)
+print review_message_bag.report_messages()
