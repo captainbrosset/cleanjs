@@ -7,6 +7,10 @@ misc
 	- Make reviewer expose configs so this can be configured before running
 	- Need to track line number in error messages
 
+complexity
+	- nb of // comment lines per function,
+	if the ratio is too big, or if there are more than 1 // lines in a row, then it means we're trying to explain something complex
+
 codesize
 	- Length of this. variables
 
