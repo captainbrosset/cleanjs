@@ -6,6 +6,7 @@ misc
 	- Run stats on the overall code quality of all submitted code.
 	- Make reviewer expose configs so this can be configured before running
 	- Need to track line number in error messages
+		- Added the lines array to the FileData, need to modify all reviewers to take advantage of it when possible
 	- Add appender/filter like functionality on the report (via command line arguments)
 	- Sort messages per category
 	- pre-pad report with spaces so that all report lines are aligned
