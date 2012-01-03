@@ -3,7 +3,7 @@ import re
 from reviewers.base import BaseReviewer
 
 class Reviewer(BaseReviewer):
-	NB_OF_CHARS_IN_NAME_BEFORE_CAMELCASE = 10
+	NB_OF_CHARS_IN_NAME_BEFORE_CAMELCASE = 15
 	MAX_CONSONANT_VOWEL_RATIO = 5
 	
 	def review_gethasis_function_return(self, functions, message_bag):

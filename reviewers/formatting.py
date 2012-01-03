@@ -19,7 +19,7 @@ class Reviewer(BaseReviewer):
 		multiple_empty_lines_matches = re.finditer("\n[\s]*\n[\s]*\n", file_content)
 		for match in multiple_empty_lines_matches:
 			line_nb = self.get_line_nb_for_match_in_str(file_content, match)
-			message_bag.add_warning(self, "There are several empty lines in a row, this probably means you are trying to space complex things up in an attempt to make them simpler ... why not making the code simpler first?", line_nb)
+			message_bag.add_warning(self, "There are several empty lines in a row, either you didn't format the file correctly, or you are trying to space complex things out.", line_nb)
 	
 	def review_separator_comments(self, file_content, message_bag):
 		# ----- or ////// or ******* or ######
