@@ -7,14 +7,12 @@ misc
 	- Make reviewer expose configs so this can be configured before running
 	- Need to track line number in error messages
 		- Added the lines array to the FileData, need to modify all reviewers to take advantage of it when possible
+		- Track line number in function objects too
 	- Add appender/filter like functionality on the report (via command line arguments)
 	- Sort messages per category
 	- pre-pad report with spaces so that all report lines are aligned
 	- Make it possible for users to define more custom reviewer, by configuration (from a different directory)
 	- Make it possible for users to define more custom parsers, by configuration (from a different directory)
-
-comments
-	- check for stuff like } //endif } //endfor , ... they mean the statement blocks are too long
 
 codesize
 	- Length of this. variables

@@ -7,15 +7,16 @@ class Parser():
 						"([a-zA-Z0-9_$]+)[\s]*:[\s]*function[\s]*\(([a-zA-Z0-9,\s]*)\)[\s]*\{"]
 	SIGNATURE_PATTERN = "[a-zA-Z0-9_$]+"
 	FUNCTIONS_BODY_PROCESSOR_SEP = "[[FUNCTIONSTART]]"
-	VARIABLES_PATTERN = "var[\s]+([a-zA-Z0-9_$]+)[\s]*="
+	VARIABLES_PATTERN = "var[\s]+([a-zA-Z0-9_$]+)"
 	
 	class Function():
-		def __init__(self, name = "anonymous", signature = [], body = ""):
+		def __init__(self, name = "anonymous", signature = [], body = "", line_nb = None):
 			self.name = name
 			self.signature = signature
 			self.body = body
+			self.line_nb = line_nb
 		def __repr__(self):
-			return self.name + "(" + str(self.signature) + "){" + self.body + "}"
+			return "[line " + self.line_nb + "] " + self.name + "(" + str(self.signature) + "){" + self.body + "}"
 	
 	def _parse_signature(self, src):
 		return re.findall(Parser.SIGNATURE_PATTERN, src)
@@ -46,19 +47,19 @@ class Parser():
 				bodies.append(content)
 		
 		return bodies
-			
+		
 	def parse_functions(self, src):
 		functions = []
 		
 		for pattern in Parser.FUNCTIONS_PATTERNS:
 			functions_bodies = self._parse_bodies(src, pattern)
-			functions_signatures = re.findall(pattern, src)
-			
-			for index, f in enumerate(functions_signatures):
-				name = f[0]
-				signature = self._parse_signature(f[1])
+			functions_signatures = re.finditer(pattern, src)
+			for index, function_match in enumerate(functions_signatures):
+				name = function_match.group(1)
+				signature = self._parse_signature(function_match.group(2))
 				body = functions_bodies[index]
-				function = Parser.Function(name, signature, body)
+				line_nb = src[0:function_match.start()].count("\n") + 1
+				function = Parser.Function(name, signature, body, line_nb)
 				functions.append(function)
 
 		return functions
