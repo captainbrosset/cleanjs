@@ -6,6 +6,8 @@ misc
 	- Run stats on the overall code quality of all submitted code.
 	- Make reviewer expose configs so this can be configured before running
 	- Need to track line number in error messages
+	- Add appender/filter like functionality on the report (via command line arguments)
+	- Sort messages per category
 
 comments
 	- nb of // comment lines per function,
