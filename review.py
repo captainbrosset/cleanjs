@@ -8,6 +8,7 @@ from utils import reviewerloader, message, parser, filedata
 src_file_name = sys.argv[1]
 src_file = open(src_file_name, 'r')
 src_file_content = src_file.read()
+src_file_lines = re.findall("^(.*)$", src_file_content, flags=re.MULTILINE);
 
 # Getting some structured data from the file
 parser = parser.Parser()
@@ -15,7 +16,7 @@ src_file_functions = parser.parse_functions(src_file_content)
 src_file_variables = parser.parse_variables(src_file_content)
 
 # Preparing the file wrapper
-file_data = filedata.FileData(src_file_name, src_file_content, src_file_functions, src_file_variables)
+file_data = filedata.FileData(src_file_name, src_file_content, src_file_lines, src_file_functions, src_file_variables)
 
 # Preparing the message bag
 review_message_bag = message.MessageBag()
