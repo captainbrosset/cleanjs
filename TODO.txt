@@ -9,6 +9,8 @@ misc
 	- Add appender/filter like functionality on the report (via command line arguments)
 	- Sort messages per category
 	- pre-pad report with spaces so that all report lines are aligned
+	- Make it possible for users to define more custom reviewer, by configuration (from a different directory)
+	- Make it possible for users to define more custom parsers, by configuration (from a different directory)
 
 comments
 	- nb of // comment lines per function,
