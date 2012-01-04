@@ -3,6 +3,8 @@
 
 this is a very long line of text here this is a very long line of text here this is a very long line of text here this is a very long line of text here
 
+//TODO: do something here
+
 function hasWings() {
 	doSomething()
 	doSomethingElse()
@@ -28,9 +30,12 @@ function averyloingnameforafunctionisnotverygood() {}
 function test(a,b,c,b,d,d,d) {
 	var test;
 	
+	b
+		
 	if(test && test || test) {
 		
 	}
+	// FIXME: not working
 }
 
 

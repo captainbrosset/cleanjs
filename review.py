@@ -1,31 +1,22 @@
+# Gather data about the file to be reviewed
 import sys
-import os
-import re
+from utils import filedata
+file_data = filedata.get_file_data_from_file(sys.argv[1])
 
-from utils import reviewerloader, message, parser, filedata
+# Prepare a message bag to put infos, warnings and errors
+from utils import message
+message_bag = message.MessageBag()
 
-# Dealing with the file itself, getting its content
-src_file_name = sys.argv[1]
-src_file = open(src_file_name, 'r')
-src_file_content = src_file.read()
-src_file_lines = re.findall("^(.*)$", src_file_content, flags=re.MULTILINE);
+# Execute all needed reviewers, passing the message bag
+from reviewers import codesize, comments, complexity, formatting, naming, unused, general
+general.Reviewer().review(file_data, message_bag)
+codesize.Reviewer().review(file_data, message_bag)
+comments.Reviewer().review(file_data, message_bag)
+complexity.Reviewer().review(file_data, message_bag)
+formatting.Reviewer().review(file_data, message_bag)
+naming.Reviewer().review(file_data, message_bag)
+unused.Reviewer().review(file_data, message_bag)
 
-# Getting some structured data from the file
-parser = parser.Parser()
-src_file_functions = parser.parse_functions(src_file_content)
-src_file_variables = parser.parse_variables(src_file_content)
-
-# Preparing the file wrapper
-file_data = filedata.FileData(src_file_name, src_file_content, src_file_lines, src_file_functions, src_file_variables)
-
-# Preparing the message bag
-review_message_bag = message.MessageBag()
-
-# Loading and executing all reviewers
-reviewer_modules_to_import = []
-for reviewer_file_name in os.listdir("reviewers"):
-    if reviewer_file_name != "__init__.py" and reviewer_file_name[-3:] != "pyc" and reviewer_file_name != "base.py" and reviewer_file_name != "base.pyc":
-        reviewer = reviewerloader.load_from_file("reviewers/" + reviewer_file_name, "Reviewer")
-        reviewer.review(file_data, review_message_bag)
-
-print review_message_bag.report_messages()
+# Displaying the messages to an output
+from utils.outputs import console
+print console.output_messages(message_bag.get_messages())

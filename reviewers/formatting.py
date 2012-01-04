@@ -1,8 +1,17 @@
 import re
 
-from reviewers.base import BaseReviewer
+import utils
 
-class Reviewer(BaseReviewer):
+class Reviewer():
+	def get_name(self):
+		return "formatting"
+		
+	def get_help(self):
+		return """Uniform code formatting across files and across members of a team is key to maintainability.
+		This reviewer checks:
+		- if the file is correctly formated (based on whitespace positions in function declaration as well as in other statements)
+		- if the file contains several empty lines in a row"""
+	
 	def review_statement_spacing(self, file_content, message_bag):
 		bad_format = len(re.findall("[a-zA-Z0-9_$]+: function", file_content))
 		bad_format += len(re.findall("[a-zA-Z0-9_$]+:function", file_content))
@@ -13,22 +22,14 @@ class Reviewer(BaseReviewer):
 		bad_format += len(re.findall("\)\{", file_content))
 		
 		if bad_format != 0:
-			message_bag.add_error(self, "It seems you haven't properly formatted your file. Make sure you have installed the proper spket JS formatter and have pressed ctrl+shift+F")
+			message_bag.add_error(self, "It seems you haven't properly formatted your file. Make sure you have configured a proper formatter")
 	
 	def review_empty_lines(self, file_content, message_bag):
 		multiple_empty_lines_matches = re.finditer("\n[\s]*\n[\s]*\n", file_content)
 		for match in multiple_empty_lines_matches:
-			line_nb = self.get_line_nb_for_match_in_str(file_content, match)
+			line_nb = utils.get_line_nb_for_match_in_str(file_content, match)
 			message_bag.add_warning(self, "There are several empty lines in a row, either you didn't format the file correctly, or you are trying to space complex things out.", line_nb)
-	
-	def review_separator_comments(self, file_content, message_bag):
-		# ----- or ////// or ******* or ######
-		for match in re.finditer("---|###|\*\*\*|///|====", file_content):
-			line_nb = self.get_line_nb_for_match_in_str(file_content, match)
-			message_bag.add_warning(self, "You are using some kind of separator characters (####, ----, ////, ****), probably in an attempt to separate some complex code ... why not making it simpler in the first place?", line_nb)
 	
 	def review(self, file_data, message_bag):
 		self.review_statement_spacing(file_data.content, message_bag)
 		self.review_empty_lines(file_data.content, message_bag)
-		self.review_separator_comments(file_data.content, message_bag)
-		

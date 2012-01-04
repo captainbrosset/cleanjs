@@ -1,10 +1,8 @@
 import re
 
-from reviewers.base import BaseReviewer
-
-class Reviewer(BaseReviewer):
-	WARN_MAX_CLASS_LINE_NB = 150
-	ERROR_MAX_CLASS_LINE_NB = 300
+class Reviewer():
+	WARN_MAX_FILE_LINE_NB = 150
+	ERROR_MAX_FILE_LINE_NB = 300
 	WARN_MAX_FUNCTION_LINE_NB = 20
 	ERROR_MAX_FUNCTION_LINE_NB = 50
 	WARN_MIN_NAME_SIZE = 3
@@ -14,6 +12,19 @@ class Reviewer(BaseReviewer):
 	WARN_MAX_ARGUMENT_NB = 5
 	ERROR_MAX_ARGUMENT_NB = 10
 	ERROR_MAX_LINE_LENGTH = 120
+
+	def get_name(self):
+		return "code size"
+		
+	def get_help(self):
+		return """The size of code is a good indicator of its quality. The fact that the size of various elements of the code is small indicates that it's easy to understand.
+		This reviewer checks:
+		- length of lines (max is """ + str(Reviewer.ERROR_MAX_LINE_LENGTH) + """)
+		- number of arguments in function signatures (warning at """ + str(Reviewer.WARN_MAX_ARGUMENT_NB) + """, error at """ + str(Reviewer.ERROR_MAX_ARGUMENT_NB) + """)
+		- number of total lines of code in the file (warning at """ + str(Reviewer.WARN_MAX_FILE_LINE_NB) + """, error at """ + str(Reviewer.ERROR_MAX_FILE_LINE_NB) + """)
+		- number of total lines of code in functions (warning at """ + str(Reviewer.WARN_MAX_FUNCTION_LINE_NB) + """, error at """ + str(Reviewer.ERROR_MAX_FUNCTION_LINE_NB) + """)
+		- length of variable names (warning when > """ + str(Reviewer.WARN_MAX_NAME_SIZE) + """ or < """ + str(Reviewer.WARN_MIN_NAME_SIZE) + """, error when > """ + str(Reviewer.ERROR_MAX_NAME_SIZE) + """ or < """ + str(Reviewer.ERROR_MIN_NAME_SIZE) + """)
+		- length of function names (same as above)"""
 
 	def review_line_length(self, file_content, message_bag):
 		lines = re.split("\n", file_content)
@@ -31,10 +42,10 @@ class Reviewer(BaseReviewer):
 	def review_line_nb_in_file(self, file_content, message_bag):
 		# FIXME: comment lines are NOT ignored, should be?!
 		lines = len(re.findall("^.*\S+.*$", file_content, flags=re.MULTILINE))
-		if lines > Reviewer.ERROR_MAX_CLASS_LINE_NB:
-			message_bag.add_error(self, "There are more than " + str(Reviewer.ERROR_MAX_CLASS_LINE_NB) + " lines in the file (" + str(lines) + ") ! Surely the class is doing more than 1 thing")
-		elif lines > Reviewer.WARN_MAX_CLASS_LINE_NB:
-			message_bag.add_warning(self, "There are more than " + str(Reviewer.WARN_MAX_CLASS_LINE_NB) + " lines in the file (" + str(lines) + ") ! If possible, please try to refactor")
+		if lines > Reviewer.ERROR_MAX_FILE_LINE_NB:
+			message_bag.add_error(self, "There are more than " + str(Reviewer.ERROR_MAX_FILE_LINE_NB) + " lines in the file (" + str(lines) + ") ! Surely the class is doing more than 1 thing")
+		elif lines > Reviewer.WARN_MAX_FILE_LINE_NB:
+			message_bag.add_warning(self, "There are more than " + str(Reviewer.WARN_MAX_FILE_LINE_NB) + " lines in the file (" + str(lines) + ") ! If possible, please try to refactor")
 
 	def review_line_nb_in_functions(self, file_functions, message_bag):
 		for function in file_functions:

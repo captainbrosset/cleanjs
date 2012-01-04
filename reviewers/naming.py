@@ -1,10 +1,19 @@
 import re
 
-from reviewers.base import BaseReviewer
-
-class Reviewer(BaseReviewer):
+class Reviewer():
 	NB_OF_CHARS_IN_NAME_BEFORE_CAMELCASE = 15
 	MAX_CONSONANT_VOWEL_RATIO = 5
+	
+	def get_name(self):
+		return "naming"
+		
+	def get_help(self):
+		return """Properly naming variables, arguments, functions or classes is key to making a code easy to read and maintain.
+		This reviewer checks:
+		- if a function returns something if its name starts with get, has or is
+		- if a function accepts 1 argument if its name starts with set
+		- if names are camelcased
+		- if words in a camelcase name actually seem to mean something"""
 	
 	def review_gethasis_function_return(self, functions, message_bag):
 		for function in functions:

@@ -1,12 +1,21 @@
 import re
 
-from reviewers.base import BaseReviewer
+import utils
 
-class Reviewer(BaseReviewer):
+class Reviewer():
 	WARN_MAX_NB_OF_STATEMENTS_IN_FUNCTION = 5
 	ERROR_MAX_NB_OF_STATEMENTS_IN_FUNCTION = 10
 	WARN_MAX_NB_OF_CONDITIONS_IN_IF = 1
 	ERROR_MAX_NB_OF_CONDITIONS_IN_IF = 2
+	
+	def get_name(self):
+		return "complexity"
+		
+	def get_help(self):
+		return """Complex code is hard to read and maintain. Clean code should have small simple functions and classes that focus on one responsibility only, and their inner working should be simple to read.
+		This reviewer checks:
+		- the complexity of functions based on the number of if, for, while, switch statements (warning at """ + str(Reviewer.WARN_MAX_NB_OF_STATEMENTS_IN_FUNCTION) + """, error at """ + str(Reviewer.ERROR_MAX_NB_OF_STATEMENTS_IN_FUNCTION) + """)
+		- the complexity of IF statements based on the number of conditions (warning at """ + str(Reviewer.WARN_MAX_NB_OF_CONDITIONS_IN_IF) + """, error at """ + str(Reviewer.ERROR_MAX_NB_OF_CONDITIONS_IN_IF) + """)"""
 	
 	def review_functions_complexity(self, functions, message_bag):
 		for function in functions:
@@ -19,7 +28,7 @@ class Reviewer(BaseReviewer):
 	def review_ifs_complexity(self, content, message_bag):
 		ifs_matches = re.finditer("if[\s]*\(([^\{]+)\{", content)
 		for if_match in ifs_matches:
-			line_nb = self.get_line_nb_for_match_in_str(content, if_match)
+			line_nb = utils.get_line_nb_for_match_in_str(content, if_match)
 			conditions = re.findall("\|\||&&", if_match.group(1))
 			if len(conditions) > Reviewer.ERROR_MAX_NB_OF_CONDITIONS_IN_IF:
 				message_bag.add_error(self, "Found an IF statement with more than " + str(Reviewer.ERROR_MAX_NB_OF_CONDITIONS_IN_IF) + " AND or OR! Wrap them in a function like isABC()", line_nb)
