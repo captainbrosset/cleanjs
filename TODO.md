@@ -15,6 +15,8 @@ Missing reviewers:
 	- Unused fields this. In class
 - code duplication
 - jslint
+- complexity
+	- inline function is often sign of difficult to read code
 	
 Other misc stuff to do:
 =======================
