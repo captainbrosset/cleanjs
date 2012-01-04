@@ -17,6 +17,8 @@ Missing reviewers:
 - jslint
 - complexity
 	- inline function is often sign of difficult to read code
+	- try to check for long functions with several returns ...
+- TODO/FIXME: add_info for these comments
 	
 Other misc stuff to do:
 =======================
