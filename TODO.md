@@ -13,6 +13,7 @@ Missing reviewers:
 	- Check that file has first a license, then a jsdoc block that is at least some nb of lines with example. Display info if there is no `pre` tag cause it means there's no example
 - unused
 	- Unused fields this. In class
+- duplication
 	
 Other misc stuff to do:
 =======================
@@ -33,3 +34,4 @@ Other misc stuff to do:
 	- possibility to add other appenders (for the website for instance)
 - Extract messages as constants of each reviewer class with %n replacement chars (easier for unit testing then)
 - Unit test each reviewer
+- Class parsing
