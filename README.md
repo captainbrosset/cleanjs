@@ -21,7 +21,7 @@ cleanjs is written in python so, first, make sure you have python 2.7 installed 
 
 Once you've retrieved the code, you can run the tool like this:
 
-  python review.py path/to/my_source_file.js
+    python review.py path/to/my_source_file.js
 
 This will review the file path/to/my_source_file.js and output the report in the console.
 
