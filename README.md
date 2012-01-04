@@ -6,6 +6,7 @@ The tool is (for now) a command line python script.
 The way it works is by parsing the source file then running a series checks on it, outputting info, warning and errors when needed.
 
 The tool is focused on code quality. The following things (and others) are checked:
+
 - file length
 - function length
 - variable and function name formatting and meaning
