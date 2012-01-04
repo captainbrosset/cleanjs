@@ -1,6 +1,9 @@
 Missing reviewers:
 ==================
 
+- general info
+	- info about file size, line nb, function nb, function length, ...
+	- list of todos and fixmes
 - codesize
 	- Length of this. variables
 - clean names
@@ -19,7 +22,6 @@ Missing reviewers:
 - complexity
 	- inline function is often sign of difficult to read code
 	- try to check for long functions with several returns ...
-- TODO/FIXME: add_info for these comments
 - comments:
 	- If // multiline comments are license header/help/ ... then skip
 	
