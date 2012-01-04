@@ -1,26 +1,23 @@
 Missing reviewers:
 ==================
 
-codesize
+- codesize
 	- Length of this. variables
-
-clean names
+- clean names
 	- Check words (in camelcase expression) against a mini dictionary?
 	- Refuse known patterns like mgr, sz, len, idx, ...
-
-jsdoc
+- jsdoc
 	- Private and protected have corresponding jsdoc, and opposite as well
 	- Check jsdoc format and accepted @ statements
 	- Check that jsdoc block have description
-	- Check that file has first a license, then a jsdoc block that is at least some nb of lines with example
-	Display info if there is no <pre> tag cause it means there's no example
-
-unused
+	- Check that file has first a license, then a jsdoc block that is at least some nb of lines with example. Display info if there is no <pre> tag cause it means there's no example
+- unused
 	- Unused fields this. In class
 	
 Other misc stuff to do:
 =======================
 
+- Fix nested functions problem
 - Automatically run in eclipse while saving a js class file
 - Categorize reviewers by file types (tpls, css, js...)
 - Website to run this on a textarea containing js code
