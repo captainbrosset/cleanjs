@@ -37,4 +37,5 @@ Other misc stuff to do:
 	- possibility to add other appenders (for the website for instance)
 - Extract messages as constants of each reviewer class with %n replacement chars (easier for unit testing then)
 - Unit test each reviewer
+- Each reviewer should have a kind of `help` method that outputs what it does and the rationale behind it, as well as the different constants it uses
 - Class parsing
