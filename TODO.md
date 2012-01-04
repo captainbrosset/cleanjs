@@ -13,7 +13,8 @@ Missing reviewers:
 	- Check that file has first a license, then a jsdoc block that is at least some nb of lines with example. Display info if there is no `pre` tag cause it means there's no example
 - unused
 	- Unused fields this. In class
-- duplication
+- code duplication
+- jslint
 	
 Other misc stuff to do:
 =======================
