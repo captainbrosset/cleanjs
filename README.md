@@ -25,6 +25,10 @@ Once you've retrieved the code, you can run the tool like this:
 
 This will review the file path/to/my_source_file.js and output the report in the console.
 
+Optionally run the following command to get some insight into what each reviewer does:
+
+    python help.py
+
 CONTRIBUTING
 ============
 
