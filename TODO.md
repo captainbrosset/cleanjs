@@ -10,7 +10,7 @@ Missing reviewers:
 	- Private and protected have corresponding jsdoc, and opposite as well
 	- Check jsdoc format and accepted @ statements
 	- Check that jsdoc block have description
-	- Check that file has first a license, then a jsdoc block that is at least some nb of lines with example. Display info if there is no <pre> tag cause it means there's no example
+	- Check that file has first a license, then a jsdoc block that is at least some nb of lines with example. Display info if there is no `pre` tag cause it means there's no example
 - unused
 	- Unused fields this. In class
 	
