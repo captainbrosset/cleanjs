@@ -15,10 +15,13 @@ Missing reviewers:
 	- Unused fields this. In class
 - code duplication
 - jslint
+	- new Array() and new Object()
 - complexity
 	- inline function is often sign of difficult to read code
 	- try to check for long functions with several returns ...
 - TODO/FIXME: add_info for these comments
+- comments:
+	- If // multiline comments are license header/help/ ... then skip
 	
 Other misc stuff to do:
 =======================
