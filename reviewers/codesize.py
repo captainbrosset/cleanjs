@@ -7,8 +7,8 @@ class Reviewer(BaseReviewer):
 	ERROR_MAX_CLASS_LINE_NB = 300
 	WARN_MAX_FUNCTION_LINE_NB = 20
 	ERROR_MAX_FUNCTION_LINE_NB = 50
-	WARN_MIN_NAME_SIZE = 4
-	ERROR_MIN_NAME_SIZE = 3
+	WARN_MIN_NAME_SIZE = 3
+	ERROR_MIN_NAME_SIZE = 2
 	WARN_MAX_NAME_SIZE = 30
 	ERROR_MAX_NAME_SIZE = 50
 	WARN_MAX_ARGUMENT_NB = 5
@@ -29,7 +29,8 @@ class Reviewer(BaseReviewer):
 				message_bag.add_warning(self, "There are more than " + str(Reviewer.WARN_MAX_ARGUMENT_NB) + " arguments in function " + function.name + " (" + str(len(function.signature)) + ")! Why not wrapping them in a nice class?", function.line_nb)
 
 	def review_line_nb_in_file(self, file_content, message_bag):
-		lines = len(file_content.split("\n"))
+		# FIXME: comment lines are NOT ignored, should be?!
+		lines = len(re.findall("^.*\S+.*$", file_content, flags=re.MULTILINE))
 		if lines > Reviewer.ERROR_MAX_CLASS_LINE_NB:
 			message_bag.add_error(self, "There are more than " + str(Reviewer.ERROR_MAX_CLASS_LINE_NB) + " lines in the file (" + str(lines) + ") ! Surely the class is doing more than 1 thing")
 		elif lines > Reviewer.WARN_MAX_CLASS_LINE_NB:
@@ -37,7 +38,8 @@ class Reviewer(BaseReviewer):
 
 	def review_line_nb_in_functions(self, file_functions, message_bag):
 		for function in file_functions:
-			lines = len(function.body.split("\n"))
+			# FIXME: comment lines are NOT ignored, should be?!
+			lines = len(re.findall("^.*\S+.*$", function.body, flags=re.MULTILINE))
 			if lines == 0:
 				message_bag.add_warning(self, "Function " + function.name + " is empty. Is it really needed?", function.line_nb)
 			elif lines > Reviewer.ERROR_MAX_FUNCTION_LINE_NB:
