@@ -1,7 +1,7 @@
 # Gather data about the file to be reviewed
 import sys
-from utils import filedata
-file_data = filedata.get_file_data_from_file(sys.argv[1])
+from utils import extractdata
+file_data = extractdata.get_file_data_from_file(sys.argv[1])
 
 # Prepare a message bag to put infos, warnings and errors
 from utils import message

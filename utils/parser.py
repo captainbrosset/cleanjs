@@ -1,5 +1,7 @@
 import re
 
+from data.functiondata import FunctionData
+
 class FileInfoParser():
 	
 	FUNCTIONS_PATTERNS = ["function[\s]+([a-zA-Z0-9_$]+)[\s]*\(([a-zA-Z0-9,\s]*)\)[\s]*\{",
@@ -8,16 +10,7 @@ class FileInfoParser():
 	SIGNATURE_PATTERN = "[a-zA-Z0-9_$]+"
 	FUNCTIONS_BODY_PROCESSOR_SEP = "[[FUNCTIONSTART]]"
 	VARIABLES_PATTERN = "var[\s]+([a-zA-Z0-9_$]+)"
-	
-	class Function():
-		def __init__(self, name = "anonymous", signature = [], body = "", line_nb = None):
-			self.name = name
-			self.signature = signature
-			self.body = body
-			self.line_nb = line_nb
-		def __repr__(self):
-			return "[line " + self.line_nb + "] " + self.name + "(" + str(self.signature) + "){" + self.body + "}"
-	
+		
 	def _parse_signature(self, src):
 		return re.findall(FileInfoParser.SIGNATURE_PATTERN, src)
 	
@@ -59,7 +52,7 @@ class FileInfoParser():
 				signature = self._parse_signature(function_match.group(2))
 				body = functions_bodies[index]
 				line_nb = src[0:function_match.start()].count("\n") + 1
-				function = FileInfoParser.Function(name, signature, body, line_nb)
+				function = FunctionData(name, signature, body, line_nb)
 				functions.append(function)
 
 		return functions

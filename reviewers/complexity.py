@@ -26,6 +26,7 @@ class Reviewer():
 				message_bag.add_warning(self, "Function " + function.name + " is getting complex. There may be too much logic going on. Think about splitting.", function.line_nb)
 	
 	def review_ifs_complexity(self, content, message_bag):
+		# TODO : change this to use the new file_data.find_line_number method, but this means that the method also needs to return the match groups too
 		ifs_matches = re.finditer("if[\s]*\(([^\{]+)\{", content)
 		for if_match in ifs_matches:
 			line_nb = utils.get_line_nb_for_match_in_str(content, if_match)

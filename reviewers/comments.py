@@ -1,7 +1,5 @@
 import re
 
-import utils
-
 class Reviewer():
 	MAX_CODE_COMMENT_RATIO_IN_FUNCTION = 0.3
 
@@ -16,11 +14,10 @@ class Reviewer():
 		- if there are comments just after an expression or statement block
 		- if there are visual separator comment lines like // ****** in the code or similar"""
 
-	def review_multiple_comment_lines(self, content, message_bag):
-		multi_comments_matches = re.finditer("^[\s]*//.*\n^[\s]*//.*\n^[\s]*//.*", content, flags=re.MULTILINE)
-		for match in multi_comments_matches:
-			line_nb = utils.get_line_nb_for_match_in_str(content, match)
-			message_bag.add_warning(self, "It seems you have at least one block of // comments spanning over several lines. Are you trying to explain something complex?", line_nb)
+	def review_multiple_comment_lines(self, file_data, message_bag):
+		line_numbers = file_data.find_line_numbers("^[\s]*//.*\n^[\s]*//.*\n^[\s]*//.*", flags=re.MULTILINE)
+		for line_number in line_numbers:
+			message_bag.add_warning(self, "It seems you have at least one block of // comments spanning over several lines. Are you trying to explain something complex?", line_number)
 	
 	def review_comments_ratio_in_functions(self, functions, message_bag):
 		for function in functions:
@@ -39,14 +36,14 @@ class Reviewer():
 			if comments:
 				message_bag.add_warning(self, "Line has comments after a statement or assignment. This is usually a sign that you need to explain a complex piece of code.", line_index+1)
 
-	def review_separator_comments(self, file_content, message_bag):
+	def review_separator_comments(self, file_data, message_bag):
 		# ----- or ////// or ******* or ######
-		for match in re.finditer("---|###|\*\*\*|///|====", file_content):
-			line_nb = utils.get_line_nb_for_match_in_str(file_content, match)
+		line_numbers = file_data.find_line_numbers("---|###|\*\*\*|///|====")
+		for line_number in line_numbers:
 			message_bag.add_warning(self, "You are using some kind of separator characters (####, ----, ////, ****), probably in an attempt to separate some complex code ... why not making it simpler in the first place?", line_nb)
 			
 	def review(self, file_data, message_bag):
-		self.review_multiple_comment_lines(file_data.content, message_bag)
+		self.review_multiple_comment_lines(file_data, message_bag)
 		self.review_comments_ratio_in_functions(file_data.functions, message_bag)
 		self.review_comments_after_statements(file_data.lines, message_bag)
-		self.review_separator_comments(file_data.content, message_bag)
+		self.review_separator_comments(file_data, message_bag)

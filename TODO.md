@@ -26,6 +26,7 @@ Other misc stuff to do:
 =======================
 
 - Transform the reviewer utils module into a code extraction helper, and add methods to get nb of lines of comments, nb of lines of code, nb of total lines in a file, or a piece of string, or function. Or put this at parsing level once and for all. And in fact, in the file data object passed to reviewer, should have sub-objects and/or methods to get line numbers for match patterns, etc ... so that reviewers do as little as possible
+- change reviewers to only be simple py modules with functions (don't think classes are needed, and they make the use of reviewers harder). 
 - Fix nested functions problem
 - Automatically run in eclipse while saving a js class file
 - Categorize reviewers by file types (tpls, css, js...)
