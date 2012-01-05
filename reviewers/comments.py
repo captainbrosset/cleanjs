@@ -15,9 +15,9 @@ class Reviewer():
 		- if there are visual separator comment lines like // ****** in the code or similar"""
 
 	def review_multiple_comment_lines(self, file_data, message_bag):
-		line_numbers = file_data.find_line_numbers("^[\s]*//.*\n^[\s]*//.*\n^[\s]*//.*", flags=re.MULTILINE)
-		for line_number in line_numbers:
-			message_bag.add_warning(self, "It seems you have at least one block of // comments spanning over several lines. Are you trying to explain something complex?", line_number)
+		matches = file_data.find_line_numbers("^[\s]*//.*\n^[\s]*//.*\n^[\s]*//.*", flags=re.MULTILINE)
+		for match in matches:
+			message_bag.add_warning(self, "It seems you have at least one block of // comments spanning over several lines. Are you trying to explain something complex?", match.line_number)
 	
 	def review_comments_ratio_in_functions(self, functions, message_bag):
 		for function in functions:
@@ -38,9 +38,9 @@ class Reviewer():
 
 	def review_separator_comments(self, file_data, message_bag):
 		# ----- or ////// or ******* or ######
-		line_numbers = file_data.find_line_numbers("---|###|\*\*\*|///|====")
-		for line_number in line_numbers:
-			message_bag.add_warning(self, "You are using some kind of separator characters (####, ----, ////, ****), probably in an attempt to separate some complex code ... why not making it simpler in the first place?", line_nb)
+		matches = file_data.find_line_numbers("---|###|\*\*\*|///|====")
+		for match in matches:
+			message_bag.add_warning(self, "You are using some kind of separator characters (####, ----, ////, ****), probably in an attempt to separate some complex code ... why not making it simpler in the first place?", match.line_nb)
 			
 	def review(self, file_data, message_bag):
 		self.review_multiple_comment_lines(file_data, message_bag)

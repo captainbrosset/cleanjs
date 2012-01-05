@@ -1,7 +1,5 @@
 import re
 
-import utils
-
 class Reviewer():
 	def get_name(self):
 		return "formatting"
@@ -24,12 +22,11 @@ class Reviewer():
 		if bad_format != 0:
 			message_bag.add_error(self, "It seems you haven't properly formatted your file. Make sure you have configured a proper formatter")
 	
-	def review_empty_lines(self, file_content, message_bag):
-		multiple_empty_lines_matches = re.finditer("\n[\s]*\n[\s]*\n", file_content)
-		for match in multiple_empty_lines_matches:
-			line_nb = utils.get_line_nb_for_match_in_str(file_content, match)
-			message_bag.add_warning(self, "There are several empty lines in a row, either you didn't format the file correctly, or you are trying to space complex things out.", line_nb)
+	def review_empty_lines(self, file_data, message_bag):
+		matches = file_data.find_line_numbers("\n[\s]*\n[\s]*\n")
+		for match in matches:
+			message_bag.add_warning(self, "There are several empty lines in a row, either you didn't format the file correctly, or you are trying to space complex things out.", match.line_number)
 	
 	def review(self, file_data, message_bag):
 		self.review_statement_spacing(file_data.content, message_bag)
-		self.review_empty_lines(file_data.content, message_bag)
+		self.review_empty_lines(file_data, message_bag)

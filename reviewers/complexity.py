@@ -1,7 +1,5 @@
 import re
 
-import utils
-
 class Reviewer():
 	WARN_MAX_NB_OF_STATEMENTS_IN_FUNCTION = 5
 	ERROR_MAX_NB_OF_STATEMENTS_IN_FUNCTION = 10
@@ -25,12 +23,12 @@ class Reviewer():
 			elif len(statements) > Reviewer.WARN_MAX_NB_OF_STATEMENTS_IN_FUNCTION:
 				message_bag.add_warning(self, "Function " + function.name + " is getting complex. There may be too much logic going on. Think about splitting.", function.line_nb)
 	
-	def review_ifs_complexity(self, content, message_bag):
+	def review_ifs_complexity(self, file_data, message_bag):
 		# TODO : change this to use the new file_data.find_line_number method, but this means that the method also needs to return the match groups too
-		ifs_matches = re.finditer("if[\s]*\(([^\{]+)\{", content)
-		for if_match in ifs_matches:
-			line_nb = utils.get_line_nb_for_match_in_str(content, if_match)
-			conditions = re.findall("\|\||&&", if_match.group(1))
+		matches = file_data.find_line_numbers("if[\s]*\(([^\{]+)\{")
+		for match in matches:
+			line_nb = match.line_number
+			conditions = re.findall("\|\||&&", match.match_object.group(1))
 			if len(conditions) > Reviewer.ERROR_MAX_NB_OF_CONDITIONS_IN_IF:
 				message_bag.add_error(self, "Found an IF statement with more than " + str(Reviewer.ERROR_MAX_NB_OF_CONDITIONS_IN_IF) + " AND or OR! Wrap them in a function like isABC()", line_nb)
 			elif len(conditions) > Reviewer.WARN_MAX_NB_OF_CONDITIONS_IN_IF:
@@ -38,4 +36,4 @@ class Reviewer():
 		
 	def review(self, file_data, message_bag):
 		self.review_functions_complexity(file_data.functions, message_bag)
-		self.review_ifs_complexity(file_data.content, message_bag)
+		self.review_ifs_complexity(file_data, message_bag)
