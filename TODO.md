@@ -22,7 +22,8 @@ Missing reviewers:
 	- try to check for long functions with several returns ...
 - comments:
 	- If // multiline comments are license header/help/ ... then skip
-	
+	- For TODOs and FIXMEs: display one info per comment and display the line of text itself
+
 Other misc stuff to do:
 =======================
 
