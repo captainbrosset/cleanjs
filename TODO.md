@@ -25,6 +25,7 @@ Missing reviewers:
 Other misc stuff to do:
 =======================
 
+- Transform the reviewer utils module into a code extraction helper, and add methods to get nb of lines of comments, nb of lines of code, nb of total lines in a file, or a piece of string, or function. Or put this at parsing level once and for all.
 - Fix nested functions problem
 - Automatically run in eclipse while saving a js class file
 - Categorize reviewers by file types (tpls, css, js...)
