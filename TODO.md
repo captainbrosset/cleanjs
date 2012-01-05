@@ -16,6 +16,7 @@ Missing reviewers:
 - code duplication
 - jslint
 	- new Array() and new Object()
+	- check for global vars assignments (missing var)
 - complexity
 	- inline function is often sign of difficult to read code
 	- try to check for long functions with several returns ...
@@ -38,3 +39,4 @@ Other misc stuff to do:
 - Extract messages as constants of each reviewer class with %n replacement chars (easier for unit testing then)
 - Unit test each reviewer. Put the test code inside each reviewer. Will need a mini-framework to easily test a reviewer
 - Class parsing
+- Try to use jslint (in python) as a parser

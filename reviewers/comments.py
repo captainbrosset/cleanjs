@@ -40,7 +40,7 @@ class Reviewer():
 		# ----- or ////// or ******* or ######
 		matches = file_data.find_line_numbers("---|###|\*\*\*|///|====")
 		for match in matches:
-			message_bag.add_warning(self, "You are using some kind of separator characters (####, ----, ////, ****), probably in an attempt to separate some complex code ... why not making it simpler in the first place?", match.line_nb)
+			message_bag.add_warning(self, "You are using some kind of separator characters (####, ----, ////, ****), probably in an attempt to separate some complex code ... why not making it simpler in the first place?", match.line_number)
 			
 	def review(self, file_data, message_bag):
 		self.review_multiple_comment_lines(file_data, message_bag)
