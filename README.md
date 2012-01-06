@@ -19,6 +19,8 @@ USING CLEANJS
 
 cleanjs is written in python so, first, make sure you have python 2.7 installed and running.
 
+Get cleanjs by downloading one of the tags available on the project Tags page.
+
 Once you've retrieved the code, you can run the tool like this:
 
     python review.py path/to/my_source_file.js
