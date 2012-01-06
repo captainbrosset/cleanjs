@@ -1,7 +1,8 @@
-def output_messages(messages):
+def output_messages(message_bag, file_data):
 	"""
 	Output messages to an HTML display
 	"""
+	messages = message_bag.get_messages()
 	report = "<ul>"
 	
 	for message in messages:

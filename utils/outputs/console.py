@@ -1,7 +1,8 @@
-def output_messages(messages):
+def output_messages(message_bag, file_data):
 	"""
 	Output messages in the console, so in the simple text format, with some formatting
 	"""
+	messages = message_bag.get_messages()
 	report = "\n\n"
 	
 	# Pre-process all messages to know the max header size

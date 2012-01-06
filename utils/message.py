@@ -12,7 +12,14 @@ class MessageBag:
 		self.messages.append(Message(Message.TYPE_INFO, reviewer, content, line))
 	
 	def get_messages(self):
-		return self.messages
+		return sorted(self.messages, key=lambda message: message.line)
+
+	def get_messages_on_line(self, line_nb):
+		messages = []
+		for message in self.messages:
+			if message.line == line_nb:
+				messages.append(message)
+		return messages
 
 	def reset_messages(self):
 		self.messages = []
