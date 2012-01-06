@@ -32,7 +32,7 @@ class Reviewer():
 		for match in todo_matches:
 			message_bag.add_info(self, "TODO " + match.match_object.group(1), match.line_number)
 			
-		fixme_matches = file_data.find_line_numbers("TODO(.*)")
+		fixme_matches = file_data.find_line_numbers("FIXME(.*)")
 		for match in fixme_matches:
 			message_bag.add_info(self, "FIXME " + match.match_object.group(1), match.line_number)
 
@@ -91,10 +91,12 @@ if __name__ == "__main__":
 	# Checking that 2 TODOFIXMES are found
 	reviewer.review_todos_and_fixmes(file_data, message_bag)
 	assert len(message_bag.get_messages()) == 2, 1
+	assert message_bag.get_messages()[0].line == 10, 2
+	assert message_bag.get_messages()[1].line == 24, 3
 	message_bag.reset_messages()
 	
 	# Checking the fucntion stats
 	reviewer.review_min_max_function_length(file_data.functions, message_bag)
-	assert message_bag.messages[0].content == "Longest function is 8 lines long, and shortest one is 3 (average is 5)", 2
+	assert message_bag.messages[0].content == "Longest function is 8 lines long, and shortest one is 3 (average is 5)", 4
 	
 	print "ALL TESTS OK"

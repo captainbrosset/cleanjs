@@ -26,7 +26,6 @@ Other misc stuff to do:
 =======================
 
 - Fix nested functions problem
-- Fix problem where FIXME and TODO appear at the same place
 - Make reviewer expose configs so this can be configured before running
 - Class parsing
 - Automatically run in eclipse while saving a js class file

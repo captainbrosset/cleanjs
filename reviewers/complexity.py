@@ -17,7 +17,7 @@ class Reviewer():
 	
 	def review_functions_complexity(self, functions, message_bag):
 		for function in functions:
-			statements = re.findall("if[\s]*\(|else[\s]*\(|else if[\s]*\(|while[\s]*\(|for[\s]*\(|switch[\s]*\(", function.body)
+			statements = re.findall("if[\s]*\(|else[\s]*\{|else if[\s]*\(|while[\s]*\(|for[\s]*\(|switch[\s]*\(", function.body)
 			if len(statements) > Reviewer.ERROR_MAX_NB_OF_STATEMENTS_IN_FUNCTION:
 				message_bag.add_error(self, "Function " + function.name + " is too complex. There are too many statements involved in its logic", function.line_nb)
 			elif len(statements) > Reviewer.WARN_MAX_NB_OF_STATEMENTS_IN_FUNCTION:

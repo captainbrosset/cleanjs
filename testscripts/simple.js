@@ -1,9 +1,5 @@
-
-
-
-this is a very long line of text here this is a very long line of text here this is a very long line of text here this is a very long line of text here
-
 //TODO: do something here
+// There are plenty of things to explain about this file, because it is very very complex
 
 function hasWings() {
 	doSomething()
@@ -23,19 +19,32 @@ function setSomething() {
 	// End of for loop
 }
 
+// --------------- another part of my file ---------------
+
 function t() {}
 
 function averyloingnameforafunctionisnotverygood() {}
 
 function test(a,b,c,b,d,d,d) {
-	var test;
-	
-	b
-		
+	var test;		
 	if(test && test || test) {
 		
 	}
 	// FIXME: not working
 }
 
-
+function ctrlMgr() {
+	if(true) {
+		if(true) {
+			while(true) {
+				if(something || somethingelse && (anotherthing || !what)) {
+					if(test) {
+						return 0;
+					} else {
+						return 1;
+					}
+				} // end if
+			} // end while
+		}
+	}
+}
