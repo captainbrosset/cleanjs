@@ -8,7 +8,7 @@ class FileData(BaseData):
 	- content: the whole text content of the file
 	- lines: an instance of utils.parsers.lineparser.LineParser.LineData
 	- functions: an array of instances of utils.data.functiondata.FunctionData
-	- variables: an array of variable names found in the file"""
+	- variables: an array of instances of utils.data.variabledata.VariableData"""
 	def __init__(self, name, content, lines, functions, variables):
 		self.name = name
 		self.content = content

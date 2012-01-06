@@ -61,17 +61,18 @@ class Reviewer():
 	def review_variable_name_size(self, variables, message_bag):
 		# FIXME: should be merged with review_function_name_size and should find line numbers
 		already_listed = []
-		for name in variables:
+		for variable in variables:
+			name = variable.name
 			if name not in already_listed:
 				already_listed.append(name)
 				if len(name) > Reviewer.ERROR_MAX_NAME_SIZE:
-					message_bag.add_error(self, "The name of variable " + name + " is more than " + str(Reviewer.ERROR_MAX_NAME_SIZE) + " characters (" + str(len(name)) + "). This is too long")
+					message_bag.add_error(self, "The name of variable " + name + " is more than " + str(Reviewer.ERROR_MAX_NAME_SIZE) + " characters (" + str(len(name)) + "). This is too long", variable.line_nb)
 				elif len(name) > Reviewer.WARN_MAX_NAME_SIZE:
-					message_bag.add_warning(self, "The name of variable " + name + " is more than " + str(Reviewer.WARN_MAX_NAME_SIZE) + " characters (" + str(len(name)) + "). This may make it harder to read")
+					message_bag.add_warning(self, "The name of variable " + name + " is more than " + str(Reviewer.WARN_MAX_NAME_SIZE) + " characters (" + str(len(name)) + "). This may make it harder to read", variable.line_nb)
 				if len(name) < Reviewer.ERROR_MIN_NAME_SIZE:
-					message_bag.add_error(self, "The name of variable " + name + " is less than " + str(Reviewer.ERROR_MIN_NAME_SIZE) + " characters (" + str(len(name)) + "). This is way too short! Noone will understand what you mean")
+					message_bag.add_error(self, "The name of variable " + name + " is less than " + str(Reviewer.ERROR_MIN_NAME_SIZE) + " characters (" + str(len(name)) + "). This is way too short! Noone will understand what you mean", variable.line_nb)
 				elif len(name) < Reviewer.WARN_MIN_NAME_SIZE:
-					message_bag.add_warning(self, "The name of variable " + name + " is less than " + str(Reviewer.WARN_MIN_NAME_SIZE) + " characters (" + str(len(name)) + "). Think about making names self explanatory")
+					message_bag.add_warning(self, "The name of variable " + name + " is less than " + str(Reviewer.WARN_MIN_NAME_SIZE) + " characters (" + str(len(name)) + "). Think about making names self explanatory", variable.line_nb)
 
 	def review_function_name_size(self, functions, message_bag):
 		for function in functions:

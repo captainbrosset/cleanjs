@@ -1,6 +1,7 @@
 import re
 
 from data.functiondata import FunctionData
+from data.variabledata import VariableData
 from parsers.lineparser import LineParser
 
 class FileInfoParser():
@@ -61,7 +62,12 @@ class FileInfoParser():
 		return functions
 	
 	def parse_variables(self, src):
-		return re.findall(FileInfoParser.VARIABLES_PATTERN, src)
+		matches = re.finditer(FileInfoParser.VARIABLES_PATTERN, src)
+		variables = []
+		for match in matches:
+			variable = VariableData(match.group(1), src[0:match.start()].count("\n") + 1)
+			variables.append(variable)
+		return variables
 	
 	def parse_lines(self, src):
 		return LineParser().parse(src)

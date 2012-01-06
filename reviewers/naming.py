@@ -41,26 +41,28 @@ class Reviewer():
 		else:
 			return consonant_nb / vowel_nb
 	
-	def review_function_name_meaning(self, functions, message_bag):
-		for function in functions:
-			name = function.name
-			words = self._get_words_from_camelcase(name)
-			for word in words:
-				ratio = self._get_consonant_vowel_ratio(word)
-				if ratio > Reviewer.MAX_CONSONANT_VOWEL_RATIO:
-					message_bag.add_warning(self, "Word " + word + " inside function name " + name + " doesn't appear to mean anything.", function.line_nb)
+	def review_name_meaning(self, name, line_nb, message_bag):
+		words = self._get_words_from_camelcase(name)
+		for word in words:
+			ratio = self._get_consonant_vowel_ratio(word)
+			if ratio > Reviewer.MAX_CONSONANT_VOWEL_RATIO:
+				message_bag.add_warning(self, "Word " + word + " inside name " + name + " doesn't appear to mean anything.", line_nb)
 			
-	def review_camelcase_function_names(self, functions, message_bag):
-		for function in functions:
-			name = function.name
-			parts = self._get_words_from_camelcase(name)
-			if len(name) > Reviewer.NB_OF_CHARS_IN_NAME_BEFORE_CAMELCASE and len(parts) == 1:
-				message_bag.add_warning(self, "Function name " + name + " doesn't appear to be camelcase", function.line_nb)
+	def review_camelcase_name(self, name, line_nb, message_bag):
+		parts = self._get_words_from_camelcase(name)
+		if len(name) > Reviewer.NB_OF_CHARS_IN_NAME_BEFORE_CAMELCASE and len(parts) == 1:
+			message_bag.add_warning(self, "Name " + name + " doesn't appear to be camelcase", line_nb)
 			
 	def review(self, file_data, message_bag):
 		self.review_gethasis_function_return(file_data.functions, message_bag)
 		self.review_set_function_arg(file_data.functions, message_bag)
-		self.review_camelcase_function_names(file_data.functions, message_bag)
-		self.review_function_name_meaning(file_data.functions, message_bag)
 		
-		# FIXME: implement same camelcase and meaning checks for variables and <this...> fields
+		for function in file_data.functions:
+			self.review_camelcase_name(function.name, function.line_nb, message_bag)
+			self.review_name_meaning(function.name, function.line_nb, message_bag)
+			
+		for variable in file_data.variables:
+			self.review_camelcase_name(variable.name, variable.line_nb, message_bag)
+			self.review_name_meaning(variable.name, variable.line_nb, message_bag)
+
+		# FIXME: implement same camelcase and meaning checks for class attributes (on this...)
