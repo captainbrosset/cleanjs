@@ -18,5 +18,5 @@ naming.Reviewer().review(file_data, message_bag)
 unused.Reviewer().review(file_data, message_bag)
     
 # Displaying the messages to an output
-from utils.outputs import consolewithcode
-print consolewithcode.output_messages(message_bag, file_data)
+from utils.outputs import htmlwithcode
+htmlwithcode.output_messages(message_bag, file_data)

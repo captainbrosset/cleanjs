@@ -4,8 +4,7 @@ Missing reviewers:
 - codesize
 	- Length of this. variables
 - clean names
-	- Check words (in camelcase expression) against a mini dictionary?
-	- Refuse known patterns like mgr, sz, len, idx, ...
+	- Check words (in camelcase expression) against a mini dictionary (could be dynamic, if a word doesn't exist, look for it using a web service like word reference and then add it to the local dictionnary if it exists)
 - jsdoc
 	- Private and protected have corresponding jsdoc, and opposite as well
 	- Check jsdoc format and accepted @ statements
@@ -22,22 +21,17 @@ Missing reviewers:
 	- try to check for long functions with several returns ...
 - comments:
 	- If // multiline comments are license header/help/ ... then skip
-	- For TODOs and FIXMEs: display one info per comment and display the line of text itself
 
 Other misc stuff to do:
 =======================
 
-- Need line numbers for ALL messages, and add possibility to order report by line number (report instrumented code? in website?)
-- Use the new line parser on function bodies too, and update reviewers to use the new structured data
 - Fix nested functions problem
+- Fix problem where FIXME and TODO appear at the same place
+- Make reviewer expose configs so this can be configured before running
+- Class parsing
 - Automatically run in eclipse while saving a js class file
-- Categorize reviewers by file types (tpls, css, js...)
 - Website to run this on a textarea containing js code
 - Give listof msgs at the end + a grade with funny random sentence. Offer animated gif if class passed all reviewers.
 - Run stats on the overall code quality of all submitted code.
-- Make reviewer expose configs so this can be configured before running
-- Sort messages per category
 - Extract messages as constants of each reviewer class with %n replacement chars (easier for unit testing then)
-- Unit test each reviewer. Put the test code inside each reviewer. Will need a mini-framework to easily test a reviewer
-- Class parsing
-- Try to use jslint (in python) as a parser
+- Try to use jslint (in python) as a parser ? Could help for parsing, although the simple parser in place today is probably enough
