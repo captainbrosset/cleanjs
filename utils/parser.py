@@ -1,6 +1,7 @@
 import re
 
 from data.functiondata import FunctionData
+from parsers.lineparser import LineParser
 
 class FileInfoParser():
 	
@@ -61,4 +62,4 @@ class FileInfoParser():
 		return re.findall(FileInfoParser.VARIABLES_PATTERN, src)
 	
 	def parse_lines(self, src):
-		return re.findall("^(.*)$", src, flags=re.MULTILINE);
+		return LineParser().parse(src)

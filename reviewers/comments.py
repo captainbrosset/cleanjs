@@ -45,5 +45,5 @@ class Reviewer():
 	def review(self, file_data, message_bag):
 		self.review_multiple_comment_lines(file_data, message_bag)
 		self.review_comments_ratio_in_functions(file_data.functions, message_bag)
-		self.review_comments_after_statements(file_data.lines, message_bag)
+		self.review_comments_after_statements(file_data.lines.total_lines, message_bag)
 		self.review_separator_comments(file_data, message_bag)

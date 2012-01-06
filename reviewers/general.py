@@ -31,7 +31,10 @@ class Reviewer():
 			message_bag.add_info(self, "Line has TODO or FIXME flag", match.line_number)
 
 	def review(self, file_data, message_bag):
-		message_bag.add_info(self, "File is " + str(len(file_data.lines)) + " lines long")
+		message_bag.add_info(self, "File is " + str(len(file_data.lines.total_lines)) + " lines long")
+		message_bag.add_info(self, str(len(file_data.lines.comment_lines)) + " lines of comments")
+		message_bag.add_info(self, str(len(file_data.lines.code_lines)) + " lines of code")
+		message_bag.add_info(self, str(len(file_data.lines.empty_lines)) + " empty lines")
 		message_bag.add_info(self, "There are " + str(len(file_data.functions)) + " functions in the file")
 		self.review_min_max_function_length(file_data.functions, message_bag)
 		self.review_todos_and_fixmes(file_data, message_bag)
