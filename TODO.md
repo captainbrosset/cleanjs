@@ -28,8 +28,7 @@ Other misc stuff to do:
 =======================
 
 - Need line numbers for ALL messages, and add possibility to order report by line number (report instrumented code? in website?)
-- fileData and functionData should also have fields of methods to get the list of lines of code, comments, total lines, etc ... to make reviewers simpler
-- change reviewers to only be simple py modules with functions (don't think classes are needed, and they make the use of reviewers harder). 
+- Use the new line parser on function bodies too, and update reviewers to use the new structured data
 - Fix nested functions problem
 - Automatically run in eclipse while saving a js class file
 - Categorize reviewers by file types (tpls, css, js...)
