@@ -23,11 +23,9 @@ Once you've retrieved the code, you can run the tool like this:
 
     python review.py path/to/my_source_file.js
 
-This will review the file path/to/my_source_file.js and output the report in the console.
+This will review the file path/to/my_source_file.js and create an HTML report file.
 
-Optionally run the following command to get some insight into what each reviewer does:
-
-    python help.py
+You can check the simple.js-report.html file to see an example of report (was generated from testscripts/simple.js source file)
 
 CONTRIBUTING
 ============
