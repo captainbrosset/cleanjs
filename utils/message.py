@@ -13,6 +13,9 @@ class MessageBag:
 	
 	def get_messages(self):
 		return self.messages
+
+	def reset_messages(self):
+		self.messages = []
 	
 class Message:
 	TYPE_WARNING = "warning"

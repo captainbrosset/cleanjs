@@ -2,6 +2,14 @@ import re
 
 class LineParser():
 	class LineData:
+		"""
+		Data structure holding structured information about a piece of source code.
+		Instances of this class have the following attributes:
+		- code_lines: an array of all the lines of pure code (no comments), striped from white spaces
+		- comment_lines: an array of all the lines of comments (no code), striped from white spaces
+		- empty_lines: an array of all empty lines
+		- total_lines: an array of all lines
+		"""
 		def __init__(self, code_lines, comment_lines, empty_lines, total_lines):
 			self.code_lines = code_lines
 			self.comment_lines = comment_lines
@@ -135,3 +143,5 @@ if __name__ == "__main__":
 	assert len(line_data.empty_lines) == 2, "number of empty lines is incorrect. Expected 2, found " + str(len(line_data.empty_lines))
 	assert len(line_data.code_lines) == 9, "number of lines of code is incorrect. Expected 9, found " + str(len(line_data.code_lines))
 	assert len(line_data.comment_lines) == 15, "number of lines of comments is incorrect. Expected 15, found " + str(len(line_data.comment_lines))
+	
+	print "ALL TESTS OK"

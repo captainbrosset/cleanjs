@@ -1,7 +1,14 @@
 from basedata import BaseData
 
 class FileData(BaseData):
-	"""A FileData instance is passed to reviewers"""
+	"""An instance of this class is passed to reviewers, in their review function.
+	This class holds the different information about the file being reviewed.
+	Instances of this class have the following attributes:
+	- name: the name of the file
+	- content: the whole text content of the file
+	- lines: an instance of utils.parsers.lineparser.LineParser.LineData
+	- functions: an array of instances of utils.data.functiondata.FunctionData
+	- variables: an array of variable names found in the file"""
 	def __init__(self, name, content, lines, functions, variables):
 		self.name = name
 		self.content = content

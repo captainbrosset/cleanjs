@@ -21,8 +21,11 @@ class Reviewer():
 	
 	def review_comments_ratio_in_functions(self, functions, message_bag):
 		for function in functions:
-			comment_lines = re.findall("^[\s]*//.*", function.body, flags=re.MULTILINE)
-			total_lines = re.findall("^.*\S+.*$", function.body, flags=re.MULTILINE)
+			# FIXME: this is good because it uses the line_data already parsed for the function
+			# FIXME: but will be problematic in case of constructor functions that have jsdoc'd fields
+			# FIXME: because a lot of /** */ comment blocks will be there and should not be taken into account
+			comment_lines = function.line_data.comment_lines
+			total_lines = function.line_data.total_lines
 			if len(total_lines) == len(comment_lines):
 				message_bag.add_warning(self, "There are only comments in function " + function.name + " (or maybe the function is empty). Is it really needed?", function.line_nb)
 			else:
@@ -38,9 +41,12 @@ class Reviewer():
 
 	def review_separator_comments(self, file_data, message_bag):
 		# ----- or ////// or ******* or ######
-		matches = file_data.find_line_numbers("---|###|\*\*\*|///|====")
+		matches = file_data.find_line_numbers("---|###|\*\*\*|////|====")
+		line_already_reported = []
 		for match in matches:
-			message_bag.add_warning(self, "You are using some kind of separator characters (####, ----, ////, ****), probably in an attempt to separate some complex code ... why not making it simpler in the first place?", match.line_number)
+			if match.line_number not in line_already_reported:
+				line_already_reported.append(match.line_number)
+				message_bag.add_warning(self, "You are using some kind of separator characters (####, ----, ////, ****), probably in an attempt to separate some complex code ... why not making it simpler in the first place?", match.line_number)
 			
 	def review(self, file_data, message_bag):
 		self.review_multiple_comment_lines(file_data, message_bag)

@@ -16,7 +16,7 @@ complexity.Reviewer().review(file_data, message_bag)
 formatting.Reviewer().review(file_data, message_bag)
 naming.Reviewer().review(file_data, message_bag)
 unused.Reviewer().review(file_data, message_bag)
-
+    
 # Displaying the messages to an output
 from utils.outputs import console
 print console.output_messages(message_bag.get_messages())

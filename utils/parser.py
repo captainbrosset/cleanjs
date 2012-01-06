@@ -44,6 +44,7 @@ class FileInfoParser():
 		
 	def parse_functions(self, src):
 		functions = []
+		body_line_parser = LineParser()
 		
 		for pattern in FileInfoParser.FUNCTIONS_PATTERNS:
 			functions_bodies = self._parse_bodies(src, pattern)
@@ -53,7 +54,8 @@ class FileInfoParser():
 				signature = self._parse_signature(function_match.group(2))
 				body = functions_bodies[index]
 				line_nb = src[0:function_match.start()].count("\n") + 1
-				function = FunctionData(name, signature, body, line_nb)
+				line_data = body_line_parser.parse(body)
+				function = FunctionData(name, signature, body, line_data, line_nb)
 				functions.append(function)
 
 		return functions
@@ -63,3 +65,46 @@ class FileInfoParser():
 	
 	def parse_lines(self, src):
 		return LineParser().parse(src)
+
+if __name__ == "__main__":
+	parser = FileInfoParser()
+	
+	content = """/**
+	 * This is a test class
+	 * @param {String} test
+	 */
+	my.package.Class = function() {
+		// This function does something
+		var a = 1;
+		
+		/**
+		 * some field
+		 * @type {Boolean}
+		 */
+		this.someField = false; /* and some inline block comment */
+	};
+	
+	my.package.Class.prototype = {
+		/**
+		 * Return the current value of the field
+		 */
+		getField : function() {
+			// Just simply return the field
+			var test = 1;
+			for(var i = 0; i < 4; i++) {
+				var something = test[i];
+			}
+			return this.someField; // And some inline comment
+		}
+	};
+	"""
+	
+	variables = parser.parse_variables(content)
+	
+	assert len(variables) == 4, 1
+	assert variables[0] == "a", 2
+	assert variables[1] == "test", 3
+	assert variables[2] == "i", 4
+	assert variables[3] == "something", 5
+	
+	print "ALL TESTS OK"
