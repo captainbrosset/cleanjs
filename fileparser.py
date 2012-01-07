@@ -40,11 +40,11 @@ class FileData():
 		return report
 
 	def find_line_numbers(self, pattern, flags=None):
-		"""Given a re pattern, return an array of line numbers where it is found in the whole file
-		If you are looking to restrict this to a particular function, see the same method on the function object instead"""
+		"""Given a re pattern, find all lines where it occurs in the file source and 
+		return an array of LineNumberMatchObject objects."""
 		results = []
 
-		# FIXME: make this better
+		# FIXME: Seems I can't pass flags=None to the finditer function. Find a way to make this better.
 		if flags:
 			matches = re.finditer(pattern, self.content, flags=flags)
 		else:
