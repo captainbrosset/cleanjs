@@ -38,7 +38,7 @@ Check the /reviewers/ folder to see how they are made.
 
 Each review must extend the BaseReviewer class and implement 1 method: review(self, file_data, message_bag)
 
-- file_data is of type utils.filedata.FileData
-- message_bag is of type utils.message.MessageBag
+- file_data is of type fileparser.FileData
+- message_bag is of type messagebag.MessageBag
 
 Check the TODO.md file to see which reviewers are currently planned for development. Other general features of the tool are also described in this file.

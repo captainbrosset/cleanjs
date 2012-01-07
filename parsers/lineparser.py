@@ -1,21 +1,21 @@
 import re
 
+class LineData:
+	"""
+	Data structure holding structured information about a piece of source code.
+	Instances of this class have the following attributes:
+	- code_lines: an array of all the lines of pure code (no comments), striped from white spaces
+	- comment_lines: an array of all the lines of comments (no code), striped from white spaces
+	- empty_lines: an array of all empty lines
+	- total_lines: an array of all lines
+	"""
+	def __init__(self, code_lines, comment_lines, empty_lines, total_lines):
+		self.code_lines = code_lines
+		self.comment_lines = comment_lines
+		self.empty_lines = empty_lines
+		self.total_lines = total_lines
+
 class LineParser():
-	class LineData:
-		"""
-		Data structure holding structured information about a piece of source code.
-		Instances of this class have the following attributes:
-		- code_lines: an array of all the lines of pure code (no comments), striped from white spaces
-		- comment_lines: an array of all the lines of comments (no code), striped from white spaces
-		- empty_lines: an array of all empty lines
-		- total_lines: an array of all lines
-		"""
-		def __init__(self, code_lines, comment_lines, empty_lines, total_lines):
-			self.code_lines = code_lines
-			self.comment_lines = comment_lines
-			self.empty_lines = empty_lines
-			self.total_lines = total_lines
-			
 	def parse_total_lines(self, src):
 		return re.findall("^(.*)$", src, flags=re.MULTILINE);
 		
@@ -100,7 +100,8 @@ class LineParser():
 		comment_lines = comments_and_code["comment_lines"]
 		code_lines = comments_and_code["code_lines"]
 
-		return LineParser.LineData(code_lines, comment_lines, empty_lines, total_lines)
+		return LineData(code_lines, comment_lines, empty_lines, total_lines)
+
 
 if __name__ == "__main__":
 	parser = LineParser()

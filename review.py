@@ -1,11 +1,11 @@
 # Gather data about the file to be reviewed
 import sys
-from utils import extractdata
-file_data = extractdata.get_file_data_from_file(sys.argv[1])
+import fileparser
+file_data = fileparser.get_file_data_from_file(sys.argv[1])
 
 # Prepare a message bag to put infos, warnings and errors
-from utils import message
-message_bag = message.MessageBag()
+from messagebag import MessageBag
+message_bag = MessageBag()
 
 # Execute all needed reviewers, passing the message bag
 from reviewers import codesize, comments, complexity, formatting, naming, unused, general
@@ -18,5 +18,5 @@ naming.Reviewer().review(file_data, message_bag)
 unused.Reviewer().review(file_data, message_bag)
     
 # Displaying the messages to an output
-from utils.outputs import htmlwithcode
+from reporters import htmlwithcode
 htmlwithcode.output_messages(message_bag, file_data)

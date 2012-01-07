@@ -39,7 +39,12 @@ function ctrlMgr() {
 			while(true) {
 				if(something || somethingelse && (anotherthing || !what)) {
 					if(test) {
-						return 0;
+						var a = {
+							do: function() {
+								// test
+							}
+						};
+						return a;
 					} else {
 						return 1;
 					}

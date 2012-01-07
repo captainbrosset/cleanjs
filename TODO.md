@@ -26,7 +26,6 @@ Missing reviewers:
 Other misc stuff to do:
 =======================
 
-- Fix nested functions problem
 - Make reviewer expose configs so this can be configured before running
 - Class parsing
 - Automatically run in eclipse while saving a js class file

@@ -26,6 +26,7 @@ class Reviewer():
 			# FIXME: because a lot of /** */ comment blocks will be there and should not be taken into account
 			comment_lines = function.line_data.comment_lines
 			total_lines = function.line_data.total_lines
+			
 			if len(total_lines) == len(comment_lines):
 				message_bag.add_warning(self, "There are only comments in function " + function.name + " (or maybe the function is empty). Is it really needed?", function.line_nb)
 			else:
