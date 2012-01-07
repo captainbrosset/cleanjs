@@ -34,3 +34,4 @@ Other misc stuff to do:
 - Run stats on the overall code quality of all submitted code.
 - Extract messages as constants of each reviewer class with %n replacement chars (easier for unit testing then)
 - Try to use jslint (in python) as a parser ? Could help for parsing, although the simple parser in place today is probably enough
+- Continue writing unit tests for all other reviewers (think of a better way to mock (for now, the whole parsing is done))

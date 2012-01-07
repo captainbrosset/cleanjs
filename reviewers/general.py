@@ -82,10 +82,10 @@ if __name__ == "__main__":
 	sys.path.append("../")
 	
 	# Creating the reviewer instance, giving it the parsed file
-	from utils import extractdata
-	file_data = extractdata.get_file_data_from_content("test_file", file_content)
-	from utils import message
-	message_bag = message.MessageBag()
+	import fileparser
+	file_data = fileparser.get_file_data_from_content("test_file", file_content)
+	import messagebag
+	message_bag = messagebag.MessageBag()
 	reviewer = Reviewer()
 	
 	# Checking that 2 TODOFIXMES are found

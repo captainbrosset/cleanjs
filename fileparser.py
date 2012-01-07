@@ -60,3 +60,46 @@ class LineNumberMatchObject:
 	def __init__(self, line_number, match_object):
 		self.line_number = line_number
 		self.match_object = match_object
+
+
+if __name__ == "__main__":
+	file_content = """/**
+	 * This is a test class
+	 * @param {String} test
+	 */
+	my.package.Class = function() {
+		// This function does something
+		var a = 1;
+
+		/**
+		 * some field
+		 * @type {Boolean}
+		 */
+		this.someField = false; /* and some inline block comment */
+	};
+
+	my.package.Class.prototype = {
+		/**
+		 * Return the current value of the field
+		 */
+		getField : function() {
+			// Just simply return the field
+			var test = 1;
+			for(var i = 0; i < 4; i++) {
+				var something = test[i];
+			}
+			return this.someField; // And some inline comment
+		}
+	};
+	"""
+	
+	data = FileData("testFile.js", file_content, None, None, None)
+	lines = data.find_line_numbers("var ([a-zA-Z]+)")
+
+	assert len(lines) == 4
+	assert lines[0].match_object.group(1) == "a"
+	assert lines[1].match_object.group(1) == "test"
+	assert lines[2].match_object.group(1) == "i"
+	assert lines[3].match_object.group(1) == "something"
+	
+	print "ALL TESTS OK"

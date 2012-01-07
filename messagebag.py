@@ -34,3 +34,39 @@ class Message:
 		self.reviewer = reviewer.get_name()
 		self.content = content
 		self.line = line
+
+
+if __name__ == "__main__":
+	
+	class MockReviewer():
+		def get_name(self):
+			return "mock"
+	
+	bag = MessageBag()
+	
+	bag.add_warning(MockReviewer(), "warning 1", 1)
+	bag.add_warning(MockReviewer(), "warning 2", 2)
+	bag.add_warning(MockReviewer(), "warning 3", 3)
+	
+	bag.add_error(MockReviewer(), "error 1", 1)
+	bag.add_error(MockReviewer(), "error 2", 2)
+	bag.add_error(MockReviewer(), "error 3", 3)
+	
+	bag.add_info(MockReviewer(), "info 1", 1)
+	bag.add_info(MockReviewer(), "info 2", 2)
+	bag.add_info(MockReviewer(), "info 3", 3)
+	
+	all_messages = bag.get_messages()
+	assert len(all_messages) == 9, 1
+	assert all_messages[0].line == 1
+	assert all_messages[3].line == 2
+	assert all_messages[6].line == 3
+	
+	messages_on_line_2 = bag.get_messages_on_line(2)
+	assert len(messages_on_line_2) == 3
+	assert messages_on_line_2[0].line == 2
+	
+	bag.reset_messages()
+	assert len(bag.get_messages()) == 0
+	
+	print "ALL TESTS OK"
