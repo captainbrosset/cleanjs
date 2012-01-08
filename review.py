@@ -1,3 +1,7 @@
+# logging
+import logging
+logging.basicConfig(format="%(asctime)s | %(levelname)s | %(module)s | %(message)s", level=logging.DEBUG)
+
 # Gather data about the file to be reviewed
 import sys
 import fileparser

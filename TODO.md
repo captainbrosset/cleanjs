@@ -3,8 +3,7 @@ Missing reviewers:
 
 - codesize
 	- Length of this. variables
-- clean names
-	- Check words (in camelcase expression) against a mini dictionary (could be dynamic, if a word doesn't exist, look for it using a web service like word reference and then add it to the local dictionnary if it exists)
+	- Line length: 80 warning, 120 error
 - jsdoc
 	- Private and protected have corresponding jsdoc, and opposite as well
 	- Check jsdoc format and accepted @ statements
@@ -22,12 +21,20 @@ Missing reviewers:
 - comments:
 	- If // multiline comments are license header/help/ ... then skip
 	- Try to detect if a // comment line and the following code line share patterns. If they do, it probably means that the comment is useless
+- vertical:
+	- Review vertical distance inside prototype : properties should come first, functions then
+	- Try to check flow of functions: caller before callee, vertically
+- formatting:
+	- Formatting: hard to rely on function declaration because formatters might be differently configured. However should check for = assignment (a = 1).
+	- Should also try to see if tab an spaces are mixed
+	- Check if multiple spaces or tabs are used after some content(could be to space things and align vertically multiple lines) this is bad, should only be one whitespace between words and statements
+	- Could check if there are not any empty line in a long function, it means that blocks are not separated nicely
 
 Other misc stuff to do:
 =======================
 
 - Make reviewer expose configs so this can be configured before running
-- Class parsing
+- Class parsing (Parse prototype and all its functions and properties)
 - Automatically run in eclipse while saving a js class file
 - Website to run this on a textarea containing js code
 - Give listof msgs at the end + a grade with funny random sentence. Offer animated gif if class passed all reviewers.
@@ -35,3 +42,6 @@ Other misc stuff to do:
 - Extract messages as constants of each reviewer class with %n replacement chars (easier for unit testing then)
 - Try to use jslint (in python) as a parser ? Could help for parsing, although the simple parser in place today is probably enough
 - Continue writing unit tests for all other reviewers (think of a better way to mock (for now, the whole parsing is done))
+- Change look and feel of the html output: bigger, with border and or shadow for messages
+- Fix problem with the last line in function appearing into the total_lines array of line_data
+- WordReference appears to be failing ... http://api.wordreference.com/0.8/117b0/json/enfr/project (too many requests ...)

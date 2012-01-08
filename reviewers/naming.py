@@ -1,8 +1,14 @@
 import re
+import logging
+
+from namingutils import wordmeaning
+
+logger = logging.getLogger(__name__)
 
 class Reviewer():
 	NB_OF_CHARS_IN_NAME_BEFORE_CAMELCASE = 15
 	MAX_CONSONANT_VOWEL_RATIO = 5
+	REMOTE_WORD_CHECKING = True
 	
 	def get_name(self):
 		return "naming"
@@ -29,10 +35,7 @@ class Reviewer():
 			is_set = (name[0:3] == "set")
 			if is_set and len(function.signature) == 0:
 				message_bag.add_error(self, "Function " + name + " starts with 'set'. This usually means an argument is passed, but none was found.", function.line_nb);
-	
-	def _get_words_from_camelcase(self, str):
-		return re.sub("([A-Z]+)", " \g<1>", str).lower().split(" ")
-	
+		
 	def _get_consonant_vowel_ratio(self, str):
 		consonant_nb = float(len(re.findall("q|w|r|t|p|s|d|f|g|h|j|k|l|z|x|c|v|b|n|m", str)))
 		vowel_nb = float(len(re.findall("e|y|u|i|o|a", str)))
@@ -40,29 +43,52 @@ class Reviewer():
 			return float("inf")
 		else:
 			return consonant_nb / vowel_nb
-	
-	def review_name_meaning(self, name, line_nb, message_bag):
-		words = self._get_words_from_camelcase(name)
+		
+	def get_all_words_from_line(self, line):
+		words = re.findall("[a-zA-Z]+", line)
+
+		all_words = []
 		for word in words:
-			ratio = self._get_consonant_vowel_ratio(word)
-			if ratio > Reviewer.MAX_CONSONANT_VOWEL_RATIO:
-				message_bag.add_warning(self, "Word " + word + " inside name " + name + " doesn't appear to mean anything.", line_nb)
+			all_words += self.get_words_in_camelcase_str(word)
+		return all_words
+		
+	def get_words_in_camelcase_str(self, str):
+		if str == "":
+			return []
+		
+		separated = re.sub("([A-Z]+)", " \g<1>", str).lower()
+		if separated[0:1] == " ":
+			separated = separated[1:]
+		words = separated.split(" ")
+
+		return words
+	
+	def review_all_names(self, all_lines, message_bag):
+		for index, line in enumerate(all_lines):
+			words_already_found = []
+			words = self.get_all_words_from_line(line)
 			
-	def review_camelcase_name(self, name, line_nb, message_bag):
-		parts = self._get_words_from_camelcase(name)
-		if len(name) > Reviewer.NB_OF_CHARS_IN_NAME_BEFORE_CAMELCASE and len(parts) == 1:
-			message_bag.add_warning(self, "Name " + name + " doesn't appear to be camelcase", line_nb)
-			
+			for word in words:
+				if word not in words_already_found and not wordmeaning.check_word_meaning(word):
+					words_already_found.append(word)
+					message_bag.add_error(self, "Word " + word + " doesn't mean anything", index+1)
+	
 	def review(self, file_data, message_bag):
 		self.review_gethasis_function_return(file_data.functions, message_bag)
 		self.review_set_function_arg(file_data.functions, message_bag)
 		
-		for function in file_data.functions:
-			self.review_camelcase_name(function.name, function.line_nb, message_bag)
-			self.review_name_meaning(function.name, function.line_nb, message_bag)
-			
-		for variable in file_data.variables:
-			self.review_camelcase_name(variable.name, variable.line_nb, message_bag)
-			self.review_name_meaning(variable.name, variable.line_nb, message_bag)
+		if Reviewer.REMOTE_WORD_CHECKING:
+			self.review_all_names(file_data.lines.total_lines, message_bag)
 
-		# FIXME: implement same camelcase and meaning checks for class attributes (on this...)
+
+if __name__ == "__main__":
+	reviewer = Reviewer()
+	
+	assert reviewer.get_words_in_camelcase_str("") == [], 1
+	assert reviewer.get_words_in_camelcase_str("simpletest") == ["simpletest"], 2
+	assert reviewer.get_words_in_camelcase_str("simpleTest") == ["simple", "test"], 3
+	assert reviewer.get_words_in_camelcase_str("SimpleTest") == ["simple", "test"], 4
+	
+	assert reviewer.get_all_words_from_line("// Project:   SproutCore - JavaScript Application Framework") == ["project","sprout","core","java","script","application","framework"], 5
+	
+	print "ALL TESTS OK"
