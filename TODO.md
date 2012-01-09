@@ -33,6 +33,7 @@ Missing reviewers:
 Other misc stuff to do:
 =======================
 
+- Redo the layout of the HTML code output (separate code and messages in 2 columns like http://rtomayko.github.com/rocco/)
 - Make reviewer expose configs so this can be configured before running
 - Class parsing (Parse prototype and all its functions and properties)
 - Automatically run in eclipse while saving a js class file
