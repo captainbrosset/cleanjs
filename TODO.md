@@ -45,3 +45,4 @@ Other misc stuff to do:
 - Change look and feel of the html output: bigger, with border and or shadow for messages
 - Fix problem with the last line in function appearing into the total_lines array of line_data
 - WordReference appears to be failing ... http://api.wordreference.com/0.8/117b0/json/enfr/project (too many requests ...)
+	- Put a flag to turn it off, and fall back to the previous vowel/consonnant ratio word meaning guesser instead
