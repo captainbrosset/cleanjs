@@ -45,5 +45,4 @@ Other misc stuff to do:
 - Continue writing unit tests for all other reviewers (think of a better way to mock (for now, the whole parsing is done))
 - Change look and feel of the html output: bigger, with border and or shadow for messages
 - Fix problem with the last line in function appearing into the total_lines array of line_data
-- WordReference appears to be failing ... http://api.wordreference.com/0.8/117b0/json/enfr/project (too many requests ...)
-	- Put a flag to turn it off, and fall back to the previous vowel/consonnant ratio word meaning guesser instead
+- Local dictionary for names reviewer: fill it in by running a script at night that will connect to wordreference every X seconds

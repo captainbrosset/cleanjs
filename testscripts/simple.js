@@ -33,6 +33,13 @@ function test(a,b,c,b,d,d,d) {
 	// FIXME: not working
 }
 
+var MyClass = function(){};
+MyClass.prototype = {
+	getSomething: function() {
+		return 0;
+	}
+};
+
 function ctrlMgr() {
 	if(true) {
 		if(true) {
@@ -40,7 +47,7 @@ function ctrlMgr() {
 				if(something || somethingelse && (anotherthing || !what)) {
 					if(test) {
 						var a = {
-							do: function() {
+							doSomething: function() {
 								// test
 							}
 						};
