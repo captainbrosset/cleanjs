@@ -7,8 +7,8 @@ logger = logging.getLogger(__name__)
 
 class Reviewer():
 	NB_OF_CHARS_IN_NAME_BEFORE_CAMELCASE = 15
-	MAX_CONSONANT_VOWEL_RATIO = 5
-	REMOTE_WORD_CHECKING = True
+	# Set to true to connect to the real dictionary
+	DICT_WORD_CHECKING = False
 	
 	def get_name(self):
 		return "naming"
@@ -36,14 +36,6 @@ class Reviewer():
 			if is_set and len(function.signature) == 0:
 				message_bag.add_error(self, "Function " + name + " starts with 'set'. This usually means an argument is passed, but none was found.", function.line_nb);
 		
-	def _get_consonant_vowel_ratio(self, str):
-		consonant_nb = float(len(re.findall("q|w|r|t|p|s|d|f|g|h|j|k|l|z|x|c|v|b|n|m", str)))
-		vowel_nb = float(len(re.findall("e|y|u|i|o|a", str)))
-		if vowel_nb == 0:
-			return float("inf")
-		else:
-			return consonant_nb / vowel_nb
-		
 	def get_all_words_from_line(self, line):
 		words = re.findall("[a-zA-Z]+", line)
 
@@ -69,16 +61,19 @@ class Reviewer():
 			words = self.get_all_words_from_line(line)
 			
 			for word in words:
-				if word not in words_already_found and not wordmeaning.check_word_meaning(word):
+				word_exists = False
+				if Reviewer.DICT_WORD_CHECKING:
+					word_exists = wordmeaning.check_word_meaning_with_dict(word)
+				else:
+					word_exists = wordmeaning.check_word_meaning_with_letter_ratio(word)
+				if word not in words_already_found and not word_exists:
 					words_already_found.append(word)
 					message_bag.add_error(self, "Word " + word + " doesn't mean anything", index+1)
 	
 	def review(self, file_data, message_bag):
 		self.review_gethasis_function_return(file_data.functions, message_bag)
 		self.review_set_function_arg(file_data.functions, message_bag)
-		
-		if Reviewer.REMOTE_WORD_CHECKING:
-			self.review_all_names(file_data.lines.total_lines, message_bag)
+		self.review_all_names(file_data.lines.total_lines, message_bag)
 
 
 if __name__ == "__main__":
