@@ -34,7 +34,6 @@ Missing reviewers:
 Other misc stuff to do:
 =======================
 
-- Redo the layout of the HTML code output (separate code and messages in 2 columns like http://rtomayko.github.com/rocco/)
 - Make reviewer expose configs so this can be configured before running
 - Class parsing (Parse prototype and all its functions and properties)
 - Automatically run in eclipse while saving a js class file
@@ -42,9 +41,7 @@ Other misc stuff to do:
 - Give listof msgs at the end + a grade with funny random sentence. Offer animated gif if class passed all reviewers.
 - Run stats on the overall code quality of all submitted code.
 - Extract messages as constants of each reviewer class with %n replacement chars (easier for unit testing then)
-- Try to use jslint (in python) as a parser ? Could help for parsing, although the simple parser in place today is probably enough
 - Continue writing unit tests for all other reviewers (think of a better way to mock (for now, the whole parsing is done))
-- Change look and feel of the html output: bigger, with border and or shadow for messages
 - Fix problem with the last line in function appearing into the total_lines array of line_data
 - Local dictionary for names reviewer: fill it in by running a script at night that will connect to wordreference every X seconds
 - Fix word naming reviewer: today it will also read comments and stuff like regexp: [a-zA-Z0-9] which of course is not going to mean anything. Should only concentrate on vars, functions, fields, property names
