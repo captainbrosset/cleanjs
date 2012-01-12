@@ -12,7 +12,7 @@ WORD_REFERENCE_REQUEST_URL = "http://api.wordreference.com/" + WORD_REFERENCE_AP
 
 MAX_CONSONANT_VOWEL_RATIO = 5
 
-def check_word_meaning_with_letter_ratio(word):
+def check_word_meaning_with_letter_ratio(word, dictionary_file=None):
 	if not check_word_structure(word):
 		return False
 	has_local_meaning = check_word_meaning_in_local_dict(word, dictionary_file)

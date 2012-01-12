@@ -15,6 +15,7 @@ Missing reviewers:
 - jslint
 	- new Array() and new Object()
 	- check for global vars assignments (missing var)
+	- check ; is present after assignements
 - complexity
 	- inline function is often sign of difficult to read code
 	- try to check for long functions with several returns ...
