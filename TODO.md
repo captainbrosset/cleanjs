@@ -47,3 +47,4 @@ Other misc stuff to do:
 - Change look and feel of the html output: bigger, with border and or shadow for messages
 - Fix problem with the last line in function appearing into the total_lines array of line_data
 - Local dictionary for names reviewer: fill it in by running a script at night that will connect to wordreference every X seconds
+- Fix word naming reviewer: today it will also read comments and stuff like regexp: [a-zA-Z0-9] which of course is not going to mean anything. Should only concentrate on vars, functions, fields, property names
