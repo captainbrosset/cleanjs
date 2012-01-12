@@ -23,11 +23,16 @@ Get cleanjs by downloading one of the tags available on the project Tags page.
 
 Once you've retrieved the code, you can run the tool like this:
 
-    python review.py path/to/my_source_file.js
+    python review.py path/to/my_source_file.js path/to/output/folder
 
 This will review the file path/to/my_source_file.js and create an HTML report file.
 
-You can check the simple.js-report.html file to see an example of report (was generated from testscripts/simple.js source file)
+You can check the testscript/reports/*.html files to see examples of reports
+
+GOING FURTHER
+=============
+
+Integrating cleanjs into an existing python program is fairly easy. Open review.py to see how a file is parsed, how reviewers are called and how the output is constructed. You'll see it's easy to create your own reviewers and reporters.
 
 CONTRIBUTING
 ============
