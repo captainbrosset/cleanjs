@@ -1,4 +1,3 @@
-import json
 import urllib2
 import logging
 import re
@@ -66,17 +65,18 @@ def check_word_meaning_in_local_dict(word, dictionary_file=None):
 def check_word_meaning_in_remote_dict(word):
 	response = urllib2.urlopen(WORD_REFERENCE_REQUEST_URL + word)
 	response_text = response.read()
-	response_object = json.loads(response_text)
+		
+	# Note that we're not using any json lib here to avoid having dependencies (for GAE compat)
+	is_not_word = response_text.find("NoTranslation") != -1
 	
-	if response_object.has_key("Error"):
+	if is_not_word:
 		return False
 	else:
-		if response_object.has_key("PrincipalTranslations"):
-			if response_object["PrincipalTranslations"][0].has_key("OriginalTerm"):
-				if response_object["PrincipalTranslations"][0]["OriginalTerm"]["term"] != word:
-					return False
-				else:
-					return True
+		found_word = re.findall("\"OriginalTerm\" : \{ \"term\" : \"([a-zA-Z ]+)\"", response_text)[0]
+		if found_word == word:
+			return True
+		else:
+			return False
 
 
 if __name__ == "__main__":
@@ -95,21 +95,21 @@ if __name__ == "__main__":
 	assert check_word_meaning_in_local_dict("test", dictionary_file=mock_dict_file) == False, 5
 	assert check_word_meaning_in_local_dict("manager", dictionary_file=mock_dict_file) == False, 6
 	
-	add_local_word("test", mock_dict_file)
+	add_word_to_local_dict("test", mock_dict_file)
 	
 	assert check_word_meaning_in_local_dict("test", dictionary_file=mock_dict_file) == True, 7
 	
-	assert check_word_meaning("something", dictionary_file=mock_dict_file) == True, 8
-	assert check_word_meaning("function", dictionary_file=mock_dict_file) == True, 9
-	assert check_word_meaning("nooooooo", dictionary_file=mock_dict_file) == False, 10
-	assert check_word_meaning("table", dictionary_file=mock_dict_file) == True, 11
+	assert check_word_meaning_with_dict("something", dictionary_file=mock_dict_file) == True, 8
+	assert check_word_meaning_with_dict("function", dictionary_file=mock_dict_file) == True, 9
+	assert check_word_meaning_with_dict("nooooooo", dictionary_file=mock_dict_file) == False, 10
+	assert check_word_meaning_with_dict("table", dictionary_file=mock_dict_file) == True, 11
+		
+	assert check_word_meaning_with_letter_ratio("cfghtr", dictionary_file=mock_dict_file) == False, 12
+	assert check_word_meaning_with_letter_ratio("abeciw", dictionary_file=mock_dict_file) == True, 13
+	assert check_word_meaning_with_letter_ratio("better", dictionary_file=mock_dict_file) == True, 14
+	assert check_word_meaning_with_letter_ratio("mgr", dictionary_file=mock_dict_file) == False, 15
 	
 	mock_dict_file.close()
 	os.remove("unit_test_mock_file.txt")
-	
-	assert check_word_meaning_with_letter_ratio("cfghtr") == False, 12
-	assert check_word_meaning_with_letter_ratio("abeciw") == True, 13
-	assert check_word_meaning_with_letter_ratio("better") == True, 14
-	assert check_word_meaning_with_letter_ratio("mgr") == False, 15
 	
 	print "ALL TESTS OK"
