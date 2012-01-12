@@ -60,3 +60,15 @@ function ctrlMgr() {
 		}
 	}
 }
+
+function complex(test) {
+	if(!test) {
+		return false;
+	} else {
+		if(typeof test == "string") {
+			return test + " ";
+		} else if(typeof test == "object") {
+			return test.name;
+		}
+	}
+}

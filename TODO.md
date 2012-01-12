@@ -18,7 +18,6 @@ Missing reviewers:
 	- check ; is present after assignements
 - complexity
 	- inline function is often sign of difficult to read code
-	- try to check for long functions with several returns ...
 - comments:
 	- If // multiline comments are license header/help/ ... then skip
 	- Try to detect if a // comment line and the following code line share patterns. If they do, it probably means that the comment is useless

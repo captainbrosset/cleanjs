@@ -5,6 +5,8 @@ class Reviewer():
 	ERROR_MAX_NB_OF_STATEMENTS_IN_FUNCTION = 10
 	WARN_MAX_NB_OF_CONDITIONS_IN_IF = 1
 	ERROR_MAX_NB_OF_CONDITIONS_IN_IF = 2
+	ERROR_MAX_NB_OF_RETURNS_IN_FUNCTION = 5
+	WARN_MAX_NB_OF_RETURNS_IN_FUNCTION = 2
 	
 	def get_name(self):
 		return "complexity"
@@ -13,6 +15,7 @@ class Reviewer():
 		return """Complex code is hard to read and maintain. Clean code should have small simple functions and classes that focus on one responsibility only, and their inner working should be simple to read.
 		This reviewer checks:
 		- the complexity of functions based on the number of if, for, while, switch statements (warning at """ + str(Reviewer.WARN_MAX_NB_OF_STATEMENTS_IN_FUNCTION) + """, error at """ + str(Reviewer.ERROR_MAX_NB_OF_STATEMENTS_IN_FUNCTION) + """)
+		- the complexity of functions based on the number of values returned (warning at """ + str(Reviewer.WARN_MAX_NB_OF_RETURNS_IN_FUNCTION) + """, error at """ + str(Reviewer.ERROR_MAX_NB_OF_RETURNS_IN_FUNCTION) + """)
 		- the complexity of IF statements based on the number of conditions (warning at """ + str(Reviewer.WARN_MAX_NB_OF_CONDITIONS_IN_IF) + """, error at """ + str(Reviewer.ERROR_MAX_NB_OF_CONDITIONS_IN_IF) + """)"""
 	
 	def review_functions_complexity(self, functions, message_bag):
@@ -22,6 +25,12 @@ class Reviewer():
 				message_bag.add_error(self, "Function " + function.name + " is too complex. There are too many statements involved in its logic", function.line_nb)
 			elif len(statements) > Reviewer.WARN_MAX_NB_OF_STATEMENTS_IN_FUNCTION:
 				message_bag.add_warning(self, "Function " + function.name + " is getting complex. There may be too much logic going on. Think about splitting.", function.line_nb)
+			
+			returns = re.findall("return ", function.body)
+			if len(returns) > Reviewer.ERROR_MAX_NB_OF_RETURNS_IN_FUNCTION:
+				message_bag.add_error(self, "Function " + function.name + " returns more than " + str(Reviewer.ERROR_MAX_NB_OF_RETURNS_IN_FUNCTION) + " values (" + str(len(returns)) + ").", function.line_nb)
+			elif len(returns) > Reviewer.WARN_MAX_NB_OF_RETURNS_IN_FUNCTION:
+				message_bag.add_warning(self, "Function " + function.name + " returns more than " + str(Reviewer.WARN_MAX_NB_OF_RETURNS_IN_FUNCTION) + " values (" + str(len(returns)) + ").", function.line_nb)
 	
 	def review_ifs_complexity(self, file_data, message_bag):
 		# TODO : change this to use the new file_data.find_line_number method, but this means that the method also needs to return the match groups too
