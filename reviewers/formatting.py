@@ -16,6 +16,7 @@ class Reviewer():
 		bad_format += len(re.findall(":function\(", file_content))
 		bad_format += len(re.findall(": function\(", file_content))
 		bad_format += len(re.findall(":function \(", file_content))
+		bad_format += len(re.findall("function [a-zA-Z0-9$_]+\(", file_content))
 		bad_format += len(re.findall("if\(", file_content))
 		bad_format += len(re.findall("\)\{", file_content))
 		
