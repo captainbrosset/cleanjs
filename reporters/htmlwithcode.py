@@ -1,14 +1,27 @@
-def output_messages(message_bag, file_data, output_dir):
-	src_file_name = get_friendly_file_name(file_data.name)
-	report_file_name = src_file_name + "-report.html"	
-	report_file = open(output_dir + "/" + report_file_name, "w")
+class InMemoryFile():
+	def __init__(self):
+		self.content = ""
+	def write(self, str):
+		self.content += str
+
+def output_messages(message_bag, file_data, to_file=None):
+	report_file = None
+	
+	if to_file:
+		report_file = open(to_file, "w")
+	else:
+		report_file = InMemoryFile()
 	
 	output_header(file_data.name, report_file)
 	output_general_messages(message_bag, file_data.lines.total_lines, report_file)
 	output_code_lines_messages(message_bag, file_data.lines.total_lines, report_file)
 	output_footer(report_file)
 	
-	report_file.close()
+	if to_file:
+		report_file.close()
+		return None
+	else:
+		return report_file.content
 
 def get_friendly_file_name(complete_name):
 	last_slash = complete_name.rfind("/")

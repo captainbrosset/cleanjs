@@ -23,7 +23,7 @@ Get cleanjs by downloading one of the tags available on the project Tags page.
 
 Once you've retrieved the code, you can run the tool like this:
 
-    python review.py path/to/my_source_file.js path/to/output/folder
+    python review.py path/to/my_source_file.js path/to/output/file.html
 
 This will review the file path/to/my_source_file.js and create an HTML report file.
 
