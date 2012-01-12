@@ -36,8 +36,7 @@ Other misc stuff to do:
 - Make reviewer expose configs so this can be configured before running
 - Class parsing (Parse prototype and all its functions and properties)
 - Automatically run in eclipse while saving a js class file
-- Website to run this on a textarea containing js code
-- Give listof msgs at the end + a grade with funny random sentence. Offer animated gif if class passed all reviewers.
+- Website should give a grade
 - Run stats on the overall code quality of all submitted code.
 - Extract messages as constants of each reviewer class with %n replacement chars (easier for unit testing then)
 - Continue writing unit tests for all other reviewers (think of a better way to mock (for now, the whole parsing is done))
