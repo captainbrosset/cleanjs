@@ -1,3 +1,4 @@
+a
 about
 above
 add
@@ -27,6 +28,7 @@ cache
 callback
 case
 catch
+checks
 class
 close
 comment
@@ -81,6 +83,7 @@ helper
 here
 html
 http
+i
 id
 if
 inc
@@ -96,6 +99,8 @@ is
 it
 java
 javascript
+js
+jscript
 key
 layout
 length
@@ -187,6 +192,7 @@ sprout
 static
 statics
 storage
+string
 strobe
 style
 switch
@@ -230,6 +236,7 @@ working
 write
 xhr
 xml
+xmlhttp
 yaml
 yml
 you

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="utf-8">
+		    <title>cleanjs report for file testscripts/goodfile.js</title>
+			<style type="text/css">
+				body {
+					margin: 0;
+					padding: 1em;
+					font-size: 14px;
+					font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, FreeSerif, serif;
+					overflow-x: hidden;
+					width: 100%;
+				}
+				h1 {
+					margin: 0;
+					padding: 1em 1em 1em 25px;
+				}
+				.general {
+					padding: 0;
+					margin: 0 0 0 30px;
+					list-style-type: none;
+					width: 500px;
+					padding: 1em;
+					background: #eee;
+					border-right: 1px solid #ccc;
+					border-left: 1px solid #ccc;
+					color: #333;
+				}
+				.general li {
+					padding-bottom: 5px;
+				}
+				.lines {
+					padding: 0;
+					margin: 0;
+					list-style-type: none;
+					width: 10000px;
+				}
+				.lines .line {
+					overflow: hidden;
+					padding: 0;
+					margin: 0;
+					list-style-type: none;
+				}
+				.lines .line .gutter {
+					float: left;
+					text-align: right;
+					width: 25px;
+					padding-right: 5px;
+					color: #aaa;
+					font-family: Menlo, Monaco, Consolas, "Lucida Console", monospace;
+					font-size: 11px;
+				}
+				.lines .line .messages {
+					float: left;
+					padding: 0 1em;
+					margin: 0;
+					list-style-type: none;
+					width: 500px;
+					border-right: 1px solid #ccc;
+					border-left: 1px solid #ccc;
+					background: #eee;
+					color: #333;
+				}
+				.lines .line .messages li {
+					padding-bottom: 8px;
+					line-height: 13px;
+				}
+				.lines .line .code {
+					float :left;
+					margin: 0;
+					padding: 0 1em;
+					font-family: Menlo, Monaco, Consolas, "Lucida Console", monospace;
+					font-size: 11px;
+				}
+				.error {
+					color: #954121;
+					color: red;
+				}
+				.info {
+					
+				}
+				.warning {
+					color: #B62;
+				}
+			</style>
+		</head>
+		<body>
+			<h1>testscripts/goodfile.js</h1><ul class='general'><li class='info'>File is 12 lines long</li><li class='info'>0 lines of comments</li><li class='info'>12 lines of code</li><li class='info'>0 empty lines</li><li class='info'>There are 3 functions in the file</li><li class='info'>Longest function is 1 lines long, and shortest one is 1 (average is 1)</li></ul><ul class='lines'><li class='line'><span class='gutter'>1</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>var utils = {};</pre></li><li class='line'><span class='gutter'>2</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>utils.Dom = function (id) {</pre></li><li class='line'><span class='gutter'>3</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>	this._id = id;</pre></li><li class='line'><span class='gutter'>4</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>};</pre></li><li class='line'><span class='gutter'>5</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>utils.Dom.prototype = {</pre></li><li class='line'><span class='gutter'>6</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>	getElement : function () {</pre></li><li class='line'><span class='gutter'>7</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>		return document.getElementById(this._id);</pre></li><li class='line'><span class='gutter'>8</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>	},</pre></li><li class='line'><span class='gutter'>9</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>	setInnerHTML : function (content) {</pre></li><li class='line'><span class='gutter'>10</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>		this._id.innerHTML = content;</pre></li><li class='line'><span class='gutter'>11</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>	}</pre></li><li class='line'><span class='gutter'>12</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>};</pre></li></ul></body></html>

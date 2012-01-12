@@ -13,8 +13,6 @@ WORD_REFERENCE_REQUEST_URL = "http://api.wordreference.com/" + WORD_REFERENCE_AP
 MAX_CONSONANT_VOWEL_RATIO = 5
 
 def check_word_meaning_with_letter_ratio(word, dictionary_file=None):
-	if not check_word_structure(word):
-		return False
 	has_local_meaning = check_word_meaning_in_local_dict(word, dictionary_file)
 	has_ratio_meaning = False
 	if not has_local_meaning:
@@ -27,8 +25,6 @@ def check_word_meaning_with_letter_ratio(word, dictionary_file=None):
 	return has_local_meaning or has_ratio_meaning
 
 def check_word_meaning_with_dict(word, dictionary_file=None):
-	if not check_word_structure(word):
-		return False
 	has_local_meaning = check_word_meaning_in_local_dict(word, dictionary_file)
 	has_remote_meaning = False
 	if not has_local_meaning:
@@ -46,11 +42,6 @@ def add_word_to_local_dict(word, dictionary_file=None):
 		dictionary_file = open(LOCAL_DICTIONARY_FILE_NAME, "a")
 		dictionary_file.write(word + "\n")
 		dictionary_file.close()
-
-def check_word_structure(word):
-	if len(word) == 1 and word != "i":
-		return False
-	return True
 
 def check_word_meaning_in_local_dict(word, dictionary_file=None):
 	should_file_be_closed = False

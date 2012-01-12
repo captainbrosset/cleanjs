@@ -23,4 +23,4 @@ unused.Reviewer().review(file_data, message_bag)
     
 # Displaying the messages to an output
 from reporters import htmlwithcode
-htmlwithcode.output_messages(message_bag, file_data)
+htmlwithcode.output_messages(message_bag, file_data, sys.argv[2])

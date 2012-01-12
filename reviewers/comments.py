@@ -42,7 +42,7 @@ class Reviewer():
 
 	def review_separator_comments(self, file_data, message_bag):
 		# ----- or ////// or ******* or ######
-		matches = file_data.find_line_numbers("---|###|\*\*\*|////|====")
+		matches = file_data.find_line_numbers("---|###|\*\*\*|////|====|\.\.\.\.")
 		line_already_reported = []
 		for match in matches:
 			if match.line_number not in line_already_reported:

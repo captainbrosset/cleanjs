@@ -1,7 +1,7 @@
-def output_messages(message_bag, file_data):
+def output_messages(message_bag, file_data, output_dir):
 	src_file_name = get_friendly_file_name(file_data.name)
 	report_file_name = src_file_name + "-report.html"	
-	report_file = open(report_file_name, "w")
+	report_file = open(output_dir + "/" + report_file_name, "w")
 	
 	output_header(file_data.name, report_file)
 	output_general_messages(message_bag, file_data.lines.total_lines, report_file)
