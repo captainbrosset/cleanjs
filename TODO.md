@@ -44,3 +44,7 @@ Other misc stuff to do:
 - Fix problem with the last line in function appearing into the total_lines array of line_data
 - Local dictionary for names reviewer: fill it in by running a script at night that will connect to wordreference every X seconds
 - Fix word naming reviewer: today it will also read comments and stuff like regexp: [a-zA-Z0-9] which of course is not going to mean anything. Should only concentrate on vars, functions, fields, property names
+- Parser:
+	- https://gist.github.com/1607354 is a good example
+	- http://ominian.com/2012/01/06/working-with-using-pynarcissus-to-parse-javascript-in-python/
+	- parser originally is pynarcissus
