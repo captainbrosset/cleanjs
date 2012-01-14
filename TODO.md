@@ -50,3 +50,4 @@ Other misc stuff to do:
 	- parser originally is pynarcissus
 - html report design: inpiration: http://dribbble.com/shots/378111-iPad-Mail-App
 - separate general messages from true line messages in htmlmreport
+- html report, remove colours and use subtle embossed icons to differentiate types
