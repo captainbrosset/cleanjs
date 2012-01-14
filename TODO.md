@@ -49,3 +49,4 @@ Other misc stuff to do:
 	- http://ominian.com/2012/01/06/working-with-using-pynarcissus-to-parse-javascript-in-python/
 	- parser originally is pynarcissus
 - html report design: inpiration: http://dribbble.com/shots/378111-iPad-Mail-App
+- separate general messages from true line messages in htmlmreport
