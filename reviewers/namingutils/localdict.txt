@@ -180,6 +180,7 @@ route
 router
 routes
 script
+scripts
 scroll
 search
 see
@@ -215,6 +216,8 @@ them
 there
 things
 this
+throw
+throws
 to
 todo
 toolbar
