@@ -51,9 +51,8 @@ class Reviewer():
 			# FIXME: comment lines are NOT ignored, should be?!
 			# Should use the lines_data
 			
-			body_lines = function.body.split("\n")
-			nb = len(body_lines)
-			if nb == 0 or (nb == 1 and body_lines[0] == ""):
+			nb = len(function.lines.get_code_lines())
+			if nb == 0:
 				message_bag.add_warning(self, "Function " + function.name + " is empty. Is it really needed?", function.line_nb)
 			elif nb > Reviewer.ERROR_MAX_FUNCTION_LINE_NB:
 				message_bag.add_error(self, "There are more than " + str(Reviewer.ERROR_MAX_FUNCTION_LINE_NB) + " lines in function " + function.name + " (" + str(nb) + ")! Surely the function is doing more than 1 thing", function.line_nb)

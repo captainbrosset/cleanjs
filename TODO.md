@@ -48,9 +48,3 @@ Other misc stuff to do:
 	- https://gist.github.com/1607354 is a good example
 	- http://ominian.com/2012/01/06/working-with-using-pynarcissus-to-parse-javascript-in-python/
 	- parser originally is pynarcissus
-- html report design: inpiration: http://dribbble.com/shots/378111-iPad-Mail-App
-- separate general messages from true line messages in htmlmreport
-- html report, remove colours and use subtle embossed icons to differentiate types
-- % of comments in function is wrong, should make ratio of comment lines over code lines
-- empty functions are not found correctly, should not take comment lines into account, should just check wether there is at least 1 line of code
-- 

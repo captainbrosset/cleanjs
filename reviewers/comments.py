@@ -47,13 +47,12 @@ class Reviewer():
 			# FIXME: this is good because it uses the line_data already parsed for the function
 			# FIXME: but will be problematic in case of constructor functions that have jsdoc'd fields
 			# FIXME: because a lot of /** */ comment blocks will be there and should not be taken into account
-			comment_lines = function.lines.get_comments_lines()
-			total_lines = function.lines.all_lines
 			
-			if len(total_lines) == len(comment_lines):
-				message_bag.add_warning(self, "There are only comments in function " + function.name + " (or maybe the function is empty). Is it really needed?", function.line_nb)
-			else:
-				ratio = float(len(comment_lines)) / float(len(total_lines))
+			nb_comments_lines = len(function.lines.get_comments_lines())
+			nb_total_lines = len(function.lines.get_code_lines()) + nb_comments_lines
+			
+			if nb_total_lines > 0:
+				ratio = float(nb_comments_lines) / float(nb_total_lines)
 				if ratio > Reviewer.MAX_CODE_COMMENT_RATIO_IN_FUNCTION:
 					message_bag.add_error(self, "There are more than " + str(int(Reviewer.MAX_CODE_COMMENT_RATIO_IN_FUNCTION*100)) + "% of comments in function " + function.name + " (" + str(ratio*100) + "%). Make the code simpler.", function.line_nb);
 	
