@@ -13,6 +13,7 @@ The tool is focused on code quality. The following things (and others) are check
 - comments
 - complexity
 - ...
+- 
 
 USING CLEANJS
 =============
