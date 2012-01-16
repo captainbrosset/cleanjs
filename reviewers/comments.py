@@ -21,17 +21,26 @@ class Reviewer():
 	def review_multiple_comment_lines(self, lines, message_bag):
 		comments_lines_passed = 0
 		line_nb_of_first_comment = -1
+		is_in_jsdoc_style_comment = False
+		
 		for line in lines:
-			if line.is_only_comments():
-				if line_nb_of_first_comment == -1:
-					line_nb_of_first_comment = line.line_number
-				comments_lines_passed += 1
-			else:
-				comments_lines_passed = 0
-				line_nb_of_first_comment = -1
 			
-			if comments_lines_passed > Reviewer.MAX_NUMBER_OF_SUBSEQUENT_COMMENTS_LINE:
-				message_bag.add_warning(self, "You have more than " + str(Reviewer.MAX_NUMBER_OF_SUBSEQUENT_COMMENTS_LINE) + " subsequent lines of comments in a row. Are you trying to explain something complex?", line_nb_of_first_comment)
+			if line.comments == "/**":
+				is_in_jsdoc_style_comment = True
+			if is_in_jsdoc_style_comment and line.comments == "*/":
+				is_in_jsdoc_style_comment = False
+		
+			if not is_in_jsdoc_style_comment:
+				if line.is_only_comments():			
+					if line_nb_of_first_comment == -1:
+						line_nb_of_first_comment = line.line_number
+					comments_lines_passed += 1
+				else:
+					if comments_lines_passed > Reviewer.MAX_NUMBER_OF_SUBSEQUENT_COMMENTS_LINE:
+						message_bag.add_warning(self, "You have " + str(comments_lines_passed) + " subsequent lines of comments in a row. Are you trying to explain something complex?", line_nb_of_first_comment)
+						
+					comments_lines_passed = 0
+					line_nb_of_first_comment = -1
 	
 	def review_comments_ratio_in_functions(self, functions, message_bag):
 		for function in functions:
