@@ -17,9 +17,9 @@ The tool is focused on code quality. The following things (and others) are check
 USING CLEANJS
 =============
 
-cleanjs is written in python so, first, make sure you have python 2.7 installed and running.
+cleanjs is written in python so, first, make sure you have [python 2.7 installed and running](http://python.org/getit/).
 
-Get cleanjs by downloading one of the tags available on the project Tags page.
+Get cleanjs by downloading [one of the tags](https://github.com/captainbrosset/cleanjs/tags).
 
 Once you've retrieved the code, you can run the tool like this:
 
