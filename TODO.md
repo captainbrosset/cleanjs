@@ -48,3 +48,4 @@ Other misc stuff to do:
 	- https://gist.github.com/1607354 is a good example
 	- http://ominian.com/2012/01/06/working-with-using-pynarcissus-to-parse-javascript-in-python/
 	- parser originally is pynarcissus
+- Make web service on website so that it can be used as a post commit hook by github projects (service hooks)
