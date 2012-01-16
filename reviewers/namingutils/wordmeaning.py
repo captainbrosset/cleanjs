@@ -2,11 +2,12 @@ import urllib2
 import logging
 import re
 import inspect
+import os
 
 logger = logging.getLogger(__name__)
 
 current_file_name = inspect.getfile(inspect.currentframe())
-LOCAL_DICTIONARY_FILE_NAME = current_file_name[0:current_file_name.rfind("/")] + "/localdict.txt"
+LOCAL_DICTIONARY_FILE_NAME = current_file_name[0:current_file_name.rfind(os.sep)] + os.sep +"localdict.txt"
 WORD_REFERENCE_API_KEY = "117b0"
 WORD_REFERENCE_API_VERSION = "0.8"
 WORD_REFERENCE_REQUEST_URL = "http://api.wordreference.com/" + WORD_REFERENCE_API_VERSION + "/" + WORD_REFERENCE_API_KEY + "/json/enfr/"
