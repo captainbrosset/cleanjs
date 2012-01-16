@@ -52,7 +52,7 @@ class Reviewer():
 			nb_total_lines = len(function.lines.get_code_lines()) + nb_comments_lines
 			
 			if nb_total_lines > 0:
-				ratio = float(nb_comments_lines) / float(nb_total_lines)
+				ratio = round(float(nb_comments_lines) / float(nb_total_lines), 1)
 				if ratio > Reviewer.MAX_CODE_COMMENT_RATIO_IN_FUNCTION:
 					message_bag.add_error(self, "There are more than " + str(int(Reviewer.MAX_CODE_COMMENT_RATIO_IN_FUNCTION*100)) + "% of comments in function " + function.name + " (" + str(ratio*100) + "%). Make the code simpler.", function.line_nb);
 	
