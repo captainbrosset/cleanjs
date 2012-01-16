@@ -42,10 +42,12 @@ def output_header(file_name, file_writer):
 				body {
 					margin: 0;
 					padding: 1em;
-					font-size: 14px;
-					font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, FreeSerif, serif;
+					font-size: 12px;
+					font-family: fantasy;
 					overflow-x: hidden;
 					width: 100%;
+					color: #888e96;
+					background: url(http://dribbble.com/images/tile.gif) repeat top left;
 				}
 				h1 {
 					margin: 0;
@@ -53,14 +55,11 @@ def output_header(file_name, file_writer):
 				}
 				.general {
 					padding: 0;
-					margin: 0 0 0 30px;
+					margin: 0 0 3px 30px;
 					list-style-type: none;
 					width: 500px;
 					padding: 1em;
-					background: #eee;
-					border-right: 1px solid #ccc;
-					border-left: 1px solid #ccc;
-					color: #333;
+					color: #222;
 				}
 				.general li {
 					padding-bottom: 5px;
@@ -92,13 +91,11 @@ def output_header(file_name, file_writer):
 					margin: 0;
 					list-style-type: none;
 					width: 500px;
-					border-right: 1px solid #ccc;
-					border-left: 1px solid #ccc;
-					background: #eee;
-					color: #333;
+					background: #343537;
+					text-shadow: 0 1px 1px #111312;
 				}
 				.lines .line .messages li {
-					padding-bottom: 8px;
+					padding: 4px 0;
 					line-height: 13px;
 				}
 				.lines .line .code {
@@ -108,15 +105,11 @@ def output_header(file_name, file_writer):
 					font-family: Menlo, Monaco, Consolas, "Lucida Console", monospace;
 					font-size: 11px;
 				}
-				.error {
-					color: #954121;
-					color: red;
-				}
-				.info {
+				.error, .info, .warning {
 					
 				}
-				.warning {
-					color: #B62;
+				.error {
+					font-weight: bold;
 				}
 			</style>
 		</head>
