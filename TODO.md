@@ -51,3 +51,6 @@ Other misc stuff to do:
 - html report design: inpiration: http://dribbble.com/shots/378111-iPad-Mail-App
 - separate general messages from true line messages in htmlmreport
 - html report, remove colours and use subtle embossed icons to differentiate types
+- % of comments in function is wrong, should make ratio of comment lines over code lines
+- empty functions are not found correctly, should not take comment lines into account, should just check wether there is at least 1 line of code
+- 
