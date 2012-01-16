@@ -36,3 +36,7 @@ def _get_message_line_gutter(total_nb):
 	total_lines_char_nb = len(str(total_nb))
 	padding = "".join([" " for i in range(total_lines_char_nb - 1)])
 	return padding + "! | >> "
+
+
+if __name__ == "__main__":
+	print "NO TESTS TO RUN " + __file__

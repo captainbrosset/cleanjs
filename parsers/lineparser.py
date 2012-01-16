@@ -1,59 +1,100 @@
 import re
 
-class LineData:
-	"""
-	Data structure holding structured information about a piece of source code.
-	Instances of this class have the following attributes:
-	- code_lines: an array of all the lines of pure code (no comments), striped from white spaces
-	- comment_lines: an array of all the lines of comments (no code), striped from white spaces
-	- empty_lines: an array of all empty lines
-	- total_lines: an array of all lines
-	"""
-	def __init__(self, code_lines, comment_lines, empty_lines, total_lines):
-		self.code_lines = code_lines
-		self.comment_lines = comment_lines
-		self.empty_lines = empty_lines
-		self.total_lines = total_lines
+class Line:
+	"""A line object, containing its line_number, string of code if any, and string of comments if any"""
+	
+	def __init__(self, line_number, complete_line, code, comments):
+		self.complete_line = complete_line
+		self.line_number = line_number
+		self.code = code
+		self.comments = comments
+		
+	def is_empty(self):
+		return self.code == "" and self.comments == ""
+	
+	def has_comments(self):
+		return self.comments != ""
+	
+	def has_code(self):
+		return self.code != ""
+	
+	def is_only_code(self):
+		return self.code != "" and self.comments == ""
+	
+	def is_only_comments(self):
+		return self.code == "" and self.comments != ""
+	
+	def is_both_code_and_comments(self):
+		return self.code != "" and self.comments != ""
+		
+	def __repr__(self):
+		string = "Line " + str(self.line_number) + " "
+		if self.is_empty():
+			string += "is empty"
+		else:
+			string += "code: [" + self.code + "] comments: [" + self.comments + "]"
+		return 
+
+class LinesData:
+	"""Data structure holding information about a piece of source code.
+	Instances of this class have the following attribute:
+	- all_lines: an array of all the lines in the file. Each element of this array is of type Line"""
+	
+	def __init__(self, all_lines):
+		self.all_lines = all_lines
+	
+	def get_code_lines(self):
+		lines = []
+		for line in self.all_lines:
+			if line.has_code():
+				lines.append(line)
+		return lines
+		
+	def get_comments_lines(self):
+		lines = []
+		for line in self.all_lines:
+			if line.has_comments():
+				lines.append(line)
+		return lines
+
+	def get_empty_lines(self):
+		lines = []
+		for line in self.all_lines:
+			if line.is_empty():
+				lines.append(line)
+		return lines
 
 class LineParser():
-	def parse_total_lines(self, src):
-		return re.findall("^(.*)$", src, flags=re.MULTILINE);
+	"""Parse lines of code, lines of comments and empty lines from a source code"""
 		
-	def differentiate_empty_nonempty_lines(self, total_lines):
-		empty_lines = []
-		nonempty_lines = []
-		for line in total_lines:
-			if self.is_empty_line(line):
-				empty_lines.append(line)
-			else:
-				nonempty_lines.append(line)
-		return {
-			"empty_lines": empty_lines,
-			"nonempty_lines": nonempty_lines
-		}
-	
-	def is_empty_line(self, line):
-		return len(re.findall("^\s*$", line)) != 0
-	
-	def parse_comments_and_code_lines(self, file_content):
-		comments = ""
-		code = ""
+	def parse_lines(self, file_content):
+		all_lines = file_content.split("\n")
+		lines = [{
+			"code": "",
+			"comments": ""
+		}]
+		line_index = 0;
 		inside_multi_comment = False
 		inside_comment = False
 		skip = False
-		
 		code_to_add = ""
 		comments_to_add = ""
-
+				
 		for index, char in enumerate(file_content):
+			if char == "\n":
+				lines.append({
+					"code": "",
+					"comments": ""
+				})
+				line_index += 1
+			
 			if skip:
 				skip = False
 				continue
-			
+						
 			if char == "\n":
 				if inside_comment:
 					inside_comment = False
-					comments += "\n"
 			
 			if char == "/" and not inside_comment and file_content[index+1:index+2] == "*":
 				inside_multi_comment = True
@@ -64,54 +105,35 @@ class LineParser():
 				comments_to_add = char + "/"
 				skip = True
 			elif inside_multi_comment and char == "*" and file_content[index+1:index+2] == "/":
-				comments += char + "/"
+				lines[line_index]["comments"] += char + "/"
 				skip = True
 				inside_multi_comment = False
-				comments += "\n"
-			elif not inside_comment and not inside_multi_comment:
+			elif not inside_comment and not inside_multi_comment and char != "\n":
 				code_to_add = char
-			else:
+			elif char != "\n":
 				comments_to_add = char
 			
-			comments += comments_to_add
-			code += code_to_add
+			lines[line_index]["comments"] += comments_to_add
+			lines[line_index]["code"] += code_to_add
 			
 			comments_to_add = ""
 			code_to_add = ""
-		
-		comments = re.sub("^[\s]*|[\s]*$", "", comments, flags=re.MULTILINE)
-		comment_lines = self.parse_total_lines(comments)
-		comment_lines = self.differentiate_empty_nonempty_lines(comment_lines)["nonempty_lines"]
-		
-		code = re.sub("^[\s]*|[\s]*$", "", code, flags=re.MULTILINE)
-		code_lines = self.parse_total_lines(code)
-		code_lines = self.differentiate_empty_nonempty_lines(code_lines)["nonempty_lines"]
-		
-		return {
-			"comment_lines": comment_lines,
-			"code_lines": code_lines
-		}
+
+		line_objects = []
+		for index, line in enumerate(lines):
+			line_objects.append(Line(index+1, all_lines[index], line["code"].strip(), line["comments"].strip()))
+
+		return line_objects
 	
 	def parse(self, src):
-		total_lines = self.parse_total_lines(src)
-		sorted_lines = self.differentiate_empty_nonempty_lines(total_lines)
-		empty_lines = sorted_lines["empty_lines"]
-		comments_and_code = self.parse_comments_and_code_lines("\n".join(sorted_lines["nonempty_lines"]))
-		comment_lines = comments_and_code["comment_lines"]
-		code_lines = comments_and_code["code_lines"]
+		all_lines = self.parse_lines(src)
 
-		return LineData(code_lines, comment_lines, empty_lines, total_lines)
+		return LinesData(all_lines)
 
 
 if __name__ == "__main__":
+	
 	parser = LineParser()
-		
-	assert parser.is_empty_line("") == True, 11
-	assert parser.is_empty_line("     ") == True, 12
-	assert parser.is_empty_line("			   ") == True, 13
-	assert parser.is_empty_line("	  	") == True, 14
-	assert parser.is_empty_line("	};  	") == False, 15
-	assert parser.is_empty_line("};") == False, 16
 	
 	file_content = """/**
 	 * This is a test class
@@ -119,15 +141,15 @@ if __name__ == "__main__":
 	 */
 	my.package.Class = function() {
 		// This function does something
-		var a = 1;
-		
+		var a = 122;
+
 		/**
 		 * some field
 		 * @type {Boolean}
 		 */
 		this.someField = false; /* and some inline block comment */
 	};
-	
+
 	my.package.Class.prototype = {
 		/**
 		 * Return the current value of the field
@@ -138,11 +160,8 @@ if __name__ == "__main__":
 		}
 	};"""
 	
-	line_data = parser.parse(file_content)
+	lines_data = parser.parse(file_content)
 	
-	assert len(line_data.total_lines) == 24, "total number of lines is incorrect. Expected 24, found " + str(len(line_data.total_lines))
-	assert len(line_data.empty_lines) == 2, "number of empty lines is incorrect. Expected 2, found " + str(len(line_data.empty_lines))
-	assert len(line_data.code_lines) == 9, "number of lines of code is incorrect. Expected 9, found " + str(len(line_data.code_lines))
-	assert len(line_data.comment_lines) == 15, "number of lines of comments is incorrect. Expected 15, found " + str(len(line_data.comment_lines))
+	assert len(lines_data.all_lines) == 24, "total number of lines is incorrect. Expected 24, found " + str(len(line_data.total_lines))
 	
-	print "ALL TESTS OK"
+	print "ALL TESTS OK " + __file__

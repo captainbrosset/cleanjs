@@ -13,8 +13,8 @@ def output_messages(message_bag, file_data, to_file=None):
 		report_file = InMemoryFile()
 	
 	output_header(file_data.name, report_file)
-	output_general_messages(message_bag, file_data.lines.total_lines, report_file)
-	output_code_lines_messages(message_bag, file_data.lines.total_lines, report_file)
+	output_general_messages(message_bag, report_file)
+	output_code_lines_messages(message_bag, file_data.lines.all_lines, report_file)
 	output_footer(report_file)
 	
 	if to_file:
@@ -123,7 +123,7 @@ def output_header(file_name, file_writer):
 		<body>
 			<h1>""" + file_name + """</h1>""")
 
-def output_general_messages(message_bag, all_lines, file_writer):
+def output_general_messages(message_bag, file_writer):
 	file_writer.write("<ul class='general'>")
 	for message in message_bag.get_messages():
 		if not message.line:
@@ -133,17 +133,17 @@ def output_general_messages(message_bag, all_lines, file_writer):
 def output_code_lines_messages(message_bag, all_lines, file_writer):
 	file_writer.write("<ul class='lines'>")
 	
-	for index, line in enumerate(all_lines):
+	for line in all_lines:
 		file_writer.write("<li class='line'>")
-		file_writer.write("<span class='gutter'>" + str(index + 1) + "</span>")
+		file_writer.write("<span class='gutter'>" + str(line.line_number) + "</span>")
 		file_writer.write("<ul class='messages'>")
-		line_messages = message_bag.get_messages_on_line(index+1)
+		line_messages = message_bag.get_messages_on_line(line.line_number)
 		if len(line_messages) == 0:
 			file_writer.write("<li>&nbsp;</li>")
 		for line_message in line_messages:
 			file_writer.write("<li class='" + line_message.type + "'>" + line_message.content + "</li>")
 		file_writer.write("</ul>")
-		file_writer.write("<pre class='code'>" + html_escape(line) + "</pre>")
+		file_writer.write("<pre class='code'>" + html_escape(line.complete_line) + "</pre>")
 		file_writer.write("</li>")
 			
 	file_writer.write("</ul>")
@@ -162,3 +162,7 @@ html_escape_table = {
 def html_escape(text):
     """Produce entities within text."""
     return "".join(html_escape_table.get(c,c) for c in text)
+
+
+if __name__ == "__main__":
+	print "NO TESTS TO RUN " + __file__

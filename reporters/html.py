@@ -16,3 +16,7 @@ def output_messages(message_bag, file_data):
 	report += "</ul>"
 	
 	return report
+
+
+if __name__ == "__main__":
+	print "NO TESTS TO RUN " + __file__

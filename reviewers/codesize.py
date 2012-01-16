@@ -26,11 +26,10 @@ class Reviewer():
 		- length of variable names (warning when > """ + str(Reviewer.WARN_MAX_NAME_SIZE) + """ or < """ + str(Reviewer.WARN_MIN_NAME_SIZE) + """, error when > """ + str(Reviewer.ERROR_MAX_NAME_SIZE) + """ or < """ + str(Reviewer.ERROR_MIN_NAME_SIZE) + """)
 		- length of function names (same as above)"""
 
-	def review_line_length(self, file_content, message_bag):
-		lines = re.split("\n", file_content)
-		for index, line in enumerate(lines):
-			if len(line) > Reviewer.ERROR_MAX_LINE_LENGTH:
-				message_bag.add_error(self, "Line is more than " + str(Reviewer.ERROR_MAX_LINE_LENGTH) + " character long (" + str(len(line)) + "). This is hard to read.", index+1)
+	def review_line_length(self, lines, message_bag):
+		for line in lines:
+			if len(line.complete_line) > Reviewer.ERROR_MAX_LINE_LENGTH:
+				message_bag.add_error(self, "Line is more than " + str(Reviewer.ERROR_MAX_LINE_LENGTH) + " character long (" + str(len(line.complete_line)) + "). This is hard to read.", line.line_number)
 
 	def review_nb_of_arguments(self, functions, message_bag):
 		for function in functions:
@@ -39,24 +38,27 @@ class Reviewer():
 			elif len(function.signature) > Reviewer.WARN_MAX_ARGUMENT_NB:
 				message_bag.add_warning(self, "There are more than " + str(Reviewer.WARN_MAX_ARGUMENT_NB) + " arguments in function " + function.name + " (" + str(len(function.signature)) + ")! Why not wrapping them in a nice class?", function.line_nb)
 
-	def review_line_nb_in_file(self, file_content, message_bag):
+	def review_line_nb_in_file(self, lines, message_bag):
 		# FIXME: comment lines are NOT ignored, should be?!
-		lines = len(re.findall("^.*\S+.*$", file_content, flags=re.MULTILINE))
-		if lines > Reviewer.ERROR_MAX_FILE_LINE_NB:
-			message_bag.add_error(self, "There are more than " + str(Reviewer.ERROR_MAX_FILE_LINE_NB) + " lines in the file (" + str(lines) + ") ! Surely the class is doing more than 1 thing")
-		elif lines > Reviewer.WARN_MAX_FILE_LINE_NB:
-			message_bag.add_warning(self, "There are more than " + str(Reviewer.WARN_MAX_FILE_LINE_NB) + " lines in the file (" + str(lines) + ") ! If possible, please try to refactor")
+		nb = len(lines.all_lines)
+		if nb > Reviewer.ERROR_MAX_FILE_LINE_NB:
+			message_bag.add_error(self, "There are more than " + str(Reviewer.ERROR_MAX_FILE_LINE_NB) + " lines in the file (" + str(nb) + ") ! Surely the file is doing more than 1 thing")
+		elif nb > Reviewer.WARN_MAX_FILE_LINE_NB:
+			message_bag.add_warning(self, "There are more than " + str(Reviewer.WARN_MAX_FILE_LINE_NB) + " lines in the file (" + str(nb) + ") ! If possible, please try to refactor")
 
 	def review_line_nb_in_functions(self, file_functions, message_bag):
 		for function in file_functions:
 			# FIXME: comment lines are NOT ignored, should be?!
-			lines = len(re.findall("^.*\S+.*$", function.body, flags=re.MULTILINE))
-			if lines == 0:
+			# Should use the lines_data
+			
+			body_lines = function.body.split("\n")
+			nb = len(body_lines)
+			if nb == 0 or (nb == 1 and body_lines[0] == ""):
 				message_bag.add_warning(self, "Function " + function.name + " is empty. Is it really needed?", function.line_nb)
-			elif lines > Reviewer.ERROR_MAX_FUNCTION_LINE_NB:
-				message_bag.add_error(self, "There are more than " + str(Reviewer.ERROR_MAX_FUNCTION_LINE_NB) + " lines in function " + function.name + " (" + str(lines) + ")! Surely the function is doing more than 1 thing", function.line_nb)
-			elif lines > Reviewer.WARN_MAX_FUNCTION_LINE_NB:
-				message_bag.add_warning(self, "There are more than " + str(Reviewer.WARN_MAX_FUNCTION_LINE_NB) + " lines in function " + function.name + " (" + str(lines) + ")! If possible, please try to refactor it", function.line_nb)
+			elif nb > Reviewer.ERROR_MAX_FUNCTION_LINE_NB:
+				message_bag.add_error(self, "There are more than " + str(Reviewer.ERROR_MAX_FUNCTION_LINE_NB) + " lines in function " + function.name + " (" + str(nb) + ")! Surely the function is doing more than 1 thing", function.line_nb)
+			elif nb > Reviewer.WARN_MAX_FUNCTION_LINE_NB:
+				message_bag.add_warning(self, "There are more than " + str(Reviewer.WARN_MAX_FUNCTION_LINE_NB) + " lines in function " + function.name + " (" + str(nb) + ")! If possible, please try to refactor it", function.line_nb)
 
 	def review_variable_name_size(self, variables, message_bag):
 		# FIXME: should be merged with review_function_name_size and should find line numbers
@@ -87,9 +89,13 @@ class Reviewer():
 				message_bag.add_warning(self, "The name of function " + function.name + " is less than " + str(Reviewer.WARN_MIN_NAME_SIZE) + " characters (" + str(name_length) + "). Think about making names self explanatory", function.line_nb)
 
 	def review(self, file_data, message_bag):
-		self.review_line_nb_in_file(file_data.content, message_bag)
+		self.review_line_nb_in_file(file_data.lines, message_bag)
 		self.review_line_nb_in_functions(file_data.functions, message_bag)
 		self.review_function_name_size(file_data.functions, message_bag)
 		self.review_variable_name_size(file_data.variables, message_bag)
 		self.review_nb_of_arguments(file_data.functions, message_bag)
-		self.review_line_length(file_data.content, message_bag)
+		self.review_line_length(file_data.lines.all_lines, message_bag)
+
+
+if __name__ == "__main__":
+	print "NO TESTS TO RUN " + __file__

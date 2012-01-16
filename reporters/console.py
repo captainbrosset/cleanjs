@@ -67,3 +67,7 @@ def _get_report_post_border(length):
 	str += "".join(["-" for i in range(length+1)])
 	str += "+"
 	return str
+
+
+if __name__ == "__main__":
+	print "NO TESTS TO RUN " + __file__

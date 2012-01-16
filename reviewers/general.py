@@ -37,16 +37,17 @@ class Reviewer():
 			message_bag.add_info(self, "FIXME " + match.match_object.group(1), match.line_number)
 
 	def review(self, file_data, message_bag):
-		message_bag.add_info(self, "File is " + str(len(file_data.lines.total_lines)) + " lines long")
-		message_bag.add_info(self, str(len(file_data.lines.comment_lines)) + " lines of comments")
-		message_bag.add_info(self, str(len(file_data.lines.code_lines)) + " lines of code")
-		message_bag.add_info(self, str(len(file_data.lines.empty_lines)) + " empty lines")
+		message_bag.add_info(self, "File is " + str(len(file_data.lines.all_lines)) + " lines long")
+		message_bag.add_info(self, str(len(file_data.lines.get_comments_lines())) + " lines of comments")
+		message_bag.add_info(self, str(len(file_data.lines.get_code_lines())) + " lines of code")
+		message_bag.add_info(self, str(len(file_data.lines.get_empty_lines())) + " empty lines")
 		message_bag.add_info(self, "There are " + str(len(file_data.functions)) + " functions in the file")
 		self.review_min_max_function_length(file_data.functions, message_bag)
 		self.review_todos_and_fixmes(file_data, message_bag)
 
 
 if __name__ == "__main__":
+	
 	file_content = """
 	/**
 	 * This is a test class
@@ -99,4 +100,4 @@ if __name__ == "__main__":
 	reviewer.review_min_max_function_length(file_data.functions, message_bag)
 	assert message_bag.messages[0].content == "Longest function is 8 lines long, and shortest one is 3 (average is 5)", 4
 	
-	print "ALL TESTS OK"
+	print "ALL TESTS OK " + __file__

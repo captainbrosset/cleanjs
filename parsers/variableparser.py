@@ -5,6 +5,7 @@ class VariableData:
 	Instances of this class have the following attributes:
 	- name: the name of the variable
 	- line_nb: the line number in the file where the variable occurs"""
+	
 	def __init__(self, name, line_nb):
 		self.name = name
 		self.line_nb = line_nb
@@ -12,7 +13,7 @@ class VariableData:
 class VariableParser():
 	
 	VARIABLES_PATTERN = "var[\s]+([a-zA-Z0-9_$]+)"
-	
+		
 	def parse(self, src):
 		matches = re.finditer(VariableParser.VARIABLES_PATTERN, src)
 		variables = []
@@ -62,4 +63,4 @@ if __name__ == "__main__":
 	assert variables[2].name == "i", 4
 	assert variables[3].name == "something", 5
 	
-	print "ALL TESTS OK"
+	print "ALL TESTS OK " + __file__

@@ -35,3 +35,7 @@ class Reviewer():
 	def review(self, file_data, message_bag):
 		self.review_unused_variables_in_functions(file_data.functions, message_bag)
 		self.review_unused_arguments_in_functions(file_data.functions, message_bag)
+
+
+if __name__ == "__main__":
+	print "NO TESTS TO RUN " + __file__

@@ -79,4 +79,4 @@ if __name__ == "__main__":
 	assert len(classes[0].prototype) == 2, 4
 	assert len(classes[1].prototype) == 2, 5
 
-	print "ALL TESTS OK"
+	print "ALL TESTS OK " + __file__

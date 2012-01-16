@@ -2,6 +2,10 @@ import re
 
 class Reviewer():
 	MAX_CODE_COMMENT_RATIO_IN_FUNCTION = 0.3
+	MAX_NUMBER_OF_SUBSEQUENT_COMMENTS_LINE = 2
+	
+	SEPARATOR_CHARACTERS = ["-", "\|", "!", "#", "\.", "\*", "=", "/", "~", "+", "\\"]
+	MAX_NUMBER_OF_SEPARATOR_CHARACTERS_IN_COMMENTS = 3
 
 	def get_name(self):
 		return "comments"
@@ -14,18 +18,28 @@ class Reviewer():
 		- if there are comments just after an expression or statement block
 		- if there are visual separator comment lines like // ****** in the code or similar"""
 
-	def review_multiple_comment_lines(self, file_data, message_bag):
-		matches = file_data.find_line_numbers("^[\s]*//.*\n^[\s]*//.*\n^[\s]*//.*", flags=re.MULTILINE)
-		for match in matches:
-			message_bag.add_warning(self, "It seems you have at least one block of // comments spanning over several lines. Are you trying to explain something complex?", match.line_number)
+	def review_multiple_comment_lines(self, lines, message_bag):
+		comments_lines_passed = 0
+		line_nb_of_first_comment = -1
+		for line in lines:
+			if line.is_only_comments():
+				if line_nb_of_first_comment == -1:
+					line_nb_of_first_comment = line.line_number
+				comments_lines_passed += 1
+			else:
+				comments_lines_passed = 0
+				line_nb_of_first_comment = -1
+			
+			if comments_lines_passed > Reviewer.MAX_NUMBER_OF_SUBSEQUENT_COMMENTS_LINE:
+				message_bag.add_warning(self, "You have more than " + str(Reviewer.MAX_NUMBER_OF_SUBSEQUENT_COMMENTS_LINE) + " subsequent lines of comments in a row. Are you trying to explain something complex?", line_nb_of_first_comment)
 	
 	def review_comments_ratio_in_functions(self, functions, message_bag):
 		for function in functions:
 			# FIXME: this is good because it uses the line_data already parsed for the function
 			# FIXME: but will be problematic in case of constructor functions that have jsdoc'd fields
 			# FIXME: because a lot of /** */ comment blocks will be there and should not be taken into account
-			comment_lines = function.line_data.comment_lines
-			total_lines = function.line_data.total_lines
+			comment_lines = function.lines.get_comments_lines()
+			total_lines = function.lines.all_lines
 			
 			if len(total_lines) == len(comment_lines):
 				message_bag.add_warning(self, "There are only comments in function " + function.name + " (or maybe the function is empty). Is it really needed?", function.line_nb)
@@ -35,22 +49,53 @@ class Reviewer():
 					message_bag.add_error(self, "There are more than " + str(int(Reviewer.MAX_CODE_COMMENT_RATIO_IN_FUNCTION*100)) + "% of comments in function " + function.name + " (" + str(ratio*100) + "%). Make the code simpler.", function.line_nb);
 	
 	def review_comments_after_statements(self, lines, message_bag):
-		for line_index, content in enumerate(lines):
-			comments = re.findall(";[\s]*//|\}[\s]*//", content)
-			if comments:
-				message_bag.add_warning(self, "Line has comments after a statement or assignment. This is usually a sign that you need to explain a complex piece of code.", line_index+1)
-
-	def review_separator_comments(self, file_data, message_bag):
-		# ----- or ////// or ******* or ######
-		matches = file_data.find_line_numbers("---|###|\*\*\*|////|====|\.\.\.\.")
-		line_already_reported = []
-		for match in matches:
-			if match.line_number not in line_already_reported:
-				line_already_reported.append(match.line_number)
-				message_bag.add_warning(self, "You are using some kind of separator characters (####, ----, ////, ****), probably in an attempt to separate some complex code ... why not making it simpler in the first place?", match.line_number)
+		for line in lines:
+			if line.is_both_code_and_comments():
+				message_bag.add_warning(self, "Line has both code and comments. This is usually a sign that you need to explain a complex piece of code.", line.line_number)
+		
+	def review_separator_comments(self, lines, message_bag):
+		maxn = "{" + str(Reviewer.MAX_NUMBER_OF_SEPARATOR_CHARACTERS_IN_COMMENTS) + "}"
+		pattern = "-" + maxn + "|\|" + maxn + "|!" + maxn + "|#" + maxn + "|\." + maxn + "|\*" + maxn + "|=" + maxn + "|/" + maxn + "|~" + maxn + "|\+" + maxn
+		
+		for line in lines:
+			if re.search(pattern, line.comments):
+				message_bag.add_warning(self, "You are using some kind of separator characters in your comment, probably in an attempt to separate some complex code ... why not making it simpler in the first place?", line.line_number)
 			
 	def review(self, file_data, message_bag):
-		self.review_multiple_comment_lines(file_data, message_bag)
+		self.review_multiple_comment_lines(file_data.lines.all_lines, message_bag)
 		self.review_comments_ratio_in_functions(file_data.functions, message_bag)
-		self.review_comments_after_statements(file_data.lines.total_lines, message_bag)
-		self.review_separator_comments(file_data, message_bag)
+		self.review_comments_after_statements(file_data.lines.all_lines, message_bag)
+		self.review_separator_comments(file_data.lines.all_lines, message_bag)
+
+
+if __name__ == "__main__":
+
+	class MockBag:
+		def __init__(self):
+			self.warnings = []
+		
+		def add_warning(self, reviewer, message, line_number):
+			self.warnings.append(line_number)
+	
+	class MockLine:
+		def __init__(self, comments):
+			self.comments = comments
+			self.line_number = 0
+		
+	reviewer = Reviewer()
+	bag = MockBag()	
+	line1 = MockLine("this is something ..")
+	line2 = MockLine("this is something ----")
+	line3 = MockLine("this is something --#-~-")
+	line4 = MockLine("// \\\\ ...")
+	lines = []
+	lines.append(line1)
+	lines.append(line2)
+	lines.append(line3)
+	lines.append(line4)
+	
+	reviewer.review_separator_comments(lines, bag)
+	
+	assert len(bag.warnings) == 2, "Wrong number of separator comments found"
+	
+	print "ALL TESTS OK " + __file__
