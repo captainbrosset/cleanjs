@@ -30,10 +30,34 @@ def get_rate(file_data, message_bag):
 			nb_errors += 1
 
 	# errors are 3 times more important than warnings
-	global_rate = int(float(nb_errors * 3 + nb_warnings) / 4)
-	if global_rate > 26:
-		global_rate = 26
+	total_nb_of_msgs = int(round(float(nb_errors * 3 + nb_warnings) / 3))
+	if total_nb_of_msgs > 6:
+		total_nb_of_msgs = 6
 
-	rating = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"][int(global_rate) - 1]
+	rating = ["A","B","C","D","E","F","really really bad"][total_nb_of_msgs]
 
 	return rating
+
+
+if __name__ == "__main__":
+
+	class MockMessage(object):
+		def __init__(self, type):
+			self.type = type
+	
+	class MockBag(object):
+		def __init__(self, messages):
+			self.messages = messages
+		def get_messages(self):
+			return self.messages
+	
+	msg_warning = MockMessage("warning")
+	msg_error = MockMessage("error")
+	
+	assert get_rate(None, MockBag([msg_warning,msg_warning,msg_warning,msg_warning,msg_warning])) == "C"
+	assert get_rate(None, MockBag([msg_error,msg_error,msg_error,msg_error])) == "E"
+	assert get_rate(None, MockBag([])) == "A"
+	assert get_rate(None, MockBag([msg_error, msg_error, msg_warning])) == "C"
+	assert get_rate(None, MockBag([msg_error, msg_error, msg_error, msg_error, msg_error, msg_error])) == "really really bad"
+
+	print "ALL TESTS OK"
