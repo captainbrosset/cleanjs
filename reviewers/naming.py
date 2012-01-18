@@ -55,10 +55,16 @@ class Reviewer():
 
 		return words
 	
-	def review_all_names(self, lines, message_bag):
-		for line in lines:
-			words_already_found = []
-			words = self.get_all_words_from_line(line.code)
+	def review_all_names(self, vars, functions, message_bag):
+		# Reviews function names, argument names and variable names only in fact
+		# TODO: missing object properties checking too (this.xxx or prototype.something)
+		all_objects = vars + functions
+
+		for object in all_objects:
+			words = self.get_all_words_from_line(object.name)
+			if getattr(object, "signature", None):
+				for arg in object.signature:
+					words += self.get_all_words_from_line(arg)
 			
 			for word in words:
 				word_exists = False
@@ -66,14 +72,13 @@ class Reviewer():
 					word_exists = wordmeaning.check_word_meaning_with_dict(word)
 				else:
 					word_exists = wordmeaning.check_word_meaning_with_letter_ratio(word)
-				if word not in words_already_found and not word_exists:
-					words_already_found.append(word)
-					message_bag.add_error(self, "Word " + word + " doesn't mean anything", line.line_number)
+				if not word_exists:
+					message_bag.add_error(self, "Name " + word + " doesn't mean anything", object.line_nb)
 	
 	def review(self, file_data, message_bag):
 		self.review_gethasis_function_return(file_data.functions, message_bag)
 		self.review_set_function_arg(file_data.functions, message_bag)
-		self.review_all_names(file_data.lines.all_lines, message_bag)
+		self.review_all_names(file_data.variables, file_data.functions, message_bag)
 
 
 if __name__ == "__main__":
@@ -83,7 +88,6 @@ if __name__ == "__main__":
 	assert reviewer.get_words_in_camelcase_str("simpletest") == ["simpletest"], 2
 	assert reviewer.get_words_in_camelcase_str("simpleTest") == ["simple", "test"], 3
 	assert reviewer.get_words_in_camelcase_str("SimpleTest") == ["simple", "test"], 4
-	
-	assert reviewer.get_all_words_from_line("// Project:   SproutCore - JavaScript Application Framework") == ["project","sprout","core","java","script","application","framework"], 5
-	
+	assert reviewer.get_words_in_camelcase_str("asyncXHR") == ["async", "xhr"], 4
+		
 	print "ALL TESTS OK " + __file__
