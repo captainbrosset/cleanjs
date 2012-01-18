@@ -18,6 +18,10 @@ The tool is focused on code quality. The following things (and others) are check
 USING CLEANJS
 =============
 
+The first way to use cleanjs is online: http://cleanjscode.appspot.com/
+
+If you are interested in running it locally on your computer and integrate it into some build system, then read on:
+
 cleanjs is written in python so, first, make sure you have [python 2.7 installed and running](http://python.org/getit/).
 
 Get cleanjs by downloading [one of the tags](https://github.com/captainbrosset/cleanjs/tags).
