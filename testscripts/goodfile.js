@@ -7,6 +7,7 @@ utils.Dom.prototype = {
 		return document.getElementById(this._id);
 	},
 	setInnerHTML : function (content) {
+		
 		this._id.innerHTML = content;
 	}
 };

@@ -24,11 +24,13 @@ Get cleanjs by downloading [one of the tags](https://github.com/captainbrosset/c
 
 Once you've retrieved the code, you can run the tool like this:
 
-    python review.py path/to/my_source_file.js path/to/output/file.html
+    python cleanjs_cmdline.py path/to/my_source_file.js path/to/output/file.html
 
 This will review the file path/to/my_source_file.js and create an HTML report file.
 
 You can check the testscript/reports/*.html files to see examples of reports
+
+Optionally, if you are using a text editor like [Sublime Text](http://sublimetext.com) or any other editor able to run build commands on files, you can use the `cleanjs_sublime.py` entry point instead.
 
 GOING FURTHER
 =============

@@ -1,4 +1,6 @@
-def output_messages(message_bag, file_data):
+def output_messages(result, file_data):
+	message_bag = result["message_bag"]
+	
 	print "========================"
 	print "File: " + file_data.name
 	print "========================"

@@ -1,7 +1,9 @@
-def output_messages(message_bag, file_data):
+def output_messages(result, file_data):
 	"""
 	Output messages in the console, so in the simple text format, with some formatting
 	"""
+	message_bag = result["message_bag"]
+	
 	messages = message_bag.get_messages()
 	report = "\n\n"
 	

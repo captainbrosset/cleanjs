@@ -4,7 +4,10 @@ class InMemoryFile():
 	def write(self, str):
 		self.content += str
 
-def output_messages(message_bag, file_data, to_file=None):
+def output_messages(result, file_data, to_file=None):
+	message_bag = result["message_bag"]
+	rating = result["rating"]
+
 	report_file = None
 	
 	if to_file:
@@ -12,7 +15,7 @@ def output_messages(message_bag, file_data, to_file=None):
 	else:
 		report_file = InMemoryFile()
 	
-	output_header(file_data.name, report_file)
+	output_header(file_data.name, rating, report_file)
 	output_general_messages(message_bag, report_file)
 	output_code_lines_messages(message_bag, file_data.lines.all_lines, report_file)
 	output_footer(report_file)
@@ -32,7 +35,7 @@ def get_friendly_file_name(complete_name):
 	
 	return src_file_name
 
-def output_header(file_name, file_writer):
+def output_header(file_name, rating, file_writer):
 	file_writer.write("""<!DOCTYPE html>
 	<html lang="en">
 		<head>
@@ -114,7 +117,7 @@ def output_header(file_name, file_writer):
 			</style>
 		</head>
 		<body>
-			<h1>""" + file_name + """</h1>""")
+			<h1>""" + file_name + """ | grade """ + rating + """</h1>""")
 
 def output_general_messages(message_bag, file_writer):
 	file_writer.write("<ul class='general'>")
