@@ -8,7 +8,10 @@ class Line:
 		self.line_number = line_number
 		self.code = code
 		self.comments = comments
-		
+	
+	def __repr__(self):
+		return "  - line " + str(self.line_number) + " | " + self.complete_line
+
 	def is_empty(self):
 		return self.code == "" and self.comments == ""
 	
@@ -26,14 +29,6 @@ class Line:
 	
 	def is_both_code_and_comments(self):
 		return self.code != "" and self.comments != ""
-		
-	def __repr__(self):
-		string = "Line " + str(self.line_number) + " "
-		if self.is_empty():
-			string += "is empty"
-		else:
-			string += "code: [" + self.code + "] comments: [" + self.comments + "]"
-		return 
 
 class LinesData:
 	"""Data structure holding information about a piece of source code.
@@ -43,6 +38,9 @@ class LinesData:
 	def __init__(self, all_lines):
 		self.all_lines = all_lines
 	
+	def __repr__(self):
+		return str(len(self.all_lines)) + " lines of code"
+
 	def get_code_lines(self):
 		lines = []
 		for line in self.all_lines:
@@ -67,7 +65,7 @@ class LinesData:
 class LineParser():
 	"""Parse lines of code, lines of comments and empty lines from a source code"""
 		
-	def parse_lines(self, file_content):
+	def parse_lines(self, file_content, start_line_number=0):
 		# FIXME: fails on the following case (consider the // as a comment start even inside a regexp):
 		# pattern = /[0-9]+\//gi;
 
@@ -136,12 +134,12 @@ class LineParser():
 
 		line_objects = []
 		for index, line in enumerate(lines):
-			line_objects.append(Line(index+1, all_lines[index], line["code"].strip(), line["comments"].strip()))
+			line_objects.append(Line(index+1+start_line_number, all_lines[index], line["code"].strip(), line["comments"].strip()))
 
 		return line_objects
 	
-	def parse(self, src):
-		all_lines = self.parse_lines(src)
+	def parse(self, src, start_line_number=0):
+		all_lines = self.parse_lines(src, start_line_number)
 
 		return LinesData(all_lines)
 

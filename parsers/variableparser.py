@@ -9,16 +9,19 @@ class VariableData:
 	def __init__(self, name, line_nb):
 		self.name = name
 		self.line_nb = line_nb
+	
+	def __repr__(self):
+		return "Variable " + self.name + "(line " + str(self.line_nb) + ")"
 
 class VariableParser():
 	
 	VARIABLES_PATTERN = "var[\s]+([a-zA-Z0-9_$]+)"
 		
-	def parse(self, src):
+	def parse(self, src, start_line_number=0):
 		matches = re.finditer(VariableParser.VARIABLES_PATTERN, src)
 		variables = []
 		for match in matches:
-			variable = VariableData(match.group(1), src[0:match.start()].count("\n") + 1)
+			variable = VariableData(match.group(1), src[0:match.start()].count("\n") + 1 + start_line_number)
 			variables.append(variable)
 		return variables
 

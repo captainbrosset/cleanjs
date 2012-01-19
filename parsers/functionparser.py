@@ -1,5 +1,6 @@
 import re
 
+from variableparser import VariableParser
 from lineparser import LineParser
 
 class FunctionData():
@@ -8,13 +9,15 @@ class FunctionData():
 	- name: the name of the function
 	- signature: an array of argument names
 	- body: the text of the body of the function
-	- lines: an instance of utils.parsers.lineparser.LineParser.LineData"""
+	- variables: all variables declared in the function. Type parsers.variableparser.VariableData
+	- lines: an instance of parsers.lineparser.LineParser.LineData"""
 	
-	def __init__(self, name, signature, body, lines, line_nb):
+	def __init__(self, name, signature, body, lines, variables, line_nb):
 		self.name = name
 		self.signature = signature
 		self.body = body
 		self.lines = lines
+		self.variables = variables
 		self.line_nb = line_nb
 	
 	def __repr__(self):
@@ -67,6 +70,7 @@ class FunctionParser:
 	def parse(self, src):
 		functions = []
 		body_line_parser = LineParser()
+		body_variable_parser = VariableParser()
 		
 		for pattern in FunctionParser.FUNCTIONS_PATTERNS:
 			functions_bodies = self._parse_bodies(src, pattern)
@@ -76,8 +80,9 @@ class FunctionParser:
 				signature = self._parse_signature(function_match.group(2))
 				body = functions_bodies[index]
 				line_nb = src[0:function_match.start()].count("\n") + 1
-				line_data = body_line_parser.parse(body)
-				function = FunctionData(name, signature, body, line_data, line_nb)
+				line_data = body_line_parser.parse(body, line_nb)
+				variable_data = body_variable_parser.parse(body, line_nb)
+				function = FunctionData(name, signature, body, line_data, variable_data, line_nb)
 				functions.append(function)
 
 		return functions
@@ -135,6 +140,8 @@ if __name__ == "__main__":
 			return false;
 		}
 
+		var i = 0;
+
 		return a;
 	};"""
 
@@ -142,8 +149,14 @@ if __name__ == "__main__":
 
 	assert len(functions) == 2, 6
 	assert functions[0].name == "test", 7
-	assert len(functions[0].lines.all_lines) == 11, 8
+	assert len(functions[0].lines.all_lines) == 13, 8
 	assert functions[1].name == "a", 9
 	assert len(functions[1].lines.all_lines) == 3, 10
+	assert len(functions[1].variables) == 1, 11
+	assert functions[1].variables[0].line_nb == 4, 12
+	assert functions[0].variables[2].name == "i", 13
+	assert functions[0].variables[2].line_nb == 12, 14
+
+	assert functions[1].lines.all_lines[1].line_number == 5, 15
 
 	print "ALL TESTS OK " + __file__
