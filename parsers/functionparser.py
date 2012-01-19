@@ -120,9 +120,9 @@ if __name__ == "__main__":
 
 	assert len(functions) == 2, 1
 	assert functions[0].name == "Class", 2
-	assert len(functions[0].line_data.all_lines) == 9, 3
+	assert len(functions[0].lines.all_lines) == 9, 3
 	assert functions[1].name == "getField", 4
-	assert len(functions[1].line_data.all_lines) == 7, 5
+	assert len(functions[1].lines.all_lines) == 7, 5
 
 	content_with_inner_function = """
 	test = function() {
@@ -142,8 +142,8 @@ if __name__ == "__main__":
 
 	assert len(functions) == 2, 6
 	assert functions[0].name == "test", 7
-	assert len(functions[0].line_data.all_lines) == 11, 8
+	assert len(functions[0].lines.all_lines) == 11, 8
 	assert functions[1].name == "a", 9
-	assert len(functions[1].line_data.all_lines) == 3, 10
+	assert len(functions[1].lines.all_lines) == 3, 10
 
 	print "ALL TESTS OK " + __file__

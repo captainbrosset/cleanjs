@@ -3,7 +3,7 @@ This is the command line tool for cleanjs.
 Usage example:
 python cmdline.py /my/source/file.js /path/to/myReport.html
 
-Note that it's simple to integreate cleanjs in any other type of
+Note that it's simple to integrate cleanjs in any other type of
 python 2.7 enabled system. See the source code below to understand
 how easy it is to review a file using the fileparser, reviewer and
 reporter

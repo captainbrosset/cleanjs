@@ -83,9 +83,9 @@ if __name__ == "__main__":
 	sys.path.append("../")
 	
 	# Creating the reviewer instance, giving it the parsed file
-	import fileparser
+	from parsers import fileparser
 	file_data = fileparser.get_file_data_from_content("test_file", file_content)
-	import messagebag
+	from reviewers import messagebag
 	message_bag = messagebag.MessageBag()
 	reviewer = Reviewer()
 	
