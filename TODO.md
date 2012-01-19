@@ -1,6 +1,7 @@
 Missing reviewers:
 ==================
 
+- syntax reviewer (based on ast)
 - codesize
 	- Length of this. variables
 	- Line length: 80 warning, 120 error
