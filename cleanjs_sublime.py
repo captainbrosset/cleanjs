@@ -3,10 +3,10 @@ This is the sublime text integration of cleanjs.
 """
 
 import sys
-import fileparser
+from parsers import fileparser
 file_data = fileparser.get_file_data_from_file(sys.argv[1])
 
-import reviewer
+from reviewers import reviewer
 result = reviewer.review(file_data)
 
 for msg in result["message_bag"].get_messages():

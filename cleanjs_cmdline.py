@@ -15,11 +15,11 @@ file_name = sys.argv[1]
 report_name = sys.argv[2]
 
 # Gather data about the file to be reviewed
-import fileparser
+from parsers import fileparser
 file_data = fileparser.get_file_data_from_file(file_name)
 
 # Review the file
-import reviewer
+from reviewers import reviewer
 result = reviewer.review(file_data)
 
 # Displaying the messages to an output

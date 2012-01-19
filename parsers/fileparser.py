@@ -1,8 +1,8 @@
 import re
 
-from parsers.lineparser import LineParser
-from parsers.functionparser import FunctionParser
-from parsers.variableparser import VariableParser
+from lineparser import LineParser
+from functionparser import FunctionParser
+from variableparser import VariableParser
 
 def get_file_data_from_content(src_file_name, src_file_content):
 	"""Use this to gather data for file, given its content"""

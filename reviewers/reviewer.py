@@ -1,4 +1,4 @@
-from reviewers import codesize, comments, complexity, formatting, naming, unused, general
+import codesize, comments, complexity, formatting, naming, unused, general
 from messagebag import MessageBag
 
 def review(file_data):
