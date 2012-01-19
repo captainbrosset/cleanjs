@@ -1,9 +1,10 @@
-import codesize, comments, complexity, formatting, naming, unused, general
+import syntax, codesize, comments, complexity, formatting, naming, unused, general
 from messagebag import MessageBag
 
 def review(file_data):
 	message_bag = MessageBag()
 
+	syntax.Reviewer().review(file_data, message_bag)
 	general.Reviewer().review(file_data, message_bag)
 	codesize.Reviewer().review(file_data, message_bag)
 	comments.Reviewer().review(file_data, message_bag)
