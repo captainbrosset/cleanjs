@@ -68,6 +68,9 @@ class LineParser():
 	"""Parse lines of code, lines of comments and empty lines from a source code"""
 		
 	def parse_lines(self, file_content):
+		# FIXME: fails on the following case (consider the // as a comment start even inside a regexp):
+		# pattern = /[0-9]+\//gi;
+
 		all_lines = file_content.split("\n")
 		lines = [{
 			"code": "",
@@ -76,6 +79,8 @@ class LineParser():
 		line_index = 0;
 		inside_multi_comment = False
 		inside_comment = False
+		inside_single_quoted_string = False
+		inside_double_quoted_string = False
 		skip = False
 		code_to_add = ""
 		comments_to_add = ""
@@ -96,11 +101,21 @@ class LineParser():
 				if inside_comment:
 					inside_comment = False
 			
-			if char == "/" and not inside_comment and file_content[index+1:index+2] == "*":
+			if char == "'" and not inside_comment and not inside_single_quoted_string:
+				inside_single_quoted_string = True
+			elif char == "'" and not inside_comment and inside_single_quoted_string:
+				inside_single_quoted_string = False
+			
+			if char == "\"" and not inside_comment and not inside_double_quoted_string:
+				inside_double_quoted_string = True
+			elif char == "\"" and not inside_comment and inside_double_quoted_string:
+				inside_double_quoted_string = False
+
+			if char == "/" and not inside_comment and file_content[index+1:index+2] == "*" and not inside_single_quoted_string and not inside_double_quoted_string:
 				inside_multi_comment = True
 				comments_to_add = char + "*"
 				skip = True
-			elif char == "/" and not inside_comment and file_content[index+1:index+2] == "/":
+			elif char == "/" and not inside_comment and file_content[index+1:index+2] == "/" and not inside_single_quoted_string and not inside_double_quoted_string:
 				inside_comment = True
 				comments_to_add = char + "/"
 				skip = True
@@ -162,6 +177,24 @@ if __name__ == "__main__":
 	
 	lines_data = parser.parse(file_content)
 	
-	assert len(lines_data.all_lines) == 24, "total number of lines is incorrect. Expected 24, found " + str(len(line_data.total_lines))
-	
+	assert len(lines_data.all_lines) == 24, "total number of lines is incorrect. Expected 24, found " + str(len(lines_data.all_lines))
+	assert len(lines_data.get_code_lines()) == 9, "total number of code lines is incorrect. Expected 9, found " + str(len(lines_data.get_code_lines()))
+	assert len(lines_data.get_comments_lines()) == 15, "total number of comments lines is incorrect. Expected 15, found " + str(len(lines_data.get_comments_lines()))
+	assert lines_data.get_code_lines()[4].code == "my.package.Class.prototype = {", "incorrect code line content extracted"
+	assert lines_data.get_code_lines()[6].code == "return this.someField;", "incorrect code line content extracted"
+
+	tricky_file_content = """var a = 1;
+	a ++;
+	// some function
+	function some(yes) {
+		var pattern = "http://a.url";
+	}
+	/* something tricky? */
+	anotherthing = /[a-z]*\//g;"""
+
+	lines_data = parser.parse(tricky_file_content)
+
+	assert len(lines_data.all_lines) == 8, "total number of lines is incorrect. Expected 8, found " + str(len(lines_data.all_lines))
+	assert len(lines_data.get_comments_lines()) == 2, "total number of comments lines is incorrect. Expected 2, found " + str(len(lines_data.get_comments_lines()))
+
 	print "ALL TESTS OK " + __file__

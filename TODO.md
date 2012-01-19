@@ -1,10 +1,8 @@
 Missing reviewers:
 ==================
 
-- syntax reviewer (based on ast)
 - codesize
 	- Length of this. variables
-	- Line length: 80 warning, 120 error
 	- length of variable checker is fine, except when it checks for one or two letter words that are in fact in the dictionary ... 
 - jsdoc
 	- Private and protected have corresponding jsdoc, and opposite as well
