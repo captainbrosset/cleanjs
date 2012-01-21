@@ -22,7 +22,7 @@ The first way to use cleanjs is online: http://cleanjscode.appspot.com/
 
 If you are interested in running it locally on your computer and integrate it into some build system, then read on:
 
-cleanjs is written in python so, first, make sure you have [python 2.7 installed and running](http://python.org/getit/).
+cleanjs is written in python so, first, make sure you have [python 2.7 installed and running](http://python.org/getit/) (seems to work with 2.6 but mostly untested).
 
 Get cleanjs by downloading [one of the tags](https://github.com/captainbrosset/cleanjs/tags).
 
@@ -35,6 +35,17 @@ This will review the file path/to/my_source_file.js and create an HTML report fi
 You can check the testscript/reports/*.html files to see examples of reports
 
 Optionally, if you are using a text editor like [Sublime Text](http://sublimetext.com) or any other editor able to run build commands on files, you can use the `cleanjs_sublime.py` entry point instead.
+
+USING IN SUBLIME TEXT 2
+=======================
+
+cleanjs can also be integrated into Sublime Text 2 as a plugin.
+
+If you have [Sublime Text 2](http://www.sublimetext.com/2) with [Package Control](http://wbond.net/sublime_packages/package_control), just launch package control, select "Add Repository", enter https://github.com/captainbrosset/cleanjs and then launch "install package" and select cleanjs from the list.
+
+The default key biding is ctrl+shift+c and for now only outputs messages to a panel and highlights the corresponding lines in the text.
+
+A tooltip/line gutter API is terribly missing in Sublime Text 2 at the moment, [vote for it here](http://sublimetext.userecho.com/topic/54838-/).
 
 GOING FURTHER
 =============
