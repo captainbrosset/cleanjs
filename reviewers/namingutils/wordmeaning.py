@@ -11,7 +11,6 @@ def get_local_dict_filename():
 	for root, subFolders, files in os.walk(os.path.abspath(".")):
 		for file in files:
 			if file.find("localdict.txt") != -1:
-				print os.path.abspath(os.path.join(root, file))
 				return os.path.abspath(os.path.join(root, file))
 
 LOCAL_DICTIONARY_FILE_NAME = get_local_dict_filename()

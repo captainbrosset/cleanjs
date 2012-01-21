@@ -43,7 +43,7 @@ cleanjs can also be integrated into Sublime Text 2 as a plugin.
 
 If you have [Sublime Text 2](http://www.sublimetext.com/2) with [Package Control](http://wbond.net/sublime_packages/package_control), just launch package control, select "Add Repository", enter https://github.com/captainbrosset/cleanjs and then launch "install package" and select cleanjs from the list.
 
-The default key biding is ctrl+shift+c and for now only outputs messages to a panel and highlights the corresponding lines in the text.
+The default key biding is `ctrl+shift+c` and for now only outputs messages to a panel and highlights the corresponding lines in the text.
 
 A tooltip/line gutter API is terribly missing in Sublime Text 2 at the moment, [vote for it here](http://sublimetext.userecho.com/topic/54838-/).
 
