@@ -50,18 +50,18 @@ A tooltip/line gutter API is terribly missing in Sublime Text 2 at the moment, [
 GOING FURTHER
 =============
 
-Integrating cleanjs into an existing python program is fairly easy. Open cleanjs_cmdline.py to see how a file is parsed, how reviewers are called and how the output is constructed. You'll see it's easy to create your own reviewers and reporters.
+Integrating cleanjs into an existing python program is fairly easy. Open `cleanjs_cmdline.py` to see how a file is parsed, how reviewers are called and how the output is constructed. You'll see it's easy to create your own reviewers and reporters.
 
 CONTRIBUTING
 ============
 
 The easiest and most interesting way to contribute is to create more reviewers.
 
-Check the /reviewers/ folder to see how they are made.
+Check the `/reviewers/` folder to see how they are made.
 
-Each review must extend the BaseReviewer class and implement 1 method: review(self, file_data, message_bag)
+Each reviewer must define a `Reviewer` class and implement a method: `review(self, file_data, message_bag)`
 
-- file_data is of type fileparser.FileData
-- message_bag is of type messagebag.MessageBag
+- file_data is of type `parsers.fileparser.FileData`
+- message_bag is of type `reviewers.messagebag.MessageBag`
 
-Check the TODO.md file to see which reviewers are currently planned for development. Other general features of the tool are also described in this file.
+Check the TODO.md file to see what is currently planned for development.
