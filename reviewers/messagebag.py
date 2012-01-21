@@ -34,6 +34,9 @@ class Message:
 		self.reviewer = reviewer.get_name()
 		self.content = content
 		self.line = line
+	
+	def __repr__(self):
+		return self.reviewer + " " + self.type + " line " + str(self.line) + " : " + self.content
 
 
 if __name__ == "__main__":

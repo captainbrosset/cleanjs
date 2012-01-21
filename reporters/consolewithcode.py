@@ -14,10 +14,10 @@ def output_messages(result, file_data):
 	print "Code"
 	print "========================"
 	
-	nb_of_total_lines = len(file_data.lines.total_lines)
+	nb_of_total_lines = len(file_data.lines.all_lines)
 	
-	for index, line in enumerate(file_data.lines.total_lines):
-		print _get_line_number_gutter(index, nb_of_total_lines) + line
+	for index, line in enumerate(file_data.lines.all_lines):
+		print _get_line_number_gutter(index, nb_of_total_lines) + str(line)
 		line_messages = message_bag.get_messages_on_line(index+1)
 		for line_message in line_messages:
 			print _get_message_line_gutter(nb_of_total_lines) + line_message.reviewer + " " + line_message.type + ": " + line_message.content
