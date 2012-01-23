@@ -1,8 +1,8 @@
 WHAT IS THIS?
 ============
 
-cleanjs is a code review/check style kind of tool that can check javascript source files.
-The tool is (for now) a command line python script.
+cleanjs is a tool written in python that checks javascript source files and returns a report about various aspects related to **clean code** practices (kind of like check style).
+
 The way it works is by parsing the source file then running a series checks on it, outputting info, warning and errors when needed.
 
 The tool is focused on code quality. The following things (and others) are checked:
@@ -12,8 +12,9 @@ The tool is focused on code quality. The following things (and others) are check
 - variable and function name formatting and meaning
 - comments
 - complexity
+- syntax error
+- formatting
 - ...
-- 
 
 USING CLEANJS
 =============
