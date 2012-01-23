@@ -5,16 +5,7 @@ import os
 
 logger = logging.getLogger(__name__)
 
-# There are so many ways to invoke cleanjs that I wasn't able to find a way to get the localdict.txt filepath correctly
-# So I'm just looking for it now
-def get_local_dict_filename():
-	for root, subFolders, files in os.walk(os.path.abspath(".")):
-		for file in files:
-			if file.find("localdict.txt") != -1:
-				return os.path.abspath(os.path.join(root, file))
-
-LOCAL_DICTIONARY_FILE_NAME = get_local_dict_filename()
-
+LOCAL_DICTIONARY_FILE_NAME = __file__[0:__file__.rfind("/") + 1] + "localdict.txt"
 WORD_REFERENCE_API_KEY = "117b0"
 WORD_REFERENCE_API_VERSION = "0.8"
 WORD_REFERENCE_REQUEST_URL = "http://api.wordreference.com/" + WORD_REFERENCE_API_VERSION + "/" + WORD_REFERENCE_API_KEY + "/json/enfr/"

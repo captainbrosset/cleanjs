@@ -1,6 +1,6 @@
 import re
 
-from commentsutils import similartocode
+from helpers import similartocode
 
 class Reviewer():
 	MAX_CODE_COMMENT_RATIO_IN_FUNCTION = 0.3
@@ -73,7 +73,7 @@ class Reviewer():
 	
 	def review_comment_code_similarity(self, lines, message_bag):
 		for index, line in enumerate(lines):
-			if line.is_only_comments() and lines[index+1].is_only_code():
+			if len(lines) > index+1 and line.is_only_comments() and lines[index+1].is_only_code():
 				comment = line.complete_line
 				code =  lines[index+1].complete_line
 				if similartocode.is_code_and_comment_similar(code, comment):

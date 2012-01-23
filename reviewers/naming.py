@@ -1,8 +1,8 @@
 import re
 import logging
 
-from namingutils import wordmeaning
-from namingutils import extractwords
+from helpers import wordmeaning
+from helpers import extractwords
 
 logger = logging.getLogger(__name__)
 

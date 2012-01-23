@@ -1,6 +1,6 @@
 import re
 
-from codesizeutils import variablelength
+from helpers import variablelength
 
 class Reviewer():
 	WARN_MAX_FILE_LINE_NB = 150

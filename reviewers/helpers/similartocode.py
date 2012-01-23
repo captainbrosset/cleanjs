@@ -1,11 +1,6 @@
-# Tricking the PYTHONPATH because relative imports don't work when running the file standalone
-import sys
-sys.path.append("../")
-sys.path.append("./reviewers")
-
 import re
 
-from namingutils import extractwords
+import extractwords
 
 def get_unique_words(words):
 	return list(set(words))

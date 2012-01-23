@@ -1,4 +1,4 @@
-from syntaxutils import jsparser
+from helpers.jsparser import jsparser
 
 class Reviewer():
 	def get_name(self):
