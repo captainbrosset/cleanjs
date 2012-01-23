@@ -5,7 +5,7 @@ import os
 
 logger = logging.getLogger(__name__)
 
-LOCAL_DICTIONARY_FILE_NAME = __file__[0:__file__.rfind("/") + 1] + "localdict.txt"
+LOCAL_DICTIONARY_FILE_NAME = os.getcwd() + os.sep + "reviewers" + os.sep + "helpers" + os.sep + "localdict.txt"
 WORD_REFERENCE_API_KEY = "117b0"
 WORD_REFERENCE_API_VERSION = "0.8"
 WORD_REFERENCE_REQUEST_URL = "http://api.wordreference.com/" + WORD_REFERENCE_API_VERSION + "/" + WORD_REFERENCE_API_KEY + "/json/enfr/"
