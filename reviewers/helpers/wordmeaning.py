@@ -5,7 +5,10 @@ import os
 
 logger = logging.getLogger(__name__)
 
-LOCAL_DICTIONARY_FILE_NAME = os.getcwd() + os.sep + "reviewers" + os.sep + "helpers" + os.sep + "localdict.txt"
+root_dir = os.getcwd()
+if root_dir[-5:] == "tests":
+	root_dir = root_dir[0:-5]
+LOCAL_DICTIONARY_FILE_NAME = root_dir + os.sep + "reviewers" + os.sep + "helpers" + os.sep + "localdict.txt"
 WORD_REFERENCE_API_KEY = "117b0"
 WORD_REFERENCE_API_VERSION = "0.8"
 WORD_REFERENCE_REQUEST_URL = "http://api.wordreference.com/" + WORD_REFERENCE_API_VERSION + "/" + WORD_REFERENCE_API_KEY + "/json/enfr/"
