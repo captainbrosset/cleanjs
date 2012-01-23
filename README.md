@@ -39,6 +39,8 @@ Optionally, if you are using a text editor like [Sublime Text](http://sublimetex
 USING IN SUBLIME TEXT 2
 =======================
 
+**INFO: latest version breaks support for Sublime text 2!! Working on it now.**
+
 cleanjs can also be integrated into Sublime Text 2 as a plugin.
 
 If you have [Sublime Text 2](http://www.sublimetext.com/2) with [Package Control](http://wbond.net/sublime_packages/package_control), just launch package control, select "Add Repository", enter https://github.com/captainbrosset/cleanjs and then launch "install package" and select cleanjs from the list.
