@@ -1,5 +1,7 @@
 import re
 
+from commentsutils import similartocode
+
 class Reviewer():
 	MAX_CODE_COMMENT_RATIO_IN_FUNCTION = 0.3
 	MAX_NUMBER_OF_SUBSEQUENT_COMMENTS_LINE = 2
@@ -68,12 +70,21 @@ class Reviewer():
 		for line in lines:
 			if re.search(pattern, line.comments):
 				message_bag.add_warning(self, "You are using some kind of separator characters in your comment, probably in an attempt to separate some complex code ... why not making it simpler in the first place?", line.line_number)
-			
+	
+	def review_comment_code_similarity(self, lines, message_bag):
+		for index, line in enumerate(lines):
+			if line.is_only_comments() and lines[index+1].is_only_code():
+				comment = line.complete_line
+				code =  lines[index+1].complete_line
+				if similartocode.is_code_and_comment_similar(code, comment):
+					message_bag.add_warning(self, "It seems this comment is very similar to the code directly beneath it. Don't you think you can get rid of it?", line.line_number)
+
 	def review(self, file_data, message_bag):
 		self.review_multiple_comment_lines(file_data.lines.all_lines, message_bag)
 		self.review_comments_ratio_in_functions(file_data.functions, message_bag)
 		self.review_comments_after_statements(file_data.lines.all_lines, message_bag)
 		self.review_separator_comments(file_data.lines.all_lines, message_bag)
+		self.review_comment_code_similarity(file_data.lines.all_lines, message_bag)
 
 
 if __name__ == "__main__":

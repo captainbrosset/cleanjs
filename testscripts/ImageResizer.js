@@ -25,6 +25,7 @@ malica.ImageResizer.prototype.resizeOnPageLoad = function(maxDim, noResizeIfSmal
 				w: photo.width,
 				h: photo.height
 			};
+			// Resize a photo to the max dim but not if smaller
 			self._resizeAPhoto(photo, maxDim, noResizeIfSmaller);
 		}, false);
 		img.src = photo.src;

@@ -2,6 +2,7 @@ import re
 import logging
 
 from namingutils import wordmeaning
+from namingutils import extractwords
 
 logger = logging.getLogger(__name__)
 
@@ -35,25 +36,6 @@ class Reviewer():
 			is_set = (name[0:3] == "set")
 			if is_set and len(function.signature) == 0:
 				message_bag.add_error(self, "Function " + name + " starts with 'set'. This usually means an argument is passed, but none was found.", function.line_nb);
-		
-	def get_all_words_from_line(self, line):
-		words = re.findall("[a-zA-Z]+", line)
-
-		all_words = []
-		for word in words:
-			all_words += self.get_words_in_camelcase_str(word)
-		return all_words
-		
-	def get_words_in_camelcase_str(self, str):
-		if str == "":
-			return []
-		
-		separated = re.sub("([A-Z]+)", " \g<1>", str).lower()
-		if separated[0:1] == " ":
-			separated = separated[1:]
-		words = separated.split(" ")
-
-		return words
 	
 	def review_all_names(self, vars, functions, message_bag):
 		# Reviews function names, argument names and variable names only in fact
@@ -61,10 +43,10 @@ class Reviewer():
 		all_objects = vars + functions
 
 		for object in all_objects:
-			words = self.get_all_words_from_line(object.name)
+			words = extractwords.get_all_words_from_line(object.name)
 			if getattr(object, "signature", None):
 				for arg in object.signature:
-					words += self.get_all_words_from_line(arg)
+					words += extractwords.get_all_words_from_line(arg)
 			
 			for word in words:
 				word_exists = False
@@ -82,12 +64,4 @@ class Reviewer():
 
 
 if __name__ == "__main__":
-	reviewer = Reviewer()
-	
-	assert reviewer.get_words_in_camelcase_str("") == [], 1
-	assert reviewer.get_words_in_camelcase_str("simpletest") == ["simpletest"], 2
-	assert reviewer.get_words_in_camelcase_str("simpleTest") == ["simple", "test"], 3
-	assert reviewer.get_words_in_camelcase_str("SimpleTest") == ["simple", "test"], 4
-	assert reviewer.get_words_in_camelcase_str("asyncXHR") == ["async", "xhr"], 4
-		
-	print "ALL TESTS OK " + __file__
+	print "NO TESTS TO RUN " + __file__

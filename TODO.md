@@ -3,15 +3,16 @@ Missing reviewers:
 
 - codesize
 	- Length of this. variables
-	- length of variable checker is fine, except when it checks for one or two letter words that are in fact in the dictionary ... 
 - jsdoc
 	- Private and protected have corresponding jsdoc, and opposite as well
 	- Check jsdoc format and accepted @ statements
 	- Check that jsdoc block have description
 	- Check that file has first a license, then a jsdoc block that is at least some nb of lines with example. Display info if there is no `pre` tag cause it means there's no example
+	- Verify if a jsdoc block was just copied from another function/class ??
 - unused
 	- Unused fields this. In class
 - code duplication
+	- comparing branches of the AST ?
 - jslint
 	- new Array() and new Object()
 	- check for global vars assignments (missing var)
@@ -20,7 +21,6 @@ Missing reviewers:
 	- inline function is often sign of difficult to read code
 - comments:
 	- If // multiline comments are license header/help/ ... then skip
-	- Try to detect if a // comment line and the following code line share patterns. If they do, it probably means that the comment is useless
 - vertical:
 	- Review vertical distance inside prototype : properties should come first, functions then
 	- Try to check flow of functions: caller before callee, vertically

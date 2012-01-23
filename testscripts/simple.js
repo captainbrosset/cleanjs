@@ -66,6 +66,7 @@ function complex(test) {
 		return false;
 	} else {
 		if(typeof test == "string") {
+			// return the test string
 			return test + " ";
 		} else if(typeof test == "object") {
 			return test.name;

@@ -1,5 +1,7 @@
 import re
 
+from codesizeutils import variablelength
+
 class Reviewer():
 	WARN_MAX_FILE_LINE_NB = 150
 	ERROR_MAX_FILE_LINE_NB = 300
@@ -60,35 +62,18 @@ class Reviewer():
 				message_bag.add_warning(self, "There are more than " + str(Reviewer.WARN_MAX_FUNCTION_LINE_NB) + " lines in function " + function.name + " (" + str(nb) + ")! If possible, please try to refactor it", function.line_nb)
 
 	def review_variable_name_size(self, functions, message_bag):
-		# FIXME: should take into account the "scope" of the variable
-		# Indeed, if the variable is only used in a few lines of codes, close together, then it's fine to be short
-		# There should be some kind of relation between the variable name and the number of lines it is used in
-
-
-		
-
-		# Listing functions only
-		# TODO: work in progress. Trying to act at function level, to avoid having to care about scopes
-		# For each function, check variables, for each var, check the body to find out where it appears
 		for function in functions:
 			for var in function.variables:
-				pass
 
-		"""
-		already_listed = []
-		for variable in variables:
-			name = variable.name
-			if name not in already_listed:
-				already_listed.append(name)
+				name = var.name
+				line_nb = var.line_nb
+
+				if variablelength.is_variable_name_too_short(name, function.body):
+					message_bag.add_error(self, "The name of variable " + name + " is too short", line_nb)
 				if len(name) > Reviewer.ERROR_MAX_NAME_SIZE:
-					message_bag.add_error(self, "The name of variable " + name + " is more than " + str(Reviewer.ERROR_MAX_NAME_SIZE) + " characters (" + str(len(name)) + "). This is too long", variable.line_nb)
+					message_bag.add_error(self, "The name of variable " + name + " is more than " + str(Reviewer.ERROR_MAX_NAME_SIZE) + " characters (" + str(len(name)) + "). This is too long", line_nb)
 				elif len(name) > Reviewer.WARN_MAX_NAME_SIZE:
-					message_bag.add_warning(self, "The name of variable " + name + " is more than " + str(Reviewer.WARN_MAX_NAME_SIZE) + " characters (" + str(len(name)) + "). This may make it harder to read", variable.line_nb)
-				if len(name) < Reviewer.ERROR_MIN_NAME_SIZE:
-					message_bag.add_error(self, "The name of variable " + name + " is less than " + str(Reviewer.ERROR_MIN_NAME_SIZE) + " characters (" + str(len(name)) + "). This is way too short! Noone will understand what you mean", variable.line_nb)
-				elif len(name) < Reviewer.WARN_MIN_NAME_SIZE:
-					message_bag.add_warning(self, "The name of variable " + name + " is less than " + str(Reviewer.WARN_MIN_NAME_SIZE) + " characters (" + str(len(name)) + "). Think about making names self explanatory", variable.line_nb)
-		"""
+					message_bag.add_warning(self, "The name of variable " + name + " is more than " + str(Reviewer.WARN_MAX_NAME_SIZE) + " characters (" + str(len(name)) + "). This may make it harder to read", line_nb)
 
 	def review_function_name_size(self, functions, message_bag):
 		for function in functions:
@@ -102,6 +87,19 @@ class Reviewer():
 			elif name_length < Reviewer.WARN_MIN_NAME_SIZE:
 				message_bag.add_warning(self, "The name of function " + function.name + " is less than " + str(Reviewer.WARN_MIN_NAME_SIZE) + " characters (" + str(name_length) + "). Think about making names self explanatory", function.line_nb)
 
+	def review_arguments_name_size(self, functions, message_bag):
+		for function in functions:
+			for arg in function.signature:
+				name_length = len(arg)
+				if name_length > Reviewer.ERROR_MAX_NAME_SIZE:
+					message_bag.add_error(self, "The name of argument " + arg + " is more than " + str(Reviewer.ERROR_MAX_NAME_SIZE) + " characters (" + str(name_length) + "). This is too long", function.line_nb)
+				elif name_length > Reviewer.WARN_MAX_NAME_SIZE:
+					message_bag.add_warning(self, "The name of argument " + arg + " is more than " + str(Reviewer.WARN_MAX_NAME_SIZE) + " characters (" + str(name_length) + "). This may make it harder to read", function.line_nb)
+				if name_length < Reviewer.ERROR_MIN_NAME_SIZE:
+					message_bag.add_error(self, "The name of argument " + arg + " is less than " + str(Reviewer.ERROR_MIN_NAME_SIZE) + " characters (" + str(name_length) + "). This is way too short! Noone will understand what you mean", function.line_nb)
+				elif name_length < Reviewer.WARN_MIN_NAME_SIZE:
+					message_bag.add_warning(self, "The name of argument " + arg + " is less than " + str(Reviewer.WARN_MIN_NAME_SIZE) + " characters (" + str(name_length) + "). Think about making names self explanatory", function.line_nb)
+
 	def review(self, file_data, message_bag):
 		self.review_line_nb_in_file(file_data.lines, message_bag)
 		self.review_line_nb_in_functions(file_data.functions, message_bag)
@@ -109,61 +107,9 @@ class Reviewer():
 		self.review_variable_name_size(file_data.functions, message_bag)
 		self.review_nb_of_arguments(file_data.functions, message_bag)
 		self.review_line_length(file_data.lines.all_lines, message_bag)
+		self.review_arguments_name_size(file_data.functions, message_bag)
 
 
 if __name__ == "__main__":
-	
-	reviewer = Reviewer()
 
-	class MockFunction(object):
-		def __init__(self, name, signature, body, lines, variables, line_nb):
-			self.name = name
-			self.signature = signature
-			self.body = body
-			self.lines = lines
-			self.variables = variables
-			self.line_nb = line_nb
-	
-	class MockBag(object):
-		def __init__(self):
-			pass
-
-	class MockVariable(object):
-		def __init__(self, name, line_nb):
-			self.name = name
-			self.line_nb = line_nb
-
-	var_test = MockVariable("test", 32)
-	var_i = MockVariable("i", 33)
-	var_j = MockVariable("j", 39)
-	function_body = """
-	var test = 5;
-	for(var i=0; i < test; i++) {
-		alert("test" + i);
-	}
-
-	test ++;
-
-	var j = true;
-	while(j) {
-		if(5%1) {
-			test ++;
-		} else {
-			break;
-		}
-	}
-
-	if(j) {
-		// do something
-	}
-	"""
-	function1 = MockFunction("myfun", [], function_body, {}, [var_test, var_i, var_j], 30)
-
-	bag = MockBag()
-	reviewer.review_variable_name_size([function1], bag)
-
-	# TODO: work in progress here -> create asserts that should make sure that errors/warnings are thrown for variables too long
-	# But also, make sure that errors are thrown for variables too short, depending on their scope span
-	# --> 1/2 letter(s) variables only accepted if not spanning over more than 3 consecutive lines ??
-
-	print "ALL TESTS OK " + __file__
+	print "NO TESTS TO RUN " + __file__
