@@ -37,7 +37,7 @@ Missing reviewers:
 Other misc stuff to do:
 =======================
 
-- Make reviewer expose configs so this can be configured before running
+- Make reviewer expose configs so this can be configured before running (should be exposed through the sublime settings too)
 - Class parsing (Parse prototype and all its functions and properties)
 - Automatically run in eclipse while saving a js class file
 - Extract messages as constants of each reviewer class with %n replacement chars (easier for unit testing then)
@@ -48,3 +48,4 @@ Other misc stuff to do:
 	- http://ominian.com/2012/01/06/working-with-using-pynarcissus-to-parse-javascript-in-python/
 	- parser originally is pynarcissus
 - Find a way to have errors/warnings/infos into the editor directly, rather than in the console
+	- could potentially use the status bar at the bottom (where it tells you about the current line number). sublime.status_message("foo")
