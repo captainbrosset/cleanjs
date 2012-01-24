@@ -31,6 +31,7 @@ Missing reviewers:
 	- Could check if there are not any empty line in a long function, it means that blocks are not separated nicely
 - naming:
 	- review name meaning for object properties too (like this.xxx or prototype.xxx or myobj.xxx)
+	- When checking the meaning of one letter words like i (for indexes), we report an error, even if the codesize module accepted it because it was in a limited scope ... How do we deal with this? Should naming have a dependency on codesize?
 	
 Other misc stuff to do:
 =======================
