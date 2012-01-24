@@ -8,15 +8,16 @@ Missing reviewers:
 	- Check jsdoc format and accepted @ statements
 	- Check that jsdoc block have description
 	- Check that file has first a license, then a jsdoc block that is at least some nb of lines with example. Display info if there is no `pre` tag cause it means there's no example
-	- Verify if a jsdoc block was just copied from another function/class ??
 - unused
 	- Unused fields this. In class
 - code duplication
 	- comparing branches of the AST ?
-- jslint
+- syntax
+	- jslint
 	- new Array() and new Object()
 	- check for global vars assignments (missing var)
 	- check ; is present after assignements
+	- Check that when a local method is called, it is called with the right number of arguments
 - complexity
 	- inline function is often sign of difficult to read code
 - comments:
@@ -46,3 +47,4 @@ Other misc stuff to do:
 	- https://gist.github.com/1607354 is a good example
 	- http://ominian.com/2012/01/06/working-with-using-pynarcissus-to-parse-javascript-in-python/
 	- parser originally is pynarcissus
+- Find a way to have errors/warnings/infos into the editor directly, rather than in the console

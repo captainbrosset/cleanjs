@@ -11,10 +11,10 @@ def run_unit_tests(dir):
 			pass
 
 def run_full_tests():
-	for item in os.listdir("../testscripts"):
+	for item in os.listdir("scripts"):
 		if item[-3:] == ".js":
 			print "-- RUNNING CLEANJS ON " + item
-			os.system("python ../cleanjs_cmdline.py ../testscripts/" + item + " ../testscripts/reports/" + item + "-report.html")
+			os.system("python ../cleanjs_cmdline.py scripts/" + item + " scripts/reports/" + item + "-report.html")
 
 print ""
 print "-- RUNNING ALL UNIT TETS"

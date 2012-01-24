@@ -1,0 +1,6 @@
+[
+	{ 
+		"keys": ["ctrl+shift+c"], 
+		"command": "cleanjs"
+	}
+]

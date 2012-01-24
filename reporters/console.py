@@ -25,28 +25,38 @@ def output_messages(result, file_data):
 	report += _get_report_post_border(max_content_length)
 	report += "\n"
 	
+	# Output the rating
+	report += _output_one_message("Rating | ", max_header_length, result["rating"], max_content_length)
+
 	# Now output messages
 	for index, message in enumerate(messages):
-		pre_padding_length = 0
-		if len(headers[index]) < max_header_length:
-			pre_padding_length = max_header_length - len(headers[index])
-			
-		post_padding_length = 0
-		if len(contents[index]) < max_content_length:
-			post_padding_length = max_content_length - len(contents[index])
-		
-		report += "|"
-		report += "".join([" " for i in range(pre_padding_length)])
-		report += headers[index]
-		report += contents[index]
-		report += "".join([" " for i in range(post_padding_length)])
-		report += "|\n"
-		report += _get_report_pre_border(max_header_length)
-		report += _get_report_post_border(max_content_length)
-		report += "\n"
+		report += _output_one_message(headers[index], max_header_length, contents[index], max_content_length)
 	
 	report += "\n"
 	
+	return report
+
+def _output_one_message(header, max_header_length, content, max_content_length):
+	report = ""
+
+	pre_padding_length = 0
+	if len(header) < max_header_length:
+		pre_padding_length = max_header_length - len(header)
+		
+	post_padding_length = 0
+	if len(content) < max_content_length:
+		post_padding_length = max_content_length - len(content)
+	
+	report += "|"
+	report += "".join([" " for i in range(pre_padding_length)])
+	report += header
+	report += content
+	report += "".join([" " for i in range(post_padding_length)])
+	report += "|\n"
+	report += _get_report_pre_border(max_header_length)
+	report += _get_report_post_border(max_content_length)
+	report += "\n"
+
 	return report
 
 def _get_message_report_header(message):

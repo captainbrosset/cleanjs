@@ -1,14 +1,12 @@
 import re
 
 import extractwords
-
-def get_unique_words(words):
-	return list(set(words))
+import general
 
 def is_code_and_comment_similar(code, comment):
-	comment_words = get_unique_words(extractwords.get_all_words_from_line(comment))
+	comment_words = general.filter_dups_from_list(extractwords.get_all_words_from_line(comment))
 	comment_words_similar_to_code = []
-	code_words = get_unique_words(extractwords.get_all_words_from_line(code))
+	code_words = general.filter_dups_from_list(extractwords.get_all_words_from_line(code))
 	code_words_similar_to_comment = []
 
 	if len(comment_words) == 0 or len(code_words) == 0:

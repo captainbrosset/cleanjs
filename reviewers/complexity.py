@@ -40,7 +40,7 @@ class Reviewer():
 					message_bag.add_error(self, "Found an IF statement with more than " + str(Reviewer.ERROR_MAX_NB_OF_CONDITIONS_IN_IF) + " AND or OR! Wrap them in a function like isABC()", line.line_number)
 				elif len(conditions) > Reviewer.WARN_MAX_NB_OF_CONDITIONS_IN_IF:
 					message_bag.add_warning(self, "Found an IF statement with more than " + str(Reviewer.WARN_MAX_NB_OF_CONDITIONS_IN_IF) + " AND or OR! Could you extract this in a function like isABC()?", line.line_number)
-		
+	
 	def review(self, file_data, message_bag):
 		self.review_functions_complexity(file_data.functions, message_bag)
 		self.review_ifs_complexity(file_data.lines.all_lines, message_bag)

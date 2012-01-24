@@ -1,6 +1,7 @@
 import re
 
 from helpers import similartocode
+from helpers import general
 
 class Reviewer():
 	MAX_CODE_COMMENT_RATIO_IN_FUNCTION = 0.3
@@ -8,6 +9,9 @@ class Reviewer():
 	
 	SEPARATOR_CHARACTERS = ["-", "\|", "!", "#", "\.", "\*", "=", "/", "~", "+", "\\"]
 	MAX_NUMBER_OF_SEPARATOR_CHARACTERS_IN_COMMENTS = 3
+
+	WARN_MAX_NB_OF_BUTIFORAND_CONDITION = 0
+	ERROR_MAX_NB_OF_BUTIFORAND_CONDITION = 2
 
 	def get_name(self):
 		return "comments"
@@ -79,12 +83,38 @@ class Reviewer():
 				if similartocode.is_code_and_comment_similar(code, comment):
 					message_bag.add_warning(self, "It seems this comment is very similar to the code directly beneath it. Don't you think you can get rid of it?", line.line_number)
 
+	def get_all_comment_blocks(self, lines):
+		blocks = []
+		for line in lines:
+			if not line.is_only_comments():
+				# No comments, start a new block
+				blocks.append({"line_nb": None, "comment": ""})
+			else:
+				# Comments, put that into the last comment block opened
+				if len(blocks) == 0:
+					blocks.append({"line_nb": None, "comment": ""})
+				blocks[len(blocks) - 1]["comment"] += line.comments
+				if not blocks[len(blocks) - 1]["line_nb"]:
+					blocks[len(blocks) - 1]["line_nb"] = line.line_number
+		return general.filter_empty_items_from_dict_list(blocks, "comment")
+
+	def review_multiple_responsibilities(self, lines, message_bag):
+		#  'if', 'but', 'and','or', then it's likely that the commented code has more than one responsibility
+		comment_blocks = self.get_all_comment_blocks(lines)
+		for comment in comment_blocks:
+			nb_of_conditions = len(re.findall("and|or|but|if", comment["comment"]))
+			if nb_of_conditions > Reviewer.WARN_MAX_NB_OF_BUTIFORAND_CONDITION:
+				message_bag.add_warning(self, "It seems this comment tries to explain a piece of code that has several responsibilities", comment["line_nb"])
+			elif nb_of_conditions > Reviewer.ERROR_MAX_NB_OF_BUTIFORAND_CONDITION:
+				message_bag.add_error(self, "For sure, this comment corresponds to code that has more than 1 responsibility", comment["line_nb"])
+
 	def review(self, file_data, message_bag):
 		self.review_multiple_comment_lines(file_data.lines.all_lines, message_bag)
 		self.review_comments_ratio_in_functions(file_data.functions, message_bag)
 		self.review_comments_after_statements(file_data.lines.all_lines, message_bag)
 		self.review_separator_comments(file_data.lines.all_lines, message_bag)
 		self.review_comment_code_similarity(file_data.lines.all_lines, message_bag)
+		self.review_multiple_responsibilities(file_data.lines.all_lines, message_bag)
 
 
 if __name__ == "__main__":
@@ -97,24 +127,54 @@ if __name__ == "__main__":
 			self.warnings.append(line_number)
 	
 	class MockLine:
-		def __init__(self, comments):
+		def __init__(self, comments, is_only_comments=True):
 			self.comments = comments
 			self.line_number = 0
+			self._is_only_comments = is_only_comments
+		def is_only_comments(self):
+			return self._is_only_comments
+	
+	def test_separator_comments():
+		reviewer = Reviewer()
+		bag = MockBag()
+
+		line1 = MockLine("this is something ..")
+		line2 = MockLine("this is something ----")
+		line3 = MockLine("this is something --#-~-")
+		line4 = MockLine("// \\\\ ...")
+		lines = []
+		lines.append(line1)
+		lines.append(line2)
+		lines.append(line3)
+		lines.append(line4)
 		
-	reviewer = Reviewer()
-	bag = MockBag()	
-	line1 = MockLine("this is something ..")
-	line2 = MockLine("this is something ----")
-	line3 = MockLine("this is something --#-~-")
-	line4 = MockLine("// \\\\ ...")
-	lines = []
-	lines.append(line1)
-	lines.append(line2)
-	lines.append(line3)
-	lines.append(line4)
-	
-	reviewer.review_separator_comments(lines, bag)
-	
-	assert len(bag.warnings) == 2, "Wrong number of separator comments found"
-	
+		reviewer.review_separator_comments(lines, bag)
+		
+		assert len(bag.warnings) == 2, "Wrong number of separator comments found"
+
+	def test_get_all_comment_blocks():
+		line1 = MockLine("/**", True)
+		line2 = MockLine(" * Class super.great.Framework", True)
+		line3 = MockLine(" * This class is the main entry point of the framework", True)
+		line4 = MockLine(" * It provides the main utilities of the framework and also a way to load other classes", True)
+		line5 = MockLine(" */", True)
+		line6 = MockLine("super.great.Framework = function() {", False)
+		line7 = MockLine("	this.test = 2; // wow, we initialize stuff", False)
+		line8 = MockLine("	/**", True)
+		line9 = MockLine("	 * Name of the instance", True)
+		line10 = MockLine("	 * @type {String}", True)
+		line11 = MockLine("	 */", True)
+		line12 = MockLine("	 this.name = \"\"", False)
+
+		lines = [line1,line2,line3,line4,line5,line6,line7,line8,line9,line10,line11,line12]
+
+		blocks = Reviewer().get_all_comment_blocks(lines)
+		assert len(blocks) == 2, "Wrong number of comment blocks found in lines"
+
+		blocks = Reviewer().get_all_comment_blocks([])
+		assert len(blocks) == 0
+
+	test_separator_comments()
+	test_get_all_comment_blocks()
+
 	print "ALL TESTS OK " + __file__
