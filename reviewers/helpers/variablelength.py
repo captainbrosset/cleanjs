@@ -18,7 +18,11 @@ def get_variable_minmax_occurences_in_code(name, code):
 	"""Return a tuple containing the min and max line numbers where variable name occurs in code"""
 
 	occurences = get_variable_occurences_in_code(name, code)
-	return (min(occurences), max(occurences))
+	
+	if len(occurences) > 0:
+		return (min(occurences), max(occurences))
+	else:
+		return (0, 0)
 
 def is_variable_name_too_short(name, code):
 
@@ -72,6 +76,9 @@ if __name__ == "__main__":
 		return res;
 	"""
 
+	# Edge case:
+	assert is_variable_name_too_short("doesnotexist", function_code) == False, "Variable does not even exist, should return False"
+	# Normal cases:
 	assert is_variable_name_too_short("i", function_code) == False, "Variable 'i' should not be considered too short because it's in a limited scope"
 	assert is_variable_name_too_short("res", function_code) == True, "Variable 'res' should be considered too short because it's used across lot's of code"
 	assert is_variable_name_too_short("re", function_code) == True, "Variable 're' should be considered too short because it's used across lot's of code"
