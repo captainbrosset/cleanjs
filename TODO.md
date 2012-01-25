@@ -49,3 +49,5 @@ Other misc stuff to do:
 	- parser originally is pynarcissus
 - Find a way to have errors/warnings/infos into the editor directly, rather than in the console
 	- could potentially use the status bar at the bottom (where it tells you about the current line number). sublime.status_message("foo")
+- Keep track of improvements on a given file?
+- Need weight per message, to have the really important things first, so that user concentrates on solving real problems first
