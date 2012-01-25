@@ -19,7 +19,7 @@ Missing reviewers:
 	- check ; is present after assignements
 	- Check that when a local method is called, it is called with the right number of arguments
 - complexity
-	- inline function is often sign of difficult to read code
+	- inline function is often sign of difficult to read code. In fact, could check whether a function contains many inner functions (chains of callbacks a-la nodeJs) and emit a warning/error
 - comments:
 	- If // multiline comments are license header/help/ ... then skip
 - vertical:
