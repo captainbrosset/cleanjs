@@ -39,7 +39,9 @@ class Reviewer():
 				message_bag.add_warning(self, "There are several empty lines in a row, either you didn't format the file correctly, or you are trying to space complex things out.", line_nb_of_first_empty)
 	
 	def review(self, file_data, message_bag):
-		self.review_statement_spacing(file_data.content, message_bag)
+		# TODO: The formatting reviewer is fucked up today, it only checks a few things and doesn't say where problems are
+		# So it's better not to include it at all in fact
+		#self.review_statement_spacing(file_data.content, message_bag)
 		self.review_empty_lines(file_data.lines.all_lines, message_bag)
 		
 		

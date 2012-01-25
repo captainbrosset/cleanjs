@@ -44,7 +44,7 @@ class Reviewer():
 		# FIXME: comment lines are NOT ignored, should be?!
 		nb = len(lines.all_lines)
 		if nb > Reviewer.ERROR_MAX_FILE_LINE_NB:
-			message_bag.add_error(self, "There are more than " + str(Reviewer.ERROR_MAX_FILE_LINE_NB) + " lines in the file (" + str(nb) + ") ! Surely the file is doing more than 1 thing")
+			message_bag.add_error(self, "There are more than " + str(Reviewer.ERROR_MAX_FILE_LINE_NB) + " lines in the file (" + str(nb) + ") ! Surely the file has more than one responsibility")
 		elif nb > Reviewer.WARN_MAX_FILE_LINE_NB:
 			message_bag.add_warning(self, "There are more than " + str(Reviewer.WARN_MAX_FILE_LINE_NB) + " lines in the file (" + str(nb) + ") ! If possible, please try to refactor")
 
@@ -57,7 +57,7 @@ class Reviewer():
 			if nb == 0:
 				message_bag.add_warning(self, "Function " + function.name + " is empty. Is it really needed?", function.line_nb)
 			elif nb > Reviewer.ERROR_MAX_FUNCTION_LINE_NB:
-				message_bag.add_error(self, "There are more than " + str(Reviewer.ERROR_MAX_FUNCTION_LINE_NB) + " lines in function " + function.name + " (" + str(nb) + ")! Surely the function is doing more than 1 thing", function.line_nb)
+				message_bag.add_error(self, "There are more than " + str(Reviewer.ERROR_MAX_FUNCTION_LINE_NB) + " lines in function " + function.name + " (" + str(nb) + ")! Surely the function has more than one responsibility", function.line_nb)
 			elif nb > Reviewer.WARN_MAX_FUNCTION_LINE_NB:
 				message_bag.add_warning(self, "There are more than " + str(Reviewer.WARN_MAX_FUNCTION_LINE_NB) + " lines in function " + function.name + " (" + str(nb) + ")! If possible, please try to refactor it", function.line_nb)
 

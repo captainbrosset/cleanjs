@@ -8,6 +8,8 @@ logger = logging.getLogger(__name__)
 root_dir = os.getcwd()
 if root_dir[-5:] == "tests":
 	root_dir = root_dir[0:-5]
+if root_dir[-7:] != "cleanjs" and root_dir[-8:] != "cleanjs" + os.sep:
+	root_dir = root_dir + os.sep + "cleanjs"
 LOCAL_DICTIONARY_FILE_NAME = root_dir + os.sep + "reviewers" + os.sep + "helpers" + os.sep + "localdict.txt"
 WORD_REFERENCE_API_KEY = "117b0"
 WORD_REFERENCE_API_VERSION = "0.8"
