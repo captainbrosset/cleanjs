@@ -10,8 +10,8 @@ class Reviewer():
 	SEPARATOR_CHARACTERS = ["-", "\|", "!", "#", "\.", "\*", "=", "/", "~", "+", "\\"]
 	MAX_NUMBER_OF_SEPARATOR_CHARACTERS_IN_COMMENTS = 3
 
-	WARN_MAX_NB_OF_BUTIFORAND_CONDITION = 0
-	ERROR_MAX_NB_OF_BUTIFORAND_CONDITION = 2
+	WARN_MAX_NB_OF_BUTIFORAND_CONDITION = 1
+	ERROR_MAX_NB_OF_BUTIFORAND_CONDITION = 3
 
 	def get_name(self):
 		return "comments"

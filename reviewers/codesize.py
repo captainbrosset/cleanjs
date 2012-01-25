@@ -44,9 +44,9 @@ class Reviewer():
 		# FIXME: comment lines are NOT ignored, should be?!
 		nb = len(lines.all_lines)
 		if nb > Reviewer.ERROR_MAX_FILE_LINE_NB:
-			message_bag.add_error(self, "There are more than " + str(Reviewer.ERROR_MAX_FILE_LINE_NB) + " lines in the file (" + str(nb) + ") ! Surely the file has more than one responsibility")
+			message_bag.add_error(self, "There are more than " + str(Reviewer.ERROR_MAX_FILE_LINE_NB) + " lines in the file (" + str(nb) + ") ! Surely the file has more than one responsibility", 1)
 		elif nb > Reviewer.WARN_MAX_FILE_LINE_NB:
-			message_bag.add_warning(self, "There are more than " + str(Reviewer.WARN_MAX_FILE_LINE_NB) + " lines in the file (" + str(nb) + ") ! If possible, please try to refactor")
+			message_bag.add_warning(self, "There are more than " + str(Reviewer.WARN_MAX_FILE_LINE_NB) + " lines in the file (" + str(nb) + ") ! If possible, please try to refactor", 1)
 
 	def review_line_nb_in_functions(self, file_functions, message_bag):
 		for function in file_functions:

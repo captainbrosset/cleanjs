@@ -32,8 +32,8 @@ def get_rate(file_data, message_bag):
 
 	# errors are 3 times more important than warnings
 	total_nb_of_msgs = int(round(float(nb_errors * 3 + nb_warnings) / 3))
-	if total_nb_of_msgs > 18:
-		total_nb_of_msgs = 18
+	if total_nb_of_msgs > 17:
+		total_nb_of_msgs = 17
 
 	rating = ["A+","A","A-","B+","B","B-","C+","C","C-","D+","D","D-","E+","E","E-","F+","F","F-"][total_nb_of_msgs]
 
