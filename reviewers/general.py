@@ -28,13 +28,12 @@ class Reviewer():
 		message_bag.add_info(self, "Longest function is " + str(max) + " lines long, and shortest one is " + str(min) + " (average is " + str(average) + ")")
 
 	def review_todos_and_fixmes(self, file_data, message_bag):
-		todo_matches = file_data.find_line_numbers("TODO(.*)")
-		for match in todo_matches:
-			message_bag.add_info(self, "TODO " + match.match_object.group(1), match.line_number)
-			
-		fixme_matches = file_data.find_line_numbers("FIXME(.*)")
-		for match in fixme_matches:
-			message_bag.add_info(self, "FIXME " + match.match_object.group(1), match.line_number)
+		lines = file_data.lines.get_comments_lines()
+		for line in lines:
+			todo_matches = re.findall("TODO(.*)", line.comments)
+			fixme_matches = re.findall("FIXME(.*)", line.comments)
+			for match in todo_matches + fixme_matches:
+				message_bag.add_info(self, "TODO or FIXME here: " + match, line.line_number)
 
 	def review(self, file_data, message_bag):
 		message_bag.add_info(self, "File is " + str(len(file_data.lines.all_lines)) + " lines long")
@@ -74,7 +73,9 @@ if __name__ == "__main__":
 			// FIXME: there is something to be fixed here
 			// Just simply return the field
 			return this.someField; // And some inline comment
-		}
+		},
+
+		somethingTODOfunction: function() {}
 	};
 	"""
 	
@@ -98,6 +99,6 @@ if __name__ == "__main__":
 	
 	# Checking the fucntion stats
 	reviewer.review_min_max_function_length(file_data.functions, message_bag)
-	assert message_bag.messages[0].content == "Longest function is 8 lines long, and shortest one is 3 (average is 5)", 4
+	assert message_bag.messages[0].content == "Longest function is 8 lines long, and shortest one is 0 (average is 3)", 4
 	
 	print "ALL TESTS OK " + __file__
