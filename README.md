@@ -65,4 +65,4 @@ Each reviewer must define a `Reviewer` class and implement a method: `review(sel
 - file_data is of type `parsers.fileparser.FileData`
 - message_bag is of type `reviewers.messagebag.MessageBag`
 
-Check the TODO.md file to see what is currently planned for development.
+Check the issues in GitHub to see what is currently planned for development.
