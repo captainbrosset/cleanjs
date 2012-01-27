@@ -11,6 +11,17 @@ reporter
 
 # This tool works on the command line, so needs to use commant line arguments
 import sys
+
+if len(sys.argv) != 3:
+	print ""
+	print "This command line tool requires 2 arguments:"
+	print "  - the javascript file path to be checked"
+	print "  - the path and filename of the report HTML file that will be created"
+	print ""
+	print "Usage example: $ python cleanjs_cmdline.py path/to/myFile.js path/to/myFileReport.html"
+	print ""
+	exit()
+
 file_name = sys.argv[1]
 report_name = sys.argv[2]
 
@@ -25,3 +36,5 @@ result = reviewer.review(file_data)
 # Displaying the messages to an output
 from reporters import htmlwithcode
 htmlwithcode.output_messages(result, file_data, report_name)
+
+print "Your file has been cleanjs'd! Check the report here " + report_name

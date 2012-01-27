@@ -1,2 +1,2 @@
 *.pyc
-tests/scripts/reports/*.html
+testscripts/reports/*.html

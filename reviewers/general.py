@@ -81,6 +81,7 @@ if __name__ == "__main__":
 	
 	# Tricking the PYTHONPATH because relative imports don't work when running the file standalone
 	import sys
+	sys.path.append("./")
 	sys.path.append("../")
 	
 	# Creating the reviewer instance, giving it the parsed file
