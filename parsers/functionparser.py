@@ -193,4 +193,4 @@ if __name__ == "__main__":
 	assert functions[2].has_return == True
 	assert functions[3].has_return == False
 
-	print "ALL TESTS OK " + __file__
+	print "ALL TESTS OK"

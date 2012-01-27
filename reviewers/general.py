@@ -102,4 +102,4 @@ if __name__ == "__main__":
 	reviewer.review_min_max_function_length(file_data.functions, message_bag)
 	assert message_bag.messages[0].content == "Longest function is 8 lines long, and shortest one is 0 (average is 3)", 4
 	
-	print "ALL TESTS OK " + __file__
+	print "ALL TESTS OK"

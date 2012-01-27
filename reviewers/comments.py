@@ -177,4 +177,4 @@ if __name__ == "__main__":
 	test_separator_comments()
 	test_get_all_comment_blocks()
 
-	print "ALL TESTS OK " + __file__
+	print "ALL TESTS OK"

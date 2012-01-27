@@ -17,4 +17,4 @@ if __name__ == "__main__":
 	assert filter_dups_from_list([1,1,1,2,3,1,5]) == [1,2,3,5]
 	assert sorted(filter_dups_from_list(["a", 4, False, False, 4, "a", "b"])) == sorted(["a", 4, False, "b"])
 
-	print "ALL TESTS OK " + __file__
+	print "ALL TESTS OK"

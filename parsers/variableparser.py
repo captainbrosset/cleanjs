@@ -66,4 +66,4 @@ if __name__ == "__main__":
 	assert variables[2].name == "i", 4
 	assert variables[3].name == "something", 5
 	
-	print "ALL TESTS OK " + __file__
+	print "ALL TESTS OK"

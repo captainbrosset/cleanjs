@@ -41,4 +41,4 @@ def _get_message_line_gutter(total_nb):
 
 
 if __name__ == "__main__":
-	print "NO TESTS TO RUN " + __file__
+	print "NO TESTS TO RUN"

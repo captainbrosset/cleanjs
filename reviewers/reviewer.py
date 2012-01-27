@@ -61,4 +61,4 @@ if __name__ == "__main__":
 	assert get_rate(None, MockBag([msg_error, msg_error, msg_warning])) == "A-"
 	assert get_rate(None, MockBag([msg_error, msg_error, msg_error, msg_error, msg_error, msg_error])) == "C+"
 
-	print "ALL TESTS OK" + __file__
+	print "ALL TESTS OK"

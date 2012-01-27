@@ -119,4 +119,4 @@ if __name__ == "__main__":
 	mock_dict_file.close()
 	os.remove("unit_test_mock_file.txt")
 	
-	print "ALL TESTS OK " + __file__
+	print "ALL TESTS OK"

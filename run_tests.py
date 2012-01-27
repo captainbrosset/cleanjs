@@ -2,9 +2,9 @@ import os
 
 def run_unit_tests(dir):
 	for item in os.listdir(dir):
-		if item[-3:] == ".py" and item[0:8] != "cleanjs_" and item != "run_tests.py" and item != "jsparser.py":
+		if item[-3:] == ".py" and item[0:8] != "cleanjs_" and item != "run_tests.py" and item != "jsparser.py" and item[0:8] != "__init__":
+			print "- " + os.path.join(dir, item)
 			os.system("python " + os.path.join(dir, item))
-
 		try:
 			run_unit_tests(os.path.join(dir, item))
 		except:

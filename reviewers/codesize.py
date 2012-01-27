@@ -112,4 +112,4 @@ class Reviewer():
 
 if __name__ == "__main__":
 
-	print "NO TESTS TO RUN " + __file__
+	print "NO TESTS TO RUN"

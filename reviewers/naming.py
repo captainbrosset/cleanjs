@@ -122,4 +122,4 @@ if __name__ == "__main__":
 	function12 = attrdict(name="setup", line_nb=0, signature=[])
 	check_set_functions_and_assert_bag_contains([function10, function11, function12], 1, "Checking setter have parameter failed")
 
-	print "ALL TESTS OK " + __file__
+	print "ALL TESTS OK"

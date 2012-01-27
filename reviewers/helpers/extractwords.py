@@ -34,4 +34,4 @@ if __name__ == "__main__":
 	assert get_words_in_camelcase_str("SimpleTest") == ["simple", "test"], 4
 	assert get_words_in_camelcase_str("asyncXHR") == ["async", "xhr"], 4
 		
-	print "ALL TESTS OK " + __file__
+	print "ALL TESTS OK"

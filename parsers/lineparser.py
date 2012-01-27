@@ -195,4 +195,4 @@ if __name__ == "__main__":
 	assert len(lines_data.all_lines) == 8, "total number of lines is incorrect. Expected 8, found " + str(len(lines_data.all_lines))
 	assert len(lines_data.get_comments_lines()) == 2, "total number of comments lines is incorrect. Expected 2, found " + str(len(lines_data.get_comments_lines()))
 
-	print "ALL TESTS OK " + __file__
+	print "ALL TESTS OK"

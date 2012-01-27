@@ -84,4 +84,4 @@ if __name__ == "__main__":
 	assert is_variable_name_too_short("re", function_code) == True, "Variable 're' should be considered too short because it's used across lot's of code"
 	assert is_variable_name_too_short("array", function_code) == False, "Variable 'array' should not be considered too short because it's not ;-)"
 
-	print "ALL TESTS OK " + __file__
+	print "ALL TESTS OK"

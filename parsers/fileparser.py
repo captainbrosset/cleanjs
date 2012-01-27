@@ -102,4 +102,4 @@ if __name__ == "__main__":
 	assert lines[2].match_object.group(1) == "i"
 	assert lines[3].match_object.group(1) == "something"
 	
-	print "ALL TESTS OK " + __file__
+	print "ALL TESTS OK"

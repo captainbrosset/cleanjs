@@ -48,4 +48,4 @@ if __name__ == "__main__":
 	code = "self._resizeAPhoto(photo, maxDim, noResizeIfSmaller);"
 	assert is_code_and_comment_similar(code, comment) == True, "The comment is almost exactly like the code, should be detected as similar"
 
-	print "ALL TESTS OK " + __file__
+	print "ALL TESTS OK"

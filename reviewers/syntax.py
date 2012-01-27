@@ -50,4 +50,4 @@ if __name__ == "__main__":
 	assert len(message_bag.errors) == 1, "Syntax error should have been reported"
 	assert message_bag.line == 3, "Syntax error reported on the wrong line"
 
-	print "ALL TESTS OK " + __file__
+	print "ALL TESTS OK"

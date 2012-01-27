@@ -72,4 +72,4 @@ if __name__ == "__main__":
 	bag.reset_messages()
 	assert len(bag.get_messages()) == 0
 	
-	print "ALL TESTS OK " + __file__
+	print "ALL TESTS OK"
