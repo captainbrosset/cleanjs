@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="utf-8">
+		    <title>cleanjs report for file scripts/gettersetter.js</title>
+			<style type="text/css">
+				body {
+					margin: 0;
+					padding: 1em;
+					font-size: 12px;
+					font-family: verdana;
+					overflow-x: hidden;
+					width: 100%;
+					color: #444;
+				}
+				h1 {
+					margin: 0;
+					padding: 1em 1em 1em 25px;
+				}
+				.general {
+					padding: 0;
+					margin: 0 0 30px 30px;
+					list-style-type: none;
+					width: 500px;
+					color: #222;
+				}
+				.lines {
+					padding: 0;
+					margin: 0;
+					list-style-type: none;
+					width: 10000px;
+				}
+				.lines .line {
+					overflow: hidden;
+					padding: 0;
+					margin: 0;
+					list-style-type: none;
+				}
+				.lines .line .gutter {
+					float: left;
+					text-align: right;
+					width: 25px;
+					padding: 4px 5px 4px 0;
+					color: #aaa;
+					font-size: 11px;
+				}
+				.lines .nomessage .gutter {
+					color: #ddd;
+				}
+				.lines .line .messages {
+					float: left;
+					padding: 0;
+					margin: 0;
+					list-style-type: none;
+					width: 500px;
+				}
+				.lines .line .messages li, .general li {
+					padding: 4px 1em;
+					line-height: 13px;
+				}
+				.lines .line .code {
+					float :left;
+					margin: 0;
+					padding: 0 1em;
+					font-family: Menlo, Monaco, Consolas, "Lucida Console", monospace;
+					font-size: 11px;
+				}
+				.error, .info, .warning {
+					border-left: 4px solid #3e93bf;
+					background: #eee;
+				}
+				.warning {
+					border-color: #f5931f;
+				}
+				.error {
+					font-weight: bold;
+					border-color: #d83e0f;
+				}
+			</style>
+		</head>
+		<body>
+			<h1>scripts/gettersetter.js | grade A+</h1><ul class='general'><li class='info'>File is 28 lines long</li><li class='info'>0 lines of comments</li><li class='info'>24 lines of code</li><li class='info'>4 empty lines</li><li class='info'>There are 7 functions in the file</li><li class='info'>Longest function is 5 lines long, and shortest one is 1 (average is 1)</li></ul><ul class='lines'><li class='line nomessage'><span class='gutter'>1</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>var MyClass = function(prop) {</pre></li><li class='line nomessage'><span class='gutter'>2</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>	this._prop = prop;</pre></li><li class='line nomessage'><span class='gutter'>3</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>};</pre></li><li class='line nomessage'><span class='gutter'>4</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>MyClass.prototype = {</pre></li><li class='line nomessage'><span class='gutter'>5</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>	setup: function() {</pre></li><li class='line nomessage'><span class='gutter'>6</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>		this.initSomeStuff();</pre></li><li class='line nomessage'><span class='gutter'>7</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>	},</pre></li><li class='line nomessage'><span class='gutter'>8</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'></pre></li><li class='line nomessage'><span class='gutter'>9</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>	initSomeStuff: function() {</pre></li><li class='line nomessage'><span class='gutter'>10</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>		var test = document.getElementById(&quot;test&quot;);</pre></li><li class='line nomessage'><span class='gutter'>11</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>		var self = this;</pre></li><li class='line nomessage'><span class='gutter'>12</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>		test.onclick = function() {</pre></li><li class='line nomessage'><span class='gutter'>13</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>			alert(self._prop)</pre></li><li class='line nomessage'><span class='gutter'>14</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>		}</pre></li><li class='line nomessage'><span class='gutter'>15</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>	},</pre></li><li class='line nomessage'><span class='gutter'>16</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'></pre></li><li class='line nomessage'><span class='gutter'>17</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>	getProp: function() {</pre></li><li class='line nomessage'><span class='gutter'>18</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>		return this._prop;</pre></li><li class='line nomessage'><span class='gutter'>19</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>	},</pre></li><li class='line nomessage'><span class='gutter'>20</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'></pre></li><li class='line nomessage'><span class='gutter'>21</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>	getty: function() {</pre></li><li class='line nomessage'><span class='gutter'>22</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>		this.getty = tests;</pre></li><li class='line nomessage'><span class='gutter'>23</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>	},</pre></li><li class='line nomessage'><span class='gutter'>24</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'></pre></li><li class='line nomessage'><span class='gutter'>25</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>	setProp: function(prop) {</pre></li><li class='line nomessage'><span class='gutter'>26</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>		this._prop = prop;</pre></li><li class='line nomessage'><span class='gutter'>27</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>	}</pre></li><li class='line nomessage'><span class='gutter'>28</span><ul class='messages'><li>&nbsp;</li></ul><pre class='code'>};</pre></li></ul></body></html>

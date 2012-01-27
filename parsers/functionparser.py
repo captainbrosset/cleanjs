@@ -10,18 +10,20 @@ class FunctionData():
 	- signature: an array of argument names
 	- body: the text of the body of the function
 	- variables: all variables declared in the function. Type parsers.variableparser.VariableData
+	- has_return: whether the function has at least one return statement
 	- lines: an instance of parsers.lineparser.LineParser.LineData"""
 	
-	def __init__(self, name, signature, body, lines, variables, line_nb):
+	def __init__(self, name, signature, body, lines, variables, has_return, line_nb):
 		self.name = name
 		self.signature = signature
 		self.body = body
 		self.lines = lines
 		self.variables = variables
 		self.line_nb = line_nb
+		self.has_return = has_return
 	
 	def __repr__(self):
-		return "Function " + self.name + ", line " + str(self.line_nb) + " (" + str(self.signature) + ") (" + str(len(self.line_data.total_lines)) + " lines of code)"
+		return "Function " + self.name + ", line " + str(self.line_nb) + " (" + str(self.signature) + ") (" + str(len(self.lines.all_lines)) + " lines of code)"
 
 class FunctionParser:
 
@@ -67,6 +69,14 @@ class FunctionParser:
 
 		return bodies
 	
+	def has_return_statement(self, code_lines):
+		has_return = False
+		for line in code_lines:
+			if len(re.findall("[;\t\n \{\}]{1}return(?![a-zA-Z0-9_])|^return(?![a-zA-Z0-9_])", line.complete_line)) > 0:
+				has_return = True
+				break
+		return has_return
+
 	def parse(self, src):
 		functions = []
 		body_line_parser = LineParser()
@@ -82,7 +92,8 @@ class FunctionParser:
 				line_nb = src[0:function_match.start()].count("\n") + 1
 				line_data = body_line_parser.parse(body, line_nb)
 				variable_data = body_variable_parser.parse(body, line_nb)
-				function = FunctionData(name, signature, body, line_data, variable_data, line_nb)
+				has_return = self.has_return_statement(line_data.get_code_lines())
+				function = FunctionData(name, signature, body, line_data, variable_data, has_return, line_nb)
 				functions.append(function)
 
 		return functions
@@ -104,6 +115,8 @@ if __name__ == "__main__":
 		 * @type {Boolean}
 		 */
 		this.someField = false; /* and some inline block comment */
+
+		var thisVariableReturnhasNameReturnreturn = 1;
 	};
 
 	my.package.Class.prototype = {
@@ -125,9 +138,10 @@ if __name__ == "__main__":
 
 	assert len(functions) == 2, 1
 	assert functions[0].name == "Class", 2
-	assert len(functions[0].lines.all_lines) == 9, 3
+	assert len(functions[0].lines.all_lines) == 11, 3
 	assert functions[1].name == "getField", 4
 	assert len(functions[1].lines.all_lines) == 7, 5
+	assert functions[0].has_return == False
 
 	content_with_inner_function = """
 	test = function() {
@@ -158,5 +172,25 @@ if __name__ == "__main__":
 	assert functions[0].variables[2].line_nb == 12, 14
 
 	assert functions[1].lines.all_lines[1].line_number == 5, 15
+
+	assert functions[0].has_return == True
+	assert functions[1].has_return == True
+
+	function_with_return = """
+		getSomething = function() {
+			if(test) return false;
+		}
+
+		getSomethingElse = function(){return a;}
+		getSomethingElseYet = function(){
+			return
+		}
+		wat = function() {var returnA = 0;}
+	"""
+	functions = parser.parse(function_with_return)
+	assert functions[0].has_return == True
+	assert functions[1].has_return == True
+	assert functions[2].has_return == True
+	assert functions[3].has_return == False
 
 	print "ALL TESTS OK " + __file__

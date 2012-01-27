@@ -55,10 +55,10 @@ if __name__ == "__main__":
 	msg_warning = MockMessage("warning")
 	msg_error = MockMessage("error")
 	
-	assert get_rate(None, MockBag([msg_warning,msg_warning,msg_warning,msg_warning,msg_warning])) == "C"
-	assert get_rate(None, MockBag([msg_error,msg_error,msg_error,msg_error])) == "E"
-	assert get_rate(None, MockBag([])) == "A"
-	assert get_rate(None, MockBag([msg_error, msg_error, msg_warning])) == "C"
-	assert get_rate(None, MockBag([msg_error, msg_error, msg_error, msg_error, msg_error, msg_error])) == "really really bad"
+	assert get_rate(None, MockBag([msg_warning,msg_warning,msg_warning,msg_warning,msg_warning])) == "A-"
+	assert get_rate(None, MockBag([msg_error,msg_error,msg_error,msg_error])) == "B"
+	assert get_rate(None, MockBag([])) == "A+"
+	assert get_rate(None, MockBag([msg_error, msg_error, msg_warning])) == "A-"
+	assert get_rate(None, MockBag([msg_error, msg_error, msg_error, msg_error, msg_error, msg_error])) == "C+"
 
 	print "ALL TESTS OK" + __file__
