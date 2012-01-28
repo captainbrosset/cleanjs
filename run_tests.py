@@ -14,6 +14,17 @@ def ensure_dir(dir_name):
 	if not os.path.exists(dir_name):
 		os.makedirs(dir_name)
 
+def output_integration_test_errors(actual, expected):
+	if len(expected) != len(actual):
+		print "Actual results length don't match expected results length"
+	
+	for key, item in actual.iteritems():
+		if expected[key]["rating"] != item["rating"]:
+			print "Rating of " + key + " is incorrect, expected " + expected[key]["rating"] + ", found " + item["rating"]
+		if item["messages"] != expected[key]["messages"]:
+			print "Messages of " + key + " are incorrect, expected:\n" + str(expected[key]["messages"]).replace("},","\n")
+			print "found:\n" + str(item["messages"]).replace("},","\n")
+
 def run_integration_tests():
 	script_dir = "testscripts"
 	report_dir = script_dir + os.sep + "reports"
@@ -46,8 +57,11 @@ def run_integration_tests():
 					"reviewer": m.reviewer,
 					"line": m.line
 				})
+
+	if expected_results != actual_results:
+		output_integration_test_errors(actual_results, expected_results)
+		assert True == False, "Integration tests did not output the same number or type of messages"
 	
-	assert expected_results == actual_results, "Integration tests did not output the same number or type of messages"
 	print "ALL FILES OK"
 
 print ""
