@@ -15,14 +15,6 @@ class Reviewer():
 
 	def get_name(self):
 		return "comments"
-		
-	def get_help(self):
-		return """The number, position and formatting of comments often indicates that code is not clean. An over-commented function for instance hides a complex and hard-to-read implementation.
-		This reviewer checks:
-		- if there are multiple comment lines in a row (starting with //)
-		- the ratio of comments and code lines in functions (maximum at """ + str(Reviewer.MAX_CODE_COMMENT_RATIO_IN_FUNCTION) + """)
-		- if there are comments just after an expression or statement block
-		- if there are visual separator comment lines like // ****** in the code or similar"""
 
 	def review_multiple_comment_lines(self, lines, message_bag):
 		comments_lines_passed = 0
@@ -42,7 +34,7 @@ class Reviewer():
 						line_nb_of_first_comment = line.line_number
 					comments_lines_passed += 1
 				else:
-					if comments_lines_passed > Reviewer.MAX_NUMBER_OF_SUBSEQUENT_COMMENTS_LINE:
+					if comments_lines_passed > Reviewer.MAX_NUMBER_OF_SUBSEQUENT_COMMENTS_LINE and line_nb_of_first_comment != 1:
 						message_bag.add_warning(self, "You have " + str(comments_lines_passed) + " subsequent lines of comments in a row. Are you trying to explain something complex?", line_nb_of_first_comment)
 						
 					comments_lines_passed = 0
