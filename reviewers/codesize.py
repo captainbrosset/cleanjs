@@ -17,16 +17,6 @@ class Reviewer():
 
 	def get_name(self):
 		return "code size"
-		
-	def get_help(self):
-		return """The size of code is a good indicator of its quality. The fact that the size of various elements of the code is small indicates that it's easy to understand.
-		This reviewer checks:
-		- length of lines (max is """ + str(Reviewer.ERROR_MAX_LINE_LENGTH) + """)
-		- number of arguments in function signatures (warning at """ + str(Reviewer.WARN_MAX_ARGUMENT_NB) + """, error at """ + str(Reviewer.ERROR_MAX_ARGUMENT_NB) + """)
-		- number of total lines of code in the file (warning at """ + str(Reviewer.WARN_MAX_FILE_LINE_NB) + """, error at """ + str(Reviewer.ERROR_MAX_FILE_LINE_NB) + """)
-		- number of total lines of code in functions (warning at """ + str(Reviewer.WARN_MAX_FUNCTION_LINE_NB) + """, error at """ + str(Reviewer.ERROR_MAX_FUNCTION_LINE_NB) + """)
-		- length of variable names (warning when > """ + str(Reviewer.WARN_MAX_NAME_SIZE) + """ or < """ + str(Reviewer.WARN_MIN_NAME_SIZE) + """, error when > """ + str(Reviewer.ERROR_MAX_NAME_SIZE) + """ or < """ + str(Reviewer.ERROR_MIN_NAME_SIZE) + """)
-		- length of function names (same as above)"""
 
 	def review_line_length(self, lines, message_bag):
 		for line in lines:

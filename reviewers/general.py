@@ -3,13 +3,6 @@ import re
 class Reviewer():
 	def get_name(self):
 		return "general"
-		
-	def get_help(self):
-		return """Check general metrics and information about the file
-		- FIXME and TODO comments
-		- file length
-		- number of functions
-		- minimum and maximum function size"""
 
 	def review_min_max_function_length(self, functions, message_bag):
 		min = float("inf")

@@ -3,12 +3,6 @@ import re
 class Reviewer():
 	def get_name(self):
 		return "formatting"
-		
-	def get_help(self):
-		return """Uniform code formatting across files and across members of a team is key to maintainability.
-		This reviewer checks:
-		- if the file is correctly formated (based on whitespace positions in function declaration as well as in other statements)
-		- if the file contains several empty lines in a row"""
 	
 	def review_statement_spacing(self, file_content, message_bag):
 		bad_format = len(re.findall("[a-zA-Z0-9_$]+: function", file_content))

@@ -13,14 +13,6 @@ class Reviewer():
 	
 	def get_name(self):
 		return "naming"
-		
-	def get_help(self):
-		return """Properly naming variables, arguments, functions or classes is key to making a code easy to read and maintain.
-		This reviewer checks:
-		- if a function returns something if its name starts with get, has or is
-		- if a function accepts 1 argument if its name starts with set
-		- if names are camelcased
-		- if words in a camelcase name actually seem to mean something"""
 	
 	def name_starts_with(self, name, prefix):
 		"""Returns true if name starts with prefix if prefix is "separated" from the rest of the string:

@@ -10,13 +10,6 @@ class Reviewer():
 	
 	def get_name(self):
 		return "complexity"
-		
-	def get_help(self):
-		return """Complex code is hard to read and maintain. Clean code should have small simple functions and classes that focus on one responsibility only, and their inner working should be simple to read.
-		This reviewer checks:
-		- the complexity of functions based on the number of if, for, while, switch statements (warning at """ + str(Reviewer.WARN_MAX_NB_OF_STATEMENTS_IN_FUNCTION) + """, error at """ + str(Reviewer.ERROR_MAX_NB_OF_STATEMENTS_IN_FUNCTION) + """)
-		- the complexity of functions based on the number of values returned (warning at """ + str(Reviewer.WARN_MAX_NB_OF_RETURNS_IN_FUNCTION) + """, error at """ + str(Reviewer.ERROR_MAX_NB_OF_RETURNS_IN_FUNCTION) + """)
-		- the complexity of IF statements based on the number of conditions (warning at """ + str(Reviewer.WARN_MAX_NB_OF_CONDITIONS_IN_IF) + """, error at """ + str(Reviewer.ERROR_MAX_NB_OF_CONDITIONS_IN_IF) + """)"""
 	
 	def review_functions_complexity(self, functions, message_bag):
 		for function in functions:
