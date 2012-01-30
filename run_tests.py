@@ -71,4 +71,4 @@ if __name__ == "__main__":
 
 	print ""
 	print "-- RUNNING ALL INTEGRATION TESTS"
-run_integration_tests()
+	run_integration_tests()
