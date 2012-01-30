@@ -64,10 +64,11 @@ def run_integration_tests():
 	
 	print "ALL FILES OK"
 
-print ""
-print "-- RUNNING ALL UNIT TESTS"
-run_unit_tests(".")
+if __name__ == "__main__":
+	print ""
+	print "-- RUNNING ALL UNIT TESTS"
+	run_unit_tests(".")
 
-print ""
-print "-- RUNNING ALL INTEGRATION TESTS"
+	print ""
+	print "-- RUNNING ALL INTEGRATION TESTS"
 run_integration_tests()
