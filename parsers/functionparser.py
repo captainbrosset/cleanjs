@@ -193,4 +193,23 @@ if __name__ == "__main__":
 	assert functions[2].has_return == True
 	assert functions[3].has_return == False
 
+	# FIXME: this unit test is failing and shows why a true Js parser is far better compared to the simple regexp used so far
+	comment_block_with_function = """
+	/**
+	 * This is the comment of a function
+	 * you can use it like this:
+	 * addSubcribe({
+	 * 	fn: function() {
+	 * 		// this is a test
+	 * 	}
+	 * });
+	 */
+	 addSubcribe = function() {
+	 	
+	 }
+	"""
+	functions = parser.parse(comment_block_with_function)
+	assert len(functions) == 1, "Incorrect number of functions parsed in the code"
+	assert functions[0].name == "addSubscribe"
+
 	print "ALL TESTS OK"

@@ -181,6 +181,18 @@ if __name__ == "__main__":
 	assert lines_data.get_code_lines()[4].code == "my.package.Class.prototype = {", "incorrect code line content extracted"
 	assert lines_data.get_code_lines()[6].code == "return this.someField;", "incorrect code line content extracted"
 
+	comment_line_in_comment_block_file = """/**
+	 * This is the description of the class
+	 * Usage example:
+	 * // Doing something
+	 * this.doSomething();
+	 * http://test.com
+	 */
+	"""
+	lines_data = parser.parse(comment_line_in_comment_block_file)
+	assert len(lines_data.get_comments_lines()) == 7
+	assert len(lines_data.get_code_lines()) == 0
+
 	tricky_file_content = """var a = 1;
 	a ++;
 	// some function
