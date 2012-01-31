@@ -1,20 +1,39 @@
 import re
 
+from jsparser import JSFileParser
 from lineparser import LineParser
 from functionparser import FunctionParser
 from variableparser import VariableParser
 
 def get_file_data_from_content(src_file_name, src_file_content):
-	"""Use this to gather data for file, given its content"""
-	src_file_functions = FunctionParser().parse(src_file_content)
-	src_file_variables = VariableParser().parse(src_file_content)
-	src_file_lines = LineParser().parse(src_file_content)
+	"""Use this to gather data for file, given its content.
+	Will raise a jsparser.ParsingError if the syntax is incorrect"""
+
+	parser = JSFileParser(src_file_content)
+
+	function_parser = FunctionParser()
+	parser.add_visitor(function_parser)
+
+	variable_parser = VariableParser()
+	parser.add_visitor(variable_parser)
+
+	line_parser = LineParser()
+	parser.add_visitor()
+	
+	parser.visit()
+	
+	src_file_functions = function_parser.entities
+	src_file_variables = variable_parser.entities
+	src_file_lines = line_parser.entities
 
 	return FileData(src_file_name, src_file_content, src_file_lines, src_file_functions, src_file_variables)
 
 def get_file_data_from_file(src_file_name):
-	"""Use this to gather data for file, given its path and name"""
+	"""Use this to gather data for file, given its path and name.
+	Will raise a jsparser.ParsingError if the syntax is incorrect"""
+
 	return get_file_data_from_content(src_file_name, open(src_file_name, 'r').read())
+
 
 class FileData():
 	"""An instance of this class is passed to reviewers, in their review function.

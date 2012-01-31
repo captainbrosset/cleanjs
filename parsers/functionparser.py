@@ -2,8 +2,9 @@ import re
 
 from variableparser import VariableParser
 from lineparser import LineParser
+import visitor
 
-class FunctionData():
+class FunctionData(visitor.Entity):
 	"""Passed to each reviewer, as an element of the functions list, inside file_data.
 	Instances of this class have the following attributes:
 	- name: the name of the function
@@ -13,62 +14,31 @@ class FunctionData():
 	- has_return: whether the function has at least one return statement
 	- lines: an instance of parsers.lineparser.LineParser.LineData"""
 	
-	def __init__(self, name, signature, body, lines, variables, has_return, line_nb):
+	def __init__(self, name, body, line_number, signature, start_pos, end_pos, lines, variables, has_return):
+		super(Function, self).__init__(line_number, start_pos, end_pos)
+		
 		self.name = name
-		self.signature = signature
 		self.body = body
+		self.signature = signature
+
 		self.lines = lines
 		self.variables = variables
-		self.line_nb = line_nb
 		self.has_return = has_return
 	
 	def __repr__(self):
-		return "Function " + self.name + ", line " + str(self.line_nb) + " (" + str(self.signature) + ") (" + str(len(self.lines.all_lines)) + " lines of code)"
+		return "Function " + self.name + ", line " + str(self.line_number) + " (" + str(self.signature) + ") (" + str(len(self.lines.all_lines)) + " lines of code)"
 
-class FunctionParser:
-
-	FUNCTIONS_PATTERNS = ["function[\s]+([a-zA-Z0-9_$]+)[\s]*\(([a-zA-Z0-9,\s]*)\)[\s]*\{",
-						"([a-zA-Z0-9_$]+)[\s]*=[\s]*function[\s]*\(([a-zA-Z0-9,\s]*)\)[\s]*\{",
-						"([a-zA-Z0-9_$]+)[\s]*:[\s]*function[\s]*\(([a-zA-Z0-9,\s]*)\)[\s]*\{"]
-	SIGNATURE_PATTERN = "[a-zA-Z0-9_$]+"
-	FUNCTIONS_BODY_PROCESSOR_SEP = "[[FUNCTIONSTART]]"
+class FunctionParser:	
+	def __init__(self):
+		self.entities = []
 	
-	def _parse_signature(self, src):
-		return re.findall(FunctionParser.SIGNATURE_PATTERN, src)
-		
-	def _parse_bodies(self, src, pattern):
-		bodies = []
+	def add_function(self, name, body, line_number, signature, start_pos, end_pos, source):
+		parsed_lines = LineParser().parse(body)
+		parsed_vars = VariableParser().parse(body)
+		has_return = self.has_return_statement(parsed_lines.get_code_lines())
+		function = Function(name, body, line_number, signature, start_pos, end_pos, parsed_lines, parsed_vars, has_return)
+		self.entities.append(function)
 
-		while True:
-			src = re.sub(pattern, FunctionParser.FUNCTIONS_BODY_PROCESSOR_SEP, src, 1)
-			split = src.split(FunctionParser.FUNCTIONS_BODY_PROCESSOR_SEP, 1)
-			if len(split) > 1:
-				src = split[1]
-				if src[0:1] == "\n":
-					src = src[1:]
-				if src[-1:] == "\n":
-					src = src[:-1]
-				
-				# Read the chars from the beginning of this function to find the end
-				opened_curly_brace = 0
-				body = ""
-				for char in src:
-					# closing the function
-					if char == "}" and opened_curly_brace == 0:
-						break
-					# closing an already opened brace
-					if char == "}" and opened_curly_brace > 0:
-						opened_curly_brace -= 1
-					if char == "{":
-						opened_curly_brace += 1
-					body += char
-				
-				bodies.append(body)
-			else:
-				break
-
-		return bodies
-	
 	def has_return_statement(self, code_lines):
 		has_return = False
 		for line in code_lines:
@@ -77,26 +47,30 @@ class FunctionParser:
 				break
 		return has_return
 
-	def parse(self, src):
-		functions = []
-		body_line_parser = LineParser()
-		body_variable_parser = VariableParser()
-		
-		for pattern in FunctionParser.FUNCTIONS_PATTERNS:
-			functions_bodies = self._parse_bodies(src, pattern)
-			functions_signatures = re.finditer(pattern, src)
-			for index, function_match in enumerate(functions_signatures):
-				name = function_match.group(1)
-				signature = self._parse_signature(function_match.group(2))
-				body = functions_bodies[index]
-				line_nb = src[0:function_match.start()].count("\n") + 1
-				line_data = body_line_parser.parse(body, line_nb)
-				variable_data = body_variable_parser.parse(body, line_nb)
-				has_return = self.has_return_statement(line_data.get_code_lines())
-				function = FunctionData(name, signature, body, line_data, variable_data, has_return, line_nb)
-				functions.append(function)
+	def visit_FUNCTION(self, node, source):
+		# Named functions only, the getattr returns None if name doesn't exist
+		if node.type == "FUNCTION" and getattr(node, "name", None):
+			self.add_function(node.name, source[node.start:node.end], node.lineno, node.params, node.start, node.end, source)
 
-		return functions
+	def visit_IDENTIFIER(self, node, source):
+		# Anonymous functions declared with var name = function() {};
+		try:
+			if node.type == "IDENTIFIER" and hasattr(node, "initializer") and node.initializer.type == "FUNCTION":
+				self.add_function(node.name, source[node.start:node.initializer.end], node.lineno, node.initializer.params, node.start, node.initializer.end, source)
+		except Exception as e:
+			pass
+
+	def visit_ASSIGN(self, node, source):
+		if node[1].type == "FUNCTION":
+			self.add_function(node[0].value, source[node[1].start:node[1].end], node[1].lineno, node[1].params, node[1].start, node[1].end, source)
+
+	def visit_PROPERTY_INIT(self, node, source):
+		# Anonymous functions declared as a property of an object
+		try:
+			if node.type == "PROPERTY_INIT" and node[1].type == "FUNCTION":
+				self.add_function(node[0].value, source[node.start:node[1].end], node[0].lineno, node[1].params, node.start, node[1].end, source)
+		except Exception as e:
+			pass
 
 
 if __name__ == "__main__":

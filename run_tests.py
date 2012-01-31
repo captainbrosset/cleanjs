@@ -34,14 +34,22 @@ def run_integration_tests():
 	expected_results = expected.results
 	actual_results = {}
 	
+	from parsers import fileparser
+	from reviewers import reviewer
+
 	for item in os.listdir(script_dir):
 		if item[-3:] == ".js":
+			print "- " + item
+
 			# Gather data about the file to be reviewed
-			from parsers import fileparser
-			file_data = fileparser.get_file_data_from_file(script_dir + os.sep + item)
+			file_data = None
+			try:
+				file_data = fileparser.get_file_data_from_file(script_dir + os.sep + item)
+			except Exception as error:
+				print error
+				break;
 
 			# Review the file
-			from reviewers import reviewer
 			result = reviewer.review(file_data)
 
 			rating = result["rating"]

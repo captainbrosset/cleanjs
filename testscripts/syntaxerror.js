@@ -8,4 +8,4 @@ test = {
 }
 
 
-var a = fnction(a) {}
+var a = function(a) {}

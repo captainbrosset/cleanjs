@@ -814,8 +814,8 @@ results = {
 			}
 		]
 	},
-	"bookmarks.js": {
-		"rating": "F-",
+	"syntaxerror.js": {
+		"rating": "C-",
 		"messages": [
 			{'reviewer': 'general', 'line': None, 'type': 'info'},
 			{'reviewer': 'general', 'line': None, 'type': 'info'},
@@ -824,131 +824,14 @@ results = {
 			{'reviewer': 'general', 'line': None, 'type': 'info'},
 			{'reviewer': 'general', 'line': None, 'type': 'info'},
 			{'reviewer': 'code size', 'line': 1, 'type': 'error'},
-			{'reviewer': 'syntax', 'line': 19, 'type': 'error'},
-			{'reviewer': 'code size', 'line': 35, 'type': 'error'},
-			{'reviewer': 'general', 'line': 38, 'type': 'info'},
-			{'reviewer': 'comments', 'line': 42, 'type': 'warning'},
-			{'reviewer': 'code size', 'line': 61, 'type': 'warning'},
-			{'reviewer': 'code size', 'line': 61, 'type': 'warning'},
-			{'reviewer': 'complexity', 'line': 61, 'type': 'error'},
-			{'reviewer': 'general', 'line': 62, 'type': 'info'},
-			{'reviewer': 'complexity', 'line': 149, 'type': 'warning'},
-			{'reviewer': 'code size', 'line': 157, 'type': 'error'},
-			{'reviewer': 'comments', 'line': 158, 'type': 'warning'},
-			{'reviewer': 'code size', 'line': 167, 'type': 'warning'},
-			{'reviewer': 'comments', 'line': 204, 'type': 'warning'},
-			{'reviewer': 'code size', 'line': 209, 'type': 'error'},
-			{'reviewer': 'complexity', 'line': 228, 'type': 'warning'},
-			{'reviewer': 'comments', 'line': 240, 'type': 'warning'},
-			{'reviewer': 'complexity', 'line': 248, 'type': 'warning'},
-			{'reviewer': 'comments', 'line': 267, 'type': 'warning'},
-			{'reviewer': 'code size', 'line': 281, 'type': 'warning'},
-			{'reviewer': 'complexity', 'line': 281, 'type': 'warning'},
-			{'reviewer': 'complexity', 'line': 281, 'type': 'warning'},
-			{'reviewer': 'complexity', 'line': 341, 'type': 'warning'},
-			{'reviewer': 'unused', 'line': 341, 'type': 'error'},
-			{'reviewer': 'general', 'line': 342, 'type': 'info'},
-			{'reviewer': 'comments', 'line': 342, 'type': 'warning'},
-			{'reviewer': 'comments', 'line': 342, 'type': 'warning'},
-			{'reviewer': 'code size', 'line': 365, 'type': 'error'},
-			{'reviewer': 'complexity', 'line': 365, 'type': 'warning'},
-			{'reviewer': 'complexity', 'line': 365, 'type': 'warning'},
-			{'reviewer': 'general', 'line': 366, 'type': 'info'},
-			{'reviewer': 'unused', 'line': 378, 'type': 'error'},
-			{'reviewer': 'code size', 'line': 379, 'type': 'error'},
-			{'reviewer': 'code size', 'line': 395, 'type': 'error'},
-			{'reviewer': 'code size', 'line': 405, 'type': 'error'},
-			{'reviewer': 'code size', 'line': 414, 'type': 'error'},
-			{'reviewer': 'code size', 'line': 425, 'type': 'error'},
-			{'reviewer': 'code size', 'line': 439, 'type': 'error'},
-			{'reviewer': 'code size', 'line': 477, 'type': 'error'},
-			{'reviewer': 'complexity', 'line': 500, 'type': 'error'},
-			{'reviewer': 'code size', 'line': 515, 'type': 'error'},
-			{'reviewer': 'code size', 'line': 522, 'type': 'warning'},
-			{'reviewer': 'complexity', 'line': 522, 'type': 'warning'},
-			{'reviewer': 'code size', 'line': 556, 'type': 'warning'},
-			{'reviewer': 'complexity', 'line': 556, 'type': 'warning'},
-			{'reviewer': 'code size', 'line': 563, 'type': 'error'},
-			{'reviewer': 'complexity', 'line': 582, 'type': 'warning'},
-			{'reviewer': 'code size', 'line': 608, 'type': 'error'},
-			{'reviewer': 'complexity', 'line': 608, 'type': 'warning'},
-			{'reviewer': 'complexity', 'line': 608, 'type': 'warning'},
-			{'reviewer': 'code size', 'line': 628, 'type': 'warning'},
-			{'reviewer': 'complexity', 'line': 628, 'type': 'warning'},
-			{'reviewer': 'comments', 'line': 643, 'type': 'warning'},
-			{'reviewer': 'complexity', 'line': 647, 'type': 'warning'},
-			{'reviewer': 'code size', 'line': 670, 'type': 'warning'},
-			{'reviewer': 'unused', 'line': 670, 'type': 'error'},
-			{'reviewer': 'complexity', 'line': 673, 'type': 'warning'},
-			{'reviewer': 'general', 'line': 682, 'type': 'info'},
-			{'reviewer': 'comments', 'line': 682, 'type': 'warning'},
-			{'reviewer': 'comments', 'line': 685, 'type': 'warning'},
-			{'reviewer': 'code size', 'line': 690, 'type': 'error'}
-		]
-	},
-	"syntaxerror.js": {
-		"rating": "C+",
-		"messages": [
-			{
-				"type": "info",
-				"reviewer": "general",
-				"line": None
-			},
-			{
-				"type": "info",
-				"reviewer": "general",
-				"line": None
-			},
-			{
-				"type": "info",
-				"reviewer": "general",
-				"line": None
-			},
-			{
-				"type": "info",
-				"reviewer": "general",
-				"line": None
-			},
-			{
-				"type": "info",
-				"reviewer": "general",
-				"line": None
-			},
-			{
-				"type": "info",
-				"reviewer": "general",
-				"line": None
-			},
-			{
-				"type": "error",
-				"reviewer": "code size",
-				"line": 1
-			},
-			{
-				"type": "error",
-				"reviewer": "code size",
-				"line": 1
-			},
-			{
-				"type": "error",
-				"reviewer": "comments",
-				"line": 1
-			},
-			{
-				"type": "error",
-				"reviewer": "naming",
-				"line": 1
-			},
-			{
-				"type": "error",
-				"reviewer": "unused",
-				"line": 1
-			},
-			{
-				"type": "error",
-				"reviewer": "syntax",
-				"line": 11
-			}
+			{'reviewer': 'code size', 'line': 1, 'type': 'error'},
+			{'reviewer': 'comments', 'line': 1, 'type': 'error'},
+			{'reviewer': 'naming', 'line': 1, 'type': 'error'},
+			{'reviewer': 'unused', 'line': 1, 'type': 'error'},
+			{'reviewer': 'code size', 'line': 11, 'type': 'warning'},
+			{'reviewer': 'code size', 'line': 11, 'type': 'error'},
+			{'reviewer': 'code size', 'line': 11, 'type': 'error'},
+			{'reviewer': 'unused', 'line': 11, 'type': 'error'}
 		]
 	}
 }
