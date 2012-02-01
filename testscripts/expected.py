@@ -833,5 +833,17 @@ results = {
 			{'reviewer': 'code size', 'line': 11, 'type': 'error'},
 			{'reviewer': 'unused', 'line': 11, 'type': 'error'}
 		]
+	},
+	"functionincomment.js": {
+		"rating": "A",
+		"messages" :[
+			{'reviewer': 'general', 'line': None, 'type': 'info'},
+			{'reviewer': 'general', 'line': None, 'type': 'info'},
+			{'reviewer': 'general', 'line': None, 'type': 'info'},
+			{'reviewer': 'general', 'line': None, 'type': 'info'},
+			{'reviewer': 'general', 'line': None, 'type': 'info'},
+			{'reviewer': 'general', 'line': None, 'type': 'info'},
+			{'reviewer': 'code size', 'line': 4, 'type': 'error'}
+		]
 	}
 }

@@ -48,11 +48,11 @@ class CleanjsCommand(sublime_plugin.TextCommand):
 
 		self.view.add_regions(REGIONS_KEY, regions, "string", sublime.DRAW_OUTLINED)
 
-	def get_points_from_line(self, line_nb, lines_data):
+	def get_points_from_line(self, line_number, lines_data):
 		start = 0
 		end = 0
 		for index, line in enumerate(lines_data.all_lines):
-			if index+1 == line_nb:
+			if index+1 == line_number:
 				end = start + len(line.complete_line)
 				break
 			start += len(line.complete_line) + 1

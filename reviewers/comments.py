@@ -18,7 +18,7 @@ class Reviewer():
 
 	def review_multiple_comment_lines(self, lines, message_bag):
 		comments_lines_passed = 0
-		line_nb_of_first_comment = -1
+		line_number_of_first_comment = -1
 		is_in_jsdoc_style_comment = False
 		
 		for line in lines:
@@ -30,15 +30,15 @@ class Reviewer():
 		
 			if not is_in_jsdoc_style_comment:
 				if line.is_only_comments():			
-					if line_nb_of_first_comment == -1:
-						line_nb_of_first_comment = line.line_number
+					if line_number_of_first_comment == -1:
+						line_number_of_first_comment = line.line_number
 					comments_lines_passed += 1
 				else:
-					if comments_lines_passed > Reviewer.MAX_NUMBER_OF_SUBSEQUENT_COMMENTS_LINE and line_nb_of_first_comment != 1:
-						message_bag.add_warning(self, "You have " + str(comments_lines_passed) + " subsequent lines of comments in a row. Are you trying to explain something complex?", line_nb_of_first_comment)
+					if comments_lines_passed > Reviewer.MAX_NUMBER_OF_SUBSEQUENT_COMMENTS_LINE and line_number_of_first_comment != 1:
+						message_bag.add_warning(self, "You have " + str(comments_lines_passed) + " subsequent lines of comments in a row. Are you trying to explain something complex?", line_number_of_first_comment)
 						
 					comments_lines_passed = 0
-					line_nb_of_first_comment = -1
+					line_number_of_first_comment = -1
 	
 	def review_comments_ratio_in_functions(self, functions, message_bag):
 		for function in functions:
@@ -52,7 +52,7 @@ class Reviewer():
 			if nb_total_lines > 0:
 				ratio = round(float(nb_comments_lines) / float(nb_total_lines), 1)
 				if ratio > Reviewer.MAX_CODE_COMMENT_RATIO_IN_FUNCTION:
-					message_bag.add_error(self, "There are more than " + str(int(Reviewer.MAX_CODE_COMMENT_RATIO_IN_FUNCTION*100)) + "% of comments in function " + function.name + " (" + str(ratio*100) + "%). Make the code simpler.", function.line_nb);
+					message_bag.add_error(self, "There are more than " + str(int(Reviewer.MAX_CODE_COMMENT_RATIO_IN_FUNCTION*100)) + "% of comments in function " + function.name + " (" + str(ratio*100) + "%). Make the code simpler.", function.line_number);
 	
 	def review_comments_after_statements(self, lines, message_bag):
 		for line in lines:
@@ -80,14 +80,14 @@ class Reviewer():
 		for line in lines:
 			if not line.is_only_comments():
 				# No comments, start a new block
-				blocks.append({"line_nb": None, "comment": ""})
+				blocks.append({"line_number": None, "comment": ""})
 			else:
 				# Comments, put that into the last comment block opened
 				if len(blocks) == 0:
-					blocks.append({"line_nb": None, "comment": ""})
+					blocks.append({"line_number": None, "comment": ""})
 				blocks[len(blocks) - 1]["comment"] += line.comments
-				if not blocks[len(blocks) - 1]["line_nb"]:
-					blocks[len(blocks) - 1]["line_nb"] = line.line_number
+				if not blocks[len(blocks) - 1]["line_number"]:
+					blocks[len(blocks) - 1]["line_number"] = line.line_number
 		return general.filter_empty_items_from_dict_list(blocks, "comment")
 
 	def review_multiple_responsibilities(self, lines, message_bag):
@@ -96,9 +96,9 @@ class Reviewer():
 		for comment in comment_blocks:
 			nb_of_conditions = len(re.findall(" and | or | but | if ", comment["comment"]))
 			if nb_of_conditions > Reviewer.WARN_MAX_NB_OF_BUTIFORAND_CONDITION:
-				message_bag.add_warning(self, "It seems this comment tries to explain a piece of code that has several responsibilities", comment["line_nb"])
+				message_bag.add_warning(self, "It seems this comment tries to explain a piece of code that has several responsibilities", comment["line_number"])
 			elif nb_of_conditions > Reviewer.ERROR_MAX_NB_OF_BUTIFORAND_CONDITION:
-				message_bag.add_error(self, "For sure, this comment corresponds to code that has more than 1 responsibility", comment["line_nb"])
+				message_bag.add_error(self, "For sure, this comment corresponds to code that has more than 1 responsibility", comment["line_number"])
 
 	def review(self, file_data, message_bag):
 		self.review_multiple_comment_lines(file_data.lines.all_lines, message_bag)

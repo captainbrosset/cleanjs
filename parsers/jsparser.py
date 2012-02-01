@@ -4,13 +4,13 @@ from pynarcissus import jsparser
 
 class ParsingError(Exception):
 	def __init__(self, error):
-		message = "Syntax error line " + str(self.get_line_nb(error)) + " : " + self.get_msg(error)
+		message = "Syntax error line " + str(self.get_line_number(error)) + " : " + self.get_msg(error)
 		Exception.__init__(self, message)
 
 	def get_msg(self, error):
 		return str(error).split("\n")[0]
 	
-	def get_line_nb(self, error):
+	def get_line_number(self, error):
 		return int(str(error).split("\n")[1].split(":")[1])
 
 class JSFileParser:
@@ -21,7 +21,7 @@ class JSFileParser:
 
 	parser = JSFileParser(content)
 	parser.add_visitor(MyVisitor())
-	parser.visit()"""
+	parser.parse()"""
 	
 	CHILD_ATTRS = ['value', 'thenPart', 'elsePart', 'expression', 'body','exception', 'initializer',
 	'tryBlock', 'condition','update', 'iterator', 'object', 'setup', 'discriminant', 'finallyBlock',
@@ -55,22 +55,33 @@ class JSFileParser:
 		self.visitors.append(visitor)
 
 	def exec_visitors_on_node(self, node, source):
-		for visitor in self.visitors:
-			visitor_func = getattr(visitor, "visit_%s" % node.type, None)
-			if visitor_func:
-				visitor_func(node, source)
+		self.exec_visitors_function("visit_%s" % node.type, source, node)
+			
+	def exec_preprocess_visitors(self, source):
+		self.exec_visitors_function("visit_PREPROCESS", source)
 	
-	def exec_visitors_on_file(self, source):
+	def exec_postprocess_visitors(self, source):
+		self.exec_visitors_function("visit_POSTPROCESS", source)
+	
+	def exec_visitors_function(self, function_name, source, node=None):
 		for visitor in self.visitors:
-			visitor_func = getattr(visitor, "visit_FILECONTENT", None)
-			if visitor_func:
+			visitor_func = getattr(visitor, function_name, None)
+			visitor_anynode_func = getattr(visitor, "visit_ANY", None)
+			if visitor_func and node:
+				visitor_func(node, source)
+			elif visitor_anynode_func and node:
+				visitor_anynode_func(node, source)
+			elif visitor_func and not node:
 				visitor_func(source)
-		
+
+	def parse(self):
+		self.exec_preprocess_visitors(self.source)
+		self.visit()
+		self.exec_postprocess_visitors(self.source)
+
 	def visit(self, root=None):
-		# First call to visit only
 		if not root:
 			root = self.root
-			self.exec_visitors_on_file(self.source)
 		
 		if id(root) in self.visited:
 			return
@@ -161,15 +172,15 @@ if __name__ == "__main__":
 	}"""
 	parser = JSFileParser(content)
 	
-	from visitors.function import FunctionVisitor	
-	function_visitor = FunctionVisitor()
+	from functionparser import FunctionParser
+	function_visitor = FunctionParser()
 	parser.add_visitor(function_visitor)
 			
-	parser.visit()
+	parser.parse()
 		
-	assert len(function_visitor.entities) == 10, "Wrong number of functions in the file"
+	assert len(function_visitor.functions) == 10, "Wrong number of functions in the file"
 	function_names = []
-	for f in function_visitor.entities:
+	for f in function_visitor.functions:
 		function_names.append(f.name)
 	assert "".join(sorted(function_names)) == "MyClassaveryloingnameforafunctionisnotverygoodconstructorInnerFunctionctrlMgrdoSomethinggetSomethinghasWingssetSomethingttest", "Wrong functions found in the file"
 		

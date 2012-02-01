@@ -1,6 +1,6 @@
 import re
 
-from variableparser import VariableParser
+from variableparser import VariableParser, VariableData
 from lineparser import LineParser
 import visitor
 
@@ -15,8 +15,8 @@ class FunctionData(visitor.Entity):
 	- lines: an instance of parsers.lineparser.LineParser.LineData"""
 	
 	def __init__(self, name, body, line_number, signature, start_pos, end_pos, lines, variables, has_return):
-		super(Function, self).__init__(line_number, start_pos, end_pos)
-		
+		super(FunctionData, self).__init__(line_number, start_pos, end_pos)
+
 		self.name = name
 		self.body = body
 		self.signature = signature
@@ -28,24 +28,51 @@ class FunctionData(visitor.Entity):
 	def __repr__(self):
 		return "Function " + self.name + ", line " + str(self.line_number) + " (" + str(self.signature) + ") (" + str(len(self.lines.all_lines)) + " lines of code)"
 
+
 class FunctionParser:	
 	def __init__(self):
-		self.entities = []
+		self.functions = []
+		self.last_function = None
 	
-	def add_function(self, name, body, line_number, signature, start_pos, end_pos, source):
-		parsed_lines = LineParser().parse(body)
-		parsed_vars = VariableParser().parse(body)
-		has_return = self.has_return_statement(parsed_lines.get_code_lines())
-		function = Function(name, body, line_number, signature, start_pos, end_pos, parsed_lines, parsed_vars, has_return)
-		self.entities.append(function)
+	def get_function_body(self, body_src):
+		return body_src[body_src.find("{")+1:body_src.rfind("}")]
 
-	def has_return_statement(self, code_lines):
-		has_return = False
-		for line in code_lines:
-			if len(re.findall("[;\t\n \{\}]{1}return(?![a-zA-Z0-9_])|^return(?![a-zA-Z0-9_])", line.complete_line)) > 0:
-				has_return = True
-				break
-		return has_return
+	def add_function(self, name, body, line_number, signature, start_pos, end_pos, source):
+		body = self.get_function_body(body)
+		parsed_lines = LineParser().parse(body)
+
+		function = FunctionData(name, body, line_number, signature, start_pos, end_pos, parsed_lines, [], False)
+		self.functions.append(function)
+
+	def add_var(self, function, name, line_number, start, end):
+		is_already_there = False
+		for var in function.variables:
+			if var.name == name and var.line_number == line_number:
+				is_already_there = True
+		
+		if not is_already_there:
+			function.variables.append(VariableData(name, line_number, start, end))
+
+	def get_last_function(self):
+		if len(self.functions) > 0:
+			return self.functions[len(self.functions) - 1]
+		else:
+			return None
+
+	def is_in_function(self, start_pos):
+		last_function = self.get_last_function()
+		return last_function and last_function.end_pos > start_pos
+
+	def visit_VAR(self, node, source):
+		if self.is_in_function(node.start):
+			if getattr(node[0], "initializer", False):
+				self.add_var(self.get_last_function(), node[0].value, node.lineno, node.start, node[0].initializer.end)
+			else:
+				self.add_var(self.get_last_function(), node[0].value, node.lineno, node.start, node.end)
+
+	def visit_RETURN(self, node, source):
+		if self.is_in_function(node.start):
+			self.get_last_function().has_return = True
 
 	def visit_FUNCTION(self, node, source):
 		# Named functions only, the getattr returns None if name doesn't exist
@@ -76,114 +103,26 @@ class FunctionParser:
 if __name__ == "__main__":
 	parser = FunctionParser()
 
-	content = """/**
-	 * This is a test class
-	 * @param {String} test
-	 */
-	my.package.Class = function() {
-		// This function does something
-		var a = 1;
-
-		/**
-		 * some field
-		 * @type {Boolean}
-		 */
-		this.someField = false; /* and some inline block comment */
-
-		var thisVariableReturnhasNameReturnreturn = 1;
-	};
-
-	my.package.Class.prototype = {
-		/**
-		 * Return the current value of the field
-		 */
-		getField : function() {
-			// Just simply return the field
-			var test = 1;
-			for(var i = 0; i < 4; i++) {
-				var something = test[i];
+	assert parser.get_function_body("""function test(a,b,c,d) {
+		var a = a++;
+		if(test == 1) {
+			doSomething();
+		} else {
+			while(true) {
+				return;
 			}
-			return this.someField; // And some inline comment
 		}
-	};
+	}""") == """
+		var a = a++;
+		if(test == 1) {
+			doSomething();
+		} else {
+			while(true) {
+				return;
+			}
+		}
 	"""
 
-	functions = parser.parse(content)
-
-	assert len(functions) == 2, 1
-	assert functions[0].name == "Class", 2
-	assert len(functions[0].lines.all_lines) == 11, 3
-	assert functions[1].name == "getField", 4
-	assert len(functions[1].lines.all_lines) == 7, 5
-	assert functions[0].has_return == False
-
-	content_with_inner_function = """
-	test = function() {
-		var a = function() {
-			var b = 1;
-			return b;
-		}
-
-		if(test) {
-			return false;
-		}
-
-		var i = 0;
-
-		return a;
-	};"""
-
-	functions = parser.parse(content_with_inner_function)
-
-	assert len(functions) == 2, 6
-	assert functions[0].name == "test", 7
-	assert len(functions[0].lines.all_lines) == 13, 8
-	assert functions[1].name == "a", 9
-	assert len(functions[1].lines.all_lines) == 3, 10
-	assert len(functions[1].variables) == 1, 11
-	assert functions[1].variables[0].line_nb == 4, 12
-	assert functions[0].variables[2].name == "i", 13
-	assert functions[0].variables[2].line_nb == 12, 14
-
-	assert functions[1].lines.all_lines[1].line_number == 5, 15
-
-	assert functions[0].has_return == True
-	assert functions[1].has_return == True
-
-	function_with_return = """
-		getSomething = function() {
-			if(test) return false;
-		}
-
-		getSomethingElse = function(){return a;}
-		getSomethingElseYet = function(){
-			return
-		}
-		wat = function() {var returnA = 0;}
-	"""
-	functions = parser.parse(function_with_return)
-	assert functions[0].has_return == True
-	assert functions[1].has_return == True
-	assert functions[2].has_return == True
-	assert functions[3].has_return == False
-
-	# FIXME: this unit test is failing and shows why a true Js parser is far better compared to the simple regexp used so far
-	comment_block_with_function = """
-	/**
-	 * This is the comment of a function
-	 * you can use it like this:
-	 * addSubcribe({
-	 * 	fn: function() {
-	 * 		// this is a test
-	 * 	}
-	 * });
-	 */
-	 addSubcribe = function() {
-	 	
-	 }
-	"""
-	functions = parser.parse(comment_block_with_function)
-	assert len(functions) == 1, "Incorrect number of functions parsed in the code"
-	assert functions[0].name == "addSubscribe"
+	assert parser.get_function_body("""test : function() {}""") == ""
 
 	print "ALL TESTS OK"

@@ -15,15 +15,15 @@ class Reviewer():
 		for function in functions:
 			statements = re.findall("if[\s]*\(|else[\s]*\{|else if[\s]*\(|while[\s]*\(|for[\s]*\(|switch[\s]*\(", function.body)
 			if len(statements) > Reviewer.ERROR_MAX_NB_OF_STATEMENTS_IN_FUNCTION:
-				message_bag.add_error(self, "Function " + function.name + " is too complex. There are too many statements involved in its logic", function.line_nb)
+				message_bag.add_error(self, "Function " + function.name + " is too complex. There are too many statements involved in its logic", function.line_number)
 			elif len(statements) > Reviewer.WARN_MAX_NB_OF_STATEMENTS_IN_FUNCTION:
-				message_bag.add_warning(self, "Function " + function.name + " is getting complex. There may be too much logic going on. Think about splitting.", function.line_nb)
+				message_bag.add_warning(self, "Function " + function.name + " is getting complex. There may be too much logic going on. Think about splitting.", function.line_number)
 			
 			returns = re.findall("return ", function.body)
 			if len(returns) > Reviewer.ERROR_MAX_NB_OF_RETURNS_IN_FUNCTION:
-				message_bag.add_error(self, "Function " + function.name + " returns more than " + str(Reviewer.ERROR_MAX_NB_OF_RETURNS_IN_FUNCTION) + " values (" + str(len(returns)) + ").", function.line_nb)
+				message_bag.add_error(self, "Function " + function.name + " returns more than " + str(Reviewer.ERROR_MAX_NB_OF_RETURNS_IN_FUNCTION) + " values (" + str(len(returns)) + ").", function.line_number)
 			elif len(returns) > Reviewer.WARN_MAX_NB_OF_RETURNS_IN_FUNCTION:
-				message_bag.add_warning(self, "Function " + function.name + " returns more than " + str(Reviewer.WARN_MAX_NB_OF_RETURNS_IN_FUNCTION) + " values (" + str(len(returns)) + ").", function.line_nb)
+				message_bag.add_warning(self, "Function " + function.name + " returns more than " + str(Reviewer.WARN_MAX_NB_OF_RETURNS_IN_FUNCTION) + " values (" + str(len(returns)) + ").", function.line_number)
 	
 	def review_ifs_complexity(self, lines, message_bag):
 		for line in lines:

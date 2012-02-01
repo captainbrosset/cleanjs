@@ -47,7 +47,14 @@ class LinesData:
 			if line.has_code():
 				lines.append(line)
 		return lines
-		
+	
+	def get_whole_code(self):
+		code = ""
+		for line in self.all_lines:
+			if line.has_code():
+				code += line.code + "\n"
+		return code
+
 	def get_comments_lines(self):
 		lines = []
 		for line in self.all_lines:
@@ -64,12 +71,21 @@ class LinesData:
 
 class LineParser():
 	"""Parse lines of code, lines of comments and empty lines from a source code"""
-		
-	def parse_lines(self, file_content, start_line_number=0):
+	
+	def __init__(self):
+		self.lines_data = None
+	
+	def visit_PREPROCESS(self, src):
+		self.lines_data = self.parse(src)
+
+	def visit_POSTPROCESS(self, src):
+		pass
+
+	def parse(self, src):
 		# FIXME: fails on the following case (consider the // as a comment start even inside a regexp):
 		# pattern = /[0-9]+\//gi;
 
-		all_lines = file_content.split("\n")
+		all_lines = src.split("\n")
 		lines = [{
 			"code": "",
 			"comments": ""
@@ -83,7 +99,7 @@ class LineParser():
 		code_to_add = ""
 		comments_to_add = ""
 				
-		for index, char in enumerate(file_content):
+		for index, char in enumerate(src):
 			if char == "\n":
 				lines.append({
 					"code": "",
@@ -109,15 +125,15 @@ class LineParser():
 			elif char == "\"" and not inside_comment and inside_double_quoted_string:
 				inside_double_quoted_string = False
 
-			if char == "/" and not inside_comment and file_content[index+1:index+2] == "*" and not inside_single_quoted_string and not inside_double_quoted_string:
+			if char == "/" and not inside_comment and src[index+1:index+2] == "*" and not inside_single_quoted_string and not inside_double_quoted_string:
 				inside_multi_comment = True
 				comments_to_add = char + "*"
 				skip = True
-			elif char == "/" and not inside_comment and file_content[index+1:index+2] == "/" and not inside_single_quoted_string and not inside_double_quoted_string:
+			elif char == "/" and not inside_comment and src[index+1:index+2] == "/" and not inside_single_quoted_string and not inside_double_quoted_string:
 				inside_comment = True
 				comments_to_add = char + "/"
 				skip = True
-			elif inside_multi_comment and char == "*" and file_content[index+1:index+2] == "/":
+			elif inside_multi_comment and char == "*" and src[index+1:index+2] == "/":
 				lines[line_index]["comments"] += char + "/"
 				skip = True
 				inside_multi_comment = False
@@ -134,14 +150,9 @@ class LineParser():
 
 		line_objects = []
 		for index, line in enumerate(lines):
-			line_objects.append(Line(index+1+start_line_number, all_lines[index], line["code"].strip(), line["comments"].strip()))
+			line_objects.append(Line(index+1, all_lines[index], line["code"].strip(), line["comments"].strip()))
 
-		return line_objects
-	
-	def parse(self, src, start_line_number=0):
-		all_lines = self.parse_lines(src, start_line_number)
-
-		return LinesData(all_lines)
+		return LinesData(line_objects)
 
 
 if __name__ == "__main__":

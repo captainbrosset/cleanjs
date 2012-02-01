@@ -14,10 +14,10 @@ class MessageBag:
 	def get_messages(self):
 		return sorted(self.messages, key=lambda message: message.line)
 
-	def get_messages_on_line(self, line_nb):
+	def get_messages_on_line(self, line_number):
 		messages = []
 		for message in self.messages:
-			if message.line == line_nb:
+			if message.line == line_number:
 				messages.append(message)
 		return messages
 

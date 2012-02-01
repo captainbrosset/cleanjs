@@ -19,18 +19,18 @@ class Reviewer():
 	
 	def review_empty_lines(self, lines, message_bag):
 		empty_lines_passed = 0
-		line_nb_of_first_empty = -1
+		line_number_of_first_empty = -1
 		for line in lines:
 			if line.is_empty():
-				if line_nb_of_first_empty == -1:
-					line_nb_of_first_empty = line.line_number
+				if line_number_of_first_empty == -1:
+					line_number_of_first_empty = line.line_number
 				empty_lines_passed += 1
 			else:
 				empty_lines_passed = 0
-				line_nb_of_first_empty = -1
+				line_number_of_first_empty = -1
 			
 			if empty_lines_passed > 2:
-				message_bag.add_warning(self, "There are several empty lines in a row, either you didn't format the file correctly, or you are trying to space complex things out.", line_nb_of_first_empty)
+				message_bag.add_warning(self, "There are several empty lines in a row, either you didn't format the file correctly, or you are trying to space complex things out.", line_number_of_first_empty)
 	
 	def review(self, file_data, message_bag):
 		# TODO: The formatting reviewer is fucked up today, it only checks a few things and doesn't say where problems are

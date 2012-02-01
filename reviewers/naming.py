@@ -27,14 +27,14 @@ class Reviewer():
 			name = function.name
 			is_gethasis = self.name_starts_with(name, "get") or self.name_starts_with(name, "is") or self.name_starts_with(name, "has")
 			if is_gethasis and not function.has_return:
-				message_bag.add_error(self, "Function " + name + " starts with 'is/has/get'. This usually means a return value is expected, but none was found.", function.line_nb);
+				message_bag.add_error(self, "Function " + name + " starts with 'is/has/get'. This usually means a return value is expected, but none was found.", function.line_number);
 	
 	def review_set_function_arg(self, functions, message_bag):
 		for function in functions:
 			name = function.name
 			is_set = self.name_starts_with(name, "set")
 			if is_set and len(function.signature) == 0:
-				message_bag.add_error(self, "Function " + name + " starts with 'set'. This usually means an argument is passed, but none was found.", function.line_nb);
+				message_bag.add_error(self, "Function " + name + " starts with 'set'. This usually means an argument is passed, but none was found.", function.line_number);
 	
 	def review_all_names(self, vars, functions, message_bag):
 		# Reviews function names, argument names and variable names only in fact
@@ -54,7 +54,7 @@ class Reviewer():
 				else:
 					word_exists = wordmeaning.check_word_meaning_with_letter_ratio(word)
 				if not word_exists:
-					message_bag.add_error(self, "Name " + word + " doesn't mean anything", object.line_nb)
+					message_bag.add_error(self, "Name " + word + " doesn't mean anything", object.line_number)
 	
 	def review(self, file_data, message_bag):
 		self.review_gethasis_function_return(file_data.functions, message_bag)
@@ -96,22 +96,22 @@ if __name__ == "__main__":
 		assert len(bag.errors) == nb_expected_messages, msg
 
 	# Check that function starting with gethasis actually returns something
-	function1 = attrdict(name="getSomeStuff", line_nb=0, has_return=True)
-	function2 = attrdict(name="isEmpty", line_nb=0, has_return=True)
-	function3 = attrdict(name="hasHairs", line_nb=0, has_return=True)
+	function1 = attrdict(name="getSomeStuff", line_number=0, has_return=True)
+	function2 = attrdict(name="isEmpty", line_number=0, has_return=True)
+	function3 = attrdict(name="hasHairs", line_number=0, has_return=True)
 	check_gethasis_functions_and_assert_bag_contains([function1,function2,function3], 0, "Functions start with gethasis and returns something, should not output an error")
 
 	# Check that functions starting with is has or get, but not followed by capital letter do not trigger any message
-	function4 = attrdict(name="getho", line_nb=0, has_return=True)
-	function5 = attrdict(name="israel", line_nb=0, has_return=False)
-	function6 = attrdict(name="has", line_nb=0, has_return=False)
-	function7 = attrdict(name="hasimut", line_nb=0, has_return=True)
+	function4 = attrdict(name="getho", line_number=0, has_return=True)
+	function5 = attrdict(name="israel", line_number=0, has_return=False)
+	function6 = attrdict(name="has", line_number=0, has_return=False)
+	function7 = attrdict(name="hasimut", line_number=0, has_return=True)
 	check_gethasis_functions_and_assert_bag_contains([function4,function5,function6,function7], 0, "All these functions start with get/has/is but not camelcased, so should not even look into them")
 	
 	# Check that function starting with set actually take arguments
-	function10 = attrdict(name="setSomething", line_nb=0, signature=[])
-	function11 = attrdict(name="setSomething", line_nb=0, signature=["something"])
-	function12 = attrdict(name="setup", line_nb=0, signature=[])
+	function10 = attrdict(name="setSomething", line_number=0, signature=[])
+	function11 = attrdict(name="setSomething", line_number=0, signature=["something"])
+	function12 = attrdict(name="setup", line_number=0, signature=[])
 	check_set_functions_and_assert_bag_contains([function10, function11, function12], 1, "Checking setter have parameter failed")
 
 	print "ALL TESTS OK"

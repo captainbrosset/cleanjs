@@ -19,12 +19,15 @@ class Visitor:
 	- the node
 	- the complete source code of the file
 	
-	Visitors may also implement a visit_FILECONTENT method.
-	This method will NOT be called when nodes are traversed in the tree
-	but only once at the beginning of the visiting. The argument passed is:
+	Visitors may also implement a visit_PREPROCESS or visit_POSTPROCESS methods.
+	These methods will NOT be called when nodes are traversed in the tree
+	but only once at the beginning and end of the visiting. The argument passed is:
 	- the complete source code of the file
 	
-	The job of a visitor is to create Entity objects in self.entities."""
+	The job of a visitor is to create Entity objects."""
 	
 	def visit_ANY(self):
 		pass
+
+if __name__ == "__main__":
+	print "NO TESTS TO RUN"
