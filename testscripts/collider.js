@@ -5,6 +5,7 @@ Aria.classDefinition({
 	$implements : ['samples.games.common.collision.Collider'],
 	$constructor : function () {
 		this.$BaseObject.constructor.call(this);
+		this.test = 2;
 	},
 	$prototype : {
 		collide : function (bullet, enemy) {

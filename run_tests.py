@@ -58,7 +58,7 @@ def run_integration_tests():
 			elif expected_results[item].has_key("messages") and messages == []:
 				assert False, "Expected messages for " + item + " but none found. Expected:\n" + str(expected_results[item]["messages"])
 			elif expected_results[item].has_key("messages") and messages != []:
-				assert expected_results[item]["messages"] == messages, "incorrect messages found for " + item + " expected results not found:\n" + str(list(set(expected_results[item]["messages"]) - set(messages))) + "\nfound results not expected\n" + str(list(set(messages) - set(expected_results[item]["messages"])))
+				assert sorted(expected_results[item]["messages"]) == messages, "incorrect messages found for " + item + " expected results not found:\n" + str(list(set(expected_results[item]["messages"]) - set(messages))) + "\nfound results not expected\n" + str(list(set(messages) - set(expected_results[item]["messages"])))
 	
 	print "ALL FILES OK"
 

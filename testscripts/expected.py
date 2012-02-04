@@ -2,14 +2,22 @@ results = {
 	"CommentedClass.js": {
 		"rating": "A",
 		"messages": [
-			'5 Line is more than 120 character long (122). This is hard to read.'
+			'5 Line is more than 120 character long (122). This is hard to read.',
+			'9 Class property setting is initialized but never used',
+			'14 Class property _setting is initialized but never used'
 		]
 	},
 	"gettersetter.js": {
-		"rating": "A+"
+		"rating": "A+",
+		"messages": [
+			'22 Class property getty is initialized but never used'
+		]
 	},
 	"collider.js": {
-		"rating": "A+"
+		"rating": "A+",
+		"messages": [
+			'8 Class property test is initialized but never used'
+		]
 	},
 	"goodfile.js": {
 		"rating": "A+",

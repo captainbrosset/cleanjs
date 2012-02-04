@@ -4,6 +4,7 @@ from jsparser import JSFileParser
 from lineparser import LineParser, FileLines
 from functionparser import FunctionParser
 from variableparser import VariableParser
+from classpropertyparser import ClassPropertyParser
 
 class FileData():
 	"""An instance of this class is passed to reviewers, in their review function.
@@ -11,16 +12,18 @@ class FileData():
 	Instances of this class have the following attributes:
 	- name: the name of the file
 	- content: the whole text content of the file
-	- lines: an instance of utils.parsers.lineparser.FileLines
-	- functions: an array of instances of utils.parsers.functionparser.FunctionData
-	- variables: an array of instances of utils.parsers.variableparser.VariableData"""
+	- lines: an instance of parsers.lineparser.FileLines
+	- functions: an array of instances of parsers.functionparser.FunctionData
+	- variables: an array of instances of parsers.variableparser.VariableData
+	- class_properties: an array of instances of parsers.classpropertyparser.ClassPropertyData"""
 
-	def __init__(self, name, content, lines, functions, variables):
+	def __init__(self, name, content, lines, functions, variables, class_properties):
 		self.name = name
 		self.content = content
 		self.lines = lines
 		self.functions = functions
 		self.variables = variables
+		self.class_properties = class_properties
 
 	def __repr__(self):
 		report = "file " + self.name + " (" + str(len(self.lines.all_lines)) + " lines of code)"
@@ -43,10 +46,14 @@ def get_file_data_from_content(src_file_name, src_file_content):
 	variable_parser = VariableParser()
 	parser.add_visitor(variable_parser)
 	
+	class_property_parser = ClassPropertyParser()
+	parser.add_visitor(class_property_parser)
+
 	parser.parse()
 	
 	src_file_functions = function_parser.functions
 	src_file_variables = variable_parser.variables
+	src_file_class_properties = class_property_parser.properties
 	src_file_lines = line_parser.file_lines
 
 	# Trick to give the right FileLines to each function
@@ -58,7 +65,7 @@ def get_file_data_from_content(src_file_name, src_file_content):
 	for function in src_file_functions:
 		function.lines = FileLines(src_file_lines.all_lines, function.start_pos, function.end_pos)
 
-	return FileData(src_file_name, src_file_content, src_file_lines, src_file_functions, src_file_variables)
+	return FileData(src_file_name, src_file_content, src_file_lines, src_file_functions, src_file_variables, src_file_class_properties)
 
 def get_file_data_from_file(src_file_name):
 	"""Use this to gather data for file, given its path and name.
@@ -106,5 +113,7 @@ if __name__ == "__main__":
 	assert len(file_data.lines.all_lines) == 30
 	assert len(file_data.functions) == 2
 	assert len(file_data.variables) == 4
+
+	print file_data.class_properties
 
 	print "ALL TESTS OK"
