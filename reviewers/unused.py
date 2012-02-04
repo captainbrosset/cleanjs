@@ -38,8 +38,9 @@ class Reviewer():
 	def review_ununsed_class_properties(self, class_properties, lines, message_bag):
 		for property in class_properties:
 			occurences = []
+			name = self.escape_identifier_for_regexp(property.name)
 			for line in lines:
-				occurences += re.findall("this\." + property.name + "[\s]*[=\(\]\)\.;$]{1}", line.code)
+				occurences += re.findall("this\." + name + "[\s]*[=\(\]\)\.;$\+]{1}", line.code)
 			if len(occurences) == 1:
 				message_bag.add_error(self, "Class property " + property.name + " is initialized but never used", property.line_number)
 

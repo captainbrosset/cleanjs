@@ -1,4 +1,10 @@
 results = {
+	"apple.js": {
+		"messages": [
+			'4 Class property a is initialized but never used',
+			'4 The name of class property a is less than 2 characters (1). This is way too short! Noone will understand what you mean'
+		]
+	},
 	"CommentedClass.js": {
 		"rating": "A",
 		"messages": [

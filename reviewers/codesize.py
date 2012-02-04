@@ -63,30 +63,29 @@ class Reviewer():
 				elif len(name) > Reviewer.WARN_MAX_NAME_SIZE:
 					message_bag.add_warning(self, "The name of variable " + name + " is more than " + str(Reviewer.WARN_MAX_NAME_SIZE) + " characters (" + str(len(name)) + "). This may make it harder to read", line_number)
 
+	def review_name_size(self, name, type, line_number, message_bag):
+		name_length = len(name)
+		if name_length > Reviewer.ERROR_MAX_NAME_SIZE:
+			message_bag.add_error(self, "The name of " + type + " " + name + " is more than " + str(Reviewer.ERROR_MAX_NAME_SIZE) + " characters (" + str(name_length) + "). This is too long", line_number)
+		elif name_length > Reviewer.WARN_MAX_NAME_SIZE:
+			message_bag.add_warning(self, "The name of " + type + " " + name + " is more than " + str(Reviewer.WARN_MAX_NAME_SIZE) + " characters (" + str(name_length) + "). This may make it harder to read", line_number)
+		if name_length < Reviewer.ERROR_MIN_NAME_SIZE:
+			message_bag.add_error(self, "The name of " + type + " " + name + " is less than " + str(Reviewer.ERROR_MIN_NAME_SIZE) + " characters (" + str(name_length) + "). This is way too short! Noone will understand what you mean", line_number)
+		elif name_length < Reviewer.WARN_MIN_NAME_SIZE:
+			message_bag.add_warning(self, "The name of " + type + " " + name + " is less than " + str(Reviewer.WARN_MIN_NAME_SIZE) + " characters (" + str(name_length) + "). Think about making names self explanatory", line_number)		
+
 	def review_function_name_size(self, functions, message_bag):
 		for function in functions:
-			name_length = len(function.name)
-			if name_length > Reviewer.ERROR_MAX_NAME_SIZE:
-				message_bag.add_error(self, "The name of function " + function.name + " is more than " + str(Reviewer.ERROR_MAX_NAME_SIZE) + " characters (" + str(name_length) + "). This is too long", function.line_number)
-			elif name_length > Reviewer.WARN_MAX_NAME_SIZE:
-				message_bag.add_warning(self, "The name of function " + function.name + " is more than " + str(Reviewer.WARN_MAX_NAME_SIZE) + " characters (" + str(name_length) + "). This may make it harder to read", function.line_number)
-			if name_length < Reviewer.ERROR_MIN_NAME_SIZE:
-				message_bag.add_error(self, "The name of function " + function.name + " is less than " + str(Reviewer.ERROR_MIN_NAME_SIZE) + " characters (" + str(name_length) + "). This is way too short! Noone will understand what you mean", function.line_number)
-			elif name_length < Reviewer.WARN_MIN_NAME_SIZE:
-				message_bag.add_warning(self, "The name of function " + function.name + " is less than " + str(Reviewer.WARN_MIN_NAME_SIZE) + " characters (" + str(name_length) + "). Think about making names self explanatory", function.line_number)
-
+			self.review_name_size(function.name, "function", function.line_number, message_bag)
+			
 	def review_arguments_name_size(self, functions, message_bag):
 		for function in functions:
 			for arg in function.signature:
-				name_length = len(arg)
-				if name_length > Reviewer.ERROR_MAX_NAME_SIZE:
-					message_bag.add_error(self, "The name of argument " + arg + " is more than " + str(Reviewer.ERROR_MAX_NAME_SIZE) + " characters (" + str(name_length) + "). This is too long", function.line_number)
-				elif name_length > Reviewer.WARN_MAX_NAME_SIZE:
-					message_bag.add_warning(self, "The name of argument " + arg + " is more than " + str(Reviewer.WARN_MAX_NAME_SIZE) + " characters (" + str(name_length) + "). This may make it harder to read", function.line_number)
-				if name_length < Reviewer.ERROR_MIN_NAME_SIZE:
-					message_bag.add_error(self, "The name of argument " + arg + " is less than " + str(Reviewer.ERROR_MIN_NAME_SIZE) + " characters (" + str(name_length) + "). This is way too short! Noone will understand what you mean", function.line_number)
-				elif name_length < Reviewer.WARN_MIN_NAME_SIZE:
-					message_bag.add_warning(self, "The name of argument " + arg + " is less than " + str(Reviewer.WARN_MIN_NAME_SIZE) + " characters (" + str(name_length) + "). Think about making names self explanatory", function.line_number)
+				self.review_name_size(arg, "argument", function.line_number, message_bag)
+
+	def review_class_properties_name_size(self, class_properties, message_bag):
+		for property in class_properties:
+			self.review_name_size(property.name, "class property", property.line_number, message_bag)
 
 	def review(self, file_data, message_bag):
 		self.review_line_number_in_file(file_data.lines, message_bag)
@@ -96,6 +95,7 @@ class Reviewer():
 		self.review_nb_of_arguments(file_data.functions, message_bag)
 		self.review_line_length(file_data.lines.all_lines, message_bag)
 		self.review_arguments_name_size(file_data.functions, message_bag)
+		self.review_class_properties_name_size(file_data.class_properties, message_bag)
 
 
 if __name__ == "__main__":
