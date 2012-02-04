@@ -14,14 +14,14 @@ class FunctionData(visitor.Entity):
 	- has_return: whether the function has at least one return statement
 	- lines: an instance of parsers.lineparser.LineParser.LineData"""
 	
-	def __init__(self, name, body, line_number, signature, start_pos, end_pos, lines, variables, has_return):
+	def __init__(self, name, body, line_number, signature, start_pos, end_pos, variables, has_return):
 		super(FunctionData, self).__init__(line_number, start_pos, end_pos)
 
 		self.name = name
 		self.body = body
 		self.signature = signature
 
-		self.lines = lines
+		self.lines = None
 		self.variables = variables
 		self.has_return = has_return
 	
@@ -33,15 +33,13 @@ class FunctionParser:
 	def __init__(self):
 		self.functions = []
 		self.last_function = None
-	
-	def get_function_body(self, body_src):
-		return body_src[body_src.find("{")+1:body_src.rfind("}")]
 
 	def add_function(self, name, body, line_number, signature, start_pos, end_pos, source):
-		body = self.get_function_body(body)
-		parsed_lines = LineParser().parse(body)
+		inner_body_start_pos = start_pos + body.find("{") + 1
+		inner_body_end_pos = end_pos - 1
+		inner_body = body[body.find("{")+1:body.rfind("}")]
 
-		function = FunctionData(name, body, line_number, signature, start_pos, end_pos, parsed_lines, [], False)
+		function = FunctionData(name, inner_body, line_number, signature, inner_body_start_pos, inner_body_end_pos, [], False)
 		self.functions.append(function)
 
 	def add_var(self, function, name, line_number, start, end):
@@ -101,28 +99,4 @@ class FunctionParser:
 
 
 if __name__ == "__main__":
-	parser = FunctionParser()
-
-	assert parser.get_function_body("""function test(a,b,c,d) {
-		var a = a++;
-		if(test == 1) {
-			doSomething();
-		} else {
-			while(true) {
-				return;
-			}
-		}
-	}""") == """
-		var a = a++;
-		if(test == 1) {
-			doSomething();
-		} else {
-			while(true) {
-				return;
-			}
-		}
-	"""
-
-	assert parser.get_function_body("""test : function() {}""") == ""
-
-	print "ALL TESTS OK"
+	print "NO TESTS TO RUN"

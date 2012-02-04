@@ -1,6 +1,7 @@
 import re
 
 from helpers import variablelength
+from helpers import wordmeaning
 
 class Reviewer():
 	WARN_MAX_FILE_line_number = 150
@@ -29,7 +30,7 @@ class Reviewer():
 				message_bag.add_error(self, "There are more than " + str(Reviewer.ERROR_MAX_ARGUMENT_NB) + " arguments in function " + function.name + " (" + str(len(function.signature)) + ")! Pass an object instead", function.line_number)
 			elif len(function.signature) > Reviewer.WARN_MAX_ARGUMENT_NB:
 				message_bag.add_warning(self, "There are more than " + str(Reviewer.WARN_MAX_ARGUMENT_NB) + " arguments in function " + function.name + " (" + str(len(function.signature)) + ")! Why not wrapping them in a nice class?", function.line_number)
-
+	
 	def review_line_number_in_file(self, lines, message_bag):
 		# FIXME: comment lines are NOT ignored, should be?!
 		nb = len(lines.all_lines)
@@ -39,10 +40,7 @@ class Reviewer():
 			message_bag.add_warning(self, "There are more than " + str(Reviewer.WARN_MAX_FILE_line_number) + " lines in the file (" + str(nb) + ") ! If possible, please try to refactor", 1)
 
 	def review_line_number_in_functions(self, file_functions, message_bag):
-		for function in file_functions:
-			# FIXME: comment lines are NOT ignored, should be?!
-			# Should use the lines_data
-			
+		for function in file_functions:			
 			nb = len(function.lines.get_code_lines())
 			if nb == 0:
 				message_bag.add_warning(self, "Function " + function.name + " is empty. Is it really needed?", function.line_number)

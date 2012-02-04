@@ -2,7 +2,7 @@ def output_messages(result, file_data):
 	"""
 	Output messages in the console, so in the simple text format, with some formatting
 	"""
-	message_bag = result["message_bag"]
+	message_bag = result.message_bag
 	
 	messages = message_bag.get_messages()
 	report = "\n\n"
@@ -26,7 +26,7 @@ def output_messages(result, file_data):
 	report += "\n"
 	
 	# Output the rating
-	report += _output_one_message("Rating | ", max_header_length, result["rating"], max_content_length)
+	report += _output_one_message("Rating | ", max_header_length, result.rate, max_content_length)
 
 	# Now output messages
 	for index, message in enumerate(messages):

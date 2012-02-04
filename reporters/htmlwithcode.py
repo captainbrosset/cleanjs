@@ -5,8 +5,8 @@ class InMemoryFile():
 		self.content += str
 
 def output_messages(result, file_data, to_file=None):
-	message_bag = result["message_bag"]
-	rating = result["rating"]
+	message_bag = result.message_bag
+	rating = result.rate
 
 	report_file = None
 	

@@ -14,32 +14,31 @@ def ensure_dir(dir_name):
 	if not os.path.exists(dir_name):
 		os.makedirs(dir_name)
 
-def output_integration_test_errors(actual, expected):
-	if len(expected) != len(actual):
-		print "Actual results length don't match expected results length"
-	
-	for key, item in actual.iteritems():
-		if expected[key]["rating"] != item["rating"]:
-			print "Rating of " + key + " is incorrect, expected " + expected[key]["rating"] + ", found " + item["rating"]
-		if item["messages"] != expected[key]["messages"]:
-			print "Messages of " + key + " are incorrect, expected:\n" + str(expected[key]["messages"]).replace("},","\n")
-			print "found:\n" + str(item["messages"]).replace("},","\n")
+def get_list_of_messages_easy_to_compare(messages):
+	easy_list = []
+	for message in messages:
+		if message.type != "info":
+			easy_list.append(str(message.line) + " " + message.content)
+	return sorted(easy_list)
 
 def run_integration_tests():
 	script_dir = "testscripts"
 	report_dir = script_dir + os.sep + "reports"
 	ensure_dir(report_dir)
-
-	from testscripts import expected
-	expected_results = expected.results
-	actual_results = {}
 	
 	from parsers import fileparser
 	from reviewers import reviewer
+	
+	from testscripts import expected
+	expected_results = expected.results
 
 	for item in os.listdir(script_dir):
 		if item[-3:] == ".js":
 			print "- " + item
+
+			if not expected_results[item]:
+				print "seems to be a new file for which no reference data exist"
+				continue
 
 			# Gather data about the file to be reviewed
 			file_data = None
@@ -52,23 +51,15 @@ def run_integration_tests():
 			# Review the file
 			result = reviewer.review(file_data)
 
-			rating = result["rating"]
-			messages = result["message_bag"].get_messages()
+			messages = get_list_of_messages_easy_to_compare(result.message_bag.get_messages())
 			
-			actual_results[item] = {
-				"rating": rating,
-				"messages": []
-			}
-			for m in messages:
-				actual_results[item]["messages"].append({
-					"type": m.type,
-					"reviewer": m.reviewer,
-					"line": m.line
-				})
-
-	if expected_results != actual_results:
-		output_integration_test_errors(actual_results, expected_results)
-		assert True == False, "Integration tests did not output the same number or type of messages"
+			assert expected_results[item]["rating"] == result.rate, item + " rate is incorrect, expected " + expected_results[item]["rating"] + ", found " + result.rate
+			if not expected_results[item].has_key("messages") and messages != []:
+				assert False, "Found messages for " + item + ", but none expected. Found:\n" + str(messages)
+			elif expected_results[item].has_key("messages") and messages == []:
+				assert False, "Expected messages for " + item + " but none found. Expected:\n" + str(expected_results[item]["messages"])
+			elif expected_results[item].has_key("messages") and messages != []:
+				assert expected_results[item]["messages"] == messages, "incorrect messages found for " + item + " expected results not found:\n" + str(list(set(expected_results[item]["messages"]) - set(messages))) + "\nfound results not expected\n" + str(list(set(messages) - set(expected_results[item]["messages"])))
 	
 	print "ALL FILES OK"
 

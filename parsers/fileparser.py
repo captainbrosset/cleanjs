@@ -1,7 +1,7 @@
 import re
 
 from jsparser import JSFileParser
-from lineparser import LineParser
+from lineparser import LineParser, FileLines
 from functionparser import FunctionParser
 from variableparser import VariableParser
 
@@ -11,7 +11,7 @@ class FileData():
 	Instances of this class have the following attributes:
 	- name: the name of the file
 	- content: the whole text content of the file
-	- lines: an instance of utils.parsers.lineparser.LinesData
+	- lines: an instance of utils.parsers.lineparser.FileLines
 	- functions: an array of instances of utils.parsers.functionparser.FunctionData
 	- variables: an array of instances of utils.parsers.variableparser.VariableData"""
 
@@ -34,20 +34,29 @@ def get_file_data_from_content(src_file_name, src_file_content):
 
 	parser = JSFileParser(src_file_content)
 
+	line_parser = LineParser()
+	parser.add_visitor(line_parser)
+
 	function_parser = FunctionParser()
 	parser.add_visitor(function_parser)
 
 	variable_parser = VariableParser()
 	parser.add_visitor(variable_parser)
-
-	line_parser = LineParser()
-	parser.add_visitor(line_parser)
 	
 	parser.parse()
 	
 	src_file_functions = function_parser.functions
 	src_file_variables = variable_parser.variables
-	src_file_lines = line_parser.lines_data
+	src_file_lines = line_parser.file_lines
+
+	# Trick to give the right FileLines to each function
+	# The thing is now we only parse lines once, not once for the file and then once per function
+	# So, we have to give the total lines to each function to make it simple for reviewers then to
+	# get lines for a function.
+	# Therefore, the FileLines can accept an "start/stop" argument to know where to look in the lines
+	# FIXME: this shouldn't be handled here though
+	for function in src_file_functions:
+		function.lines = FileLines(src_file_lines.all_lines, function.start_pos, function.end_pos)
 
 	return FileData(src_file_name, src_file_content, src_file_lines, src_file_functions, src_file_variables)
 

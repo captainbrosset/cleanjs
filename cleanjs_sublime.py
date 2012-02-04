@@ -20,38 +20,51 @@ except:
 
 from parsers import fileparser
 from reviewers import reviewer
-from reporters import console
 
 REGIONS_KEY = PANEL_KEY = "CLEANJS"
 
 class CleanjsCommand(sublime_plugin.TextCommand):
 	def run(self, edit):
-		#settings = self.view.settings()	
+		#settings = self.view.settings()
 		js_code = self.view.substr(sublime.Region(0, self.view.size()))
 
-		file_data = fileparser.get_file_data_from_content("sublime cleanjs", js_code)
+		file_data = None
+		try:
+			file_data = fileparser.get_file_data_from_content("sublime cleanjs", js_code)
+		except Exception as error:
+			self.show_messages_to_panel(str(error), PANEL_KEY)
+			return
 
 		result = reviewer.review(file_data)
-		report = console.output_messages(result, file_data)
 
-		self.show_messages_to_panel(report, PANEL_KEY)
-		self.show_messages_to_regions(result["message_bag"].get_messages(), file_data.lines)
+		text = self.get_full_report_from_result(result)
 
-	def show_messages_to_regions(self, messages, lines_data):
+		self.show_messages_to_panel(text, PANEL_KEY)
+		self.show_messages_to_regions(result.message_bag.get_messages(), file_data.lines)
+	
+	def get_full_report_from_result(self, result):
+		text = "Rate : " + result.rate + "\n"
+		messages = result.message_bag.get_messages()
+		for message in messages:
+			if message.reviewer != "general":
+				text += "\nline " + str(message.line) + " | " + message.reviewer + " " + message.type + " : " + message.content
+		return text
+
+	def show_messages_to_regions(self, messages, file_lines):
 		self.view.erase_regions(REGIONS_KEY)
 
 		regions = []
 		for message in messages:
 			if message.line:
-				points = self.get_points_from_line(message.line, lines_data)
+				points = self.get_points_from_line(message.line, file_lines)
 				regions.append(sublime.Region(points[0], points[1]))
 
 		self.view.add_regions(REGIONS_KEY, regions, "string", sublime.DRAW_OUTLINED)
 
-	def get_points_from_line(self, line_number, lines_data):
+	def get_points_from_line(self, line_number, file_lines):
 		start = 0
 		end = 0
-		for index, line in enumerate(lines_data.all_lines):
+		for index, line in enumerate(file_lines.all_lines):
 			if index+1 == line_number:
 				end = start + len(line.complete_line)
 				break
@@ -67,7 +80,8 @@ class CleanjsCommand(sublime_plugin.TextCommand):
 
 		# Write this text to the output panel and display it
 		edit = v.begin_edit()
-		v.insert(edit, v.size(), text + '\n')
+		v.erase(edit, sublime.Region(0, v.size()))
+		v.insert(edit, v.size(), text)
 		v.end_edit(edit)
 		v.show(v.size())
 
@@ -83,7 +97,7 @@ if __name__ == "__main__":
 		def __init__(self, line):
 			self.complete_line = line
 
-	class MockLinesData(object):
+	class MockFileLines(object):
 		def __init__(self, lines):
 			self.all_lines = lines
 
@@ -91,7 +105,7 @@ if __name__ == "__main__":
 	line2 = MockLine("	var b = 1 + 1;")
 	line3 = MockLine("	alert(b);")
 	line4 = MockLine("}")
-	lines = MockLinesData([line1, line2, line3, line4])
+	lines = MockFileLines([line1, line2, line3, line4])
 
 	command = CleanjsCommand()
 	assert command.get_points_from_line(3, lines) == (35,45)

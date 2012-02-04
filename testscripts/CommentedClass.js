@@ -1,4 +1,4 @@
-var my = {package: {}}
+var my = {package: {}};
 
 /**
  * @class my.package.MyClass
