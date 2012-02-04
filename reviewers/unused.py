@@ -64,4 +64,6 @@ if __name__ == "__main__":
 	test+=1;
 	""")) == 8
 
+	assert len(reviewer.find_identifier_occurences("test", """test""")) == 1
+
 	print "ALL TESTS OK"
