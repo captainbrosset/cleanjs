@@ -8,6 +8,9 @@ results = {
 	"gettersetter.js": {
 		"rating": "A+"
 	},
+	"collider.js": {
+		"rating": "A+"
+	},
 	"goodfile.js": {
 		"rating": "A+",
 		"messages": [

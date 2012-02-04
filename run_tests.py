@@ -53,7 +53,6 @@ def run_integration_tests():
 
 			messages = get_list_of_messages_easy_to_compare(result.message_bag.get_messages())
 			
-			assert expected_results[item]["rating"] == result.rate, item + " rate is incorrect, expected " + expected_results[item]["rating"] + ", found " + result.rate
 			if not expected_results[item].has_key("messages") and messages != []:
 				assert False, "Found messages for " + item + ", but none expected. Found:\n" + str(messages)
 			elif expected_results[item].has_key("messages") and messages == []:
