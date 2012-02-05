@@ -23,9 +23,11 @@ class Reviewer():
 		for function in functions:
 			for argument in function.signature:
 				occurences = self.find_identifier_occurences(argument, function.lines.get_whole_code())
-
-				if len(occurences) == 0:
+				occurences_of_arguments_keyword = self.find_identifier_occurences("arguments", function.lines.get_whole_code())
+				if len(occurences) == 0 and len(occurences_of_arguments_keyword) == 0:
 					message_bag.add_error(self, "Argument " + argument + " in method " + function.name + " is never used", function.line_number)
+				elif len(occurences) == 0 and len(occurences_of_arguments_keyword) > 0:
+					message_bag.add_warning(self, "Argument " + argument + " in method " + function.name + " is never directly used, only through the \"arguments\" keyword, this may make it harder to read", function.line_number)
 	
 	def review_unused_variables_in_functions(self, functions, message_bag):
 		for function in functions:

@@ -1,4 +1,12 @@
 results = {
+	"argument.js": {
+		"messages": [
+			'2 Argument context in method $constructor is never directly used, only through the "arguments" keyword, this may make it harder to read',
+			'2 Argument timer in method $constructor is never directly used, only through the "arguments" keyword, this may make it harder to read',
+			'2 Argument animationLoop in method $constructor is never directly used, only through the "arguments" keyword, this may make it harder to read',
+			'2 Argument recorders in method $constructor is never directly used, only through the "arguments" keyword, this may make it harder to read'
+		]
+	},
 	"visibility.js": {
 		"messages": [
 			'18 The name of variable t is too short',
@@ -145,7 +153,6 @@ results = {
 			'29 You are using some kind of separator characters in your comment, probably in an attempt to separate some complex code ... why not making it simpler in the first place?',
 			'29 You have 3 subsequent lines of comments in a row. Are you trying to explain something complex?',
 			'355 It seems this comment tries to explain a piece of code that has several responsibilities',
-			'360 Variable hasContentType in method _prep is declared but never used',
 			'409 It seems this comment tries to explain a piece of code that has several responsibilities',
 			'417 It seems this comment tries to explain a piece of code that has several responsibilities',
 			'423 It seems this comment tries to explain a piece of code that has several responsibilities',

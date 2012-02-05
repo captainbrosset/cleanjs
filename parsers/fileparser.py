@@ -114,6 +114,7 @@ if __name__ == "__main__":
 	assert len(file_data.functions) == 2
 	assert len(file_data.variables) == 4
 
-	print file_data.class_properties
+	assert len(file_data.class_properties) == 1
+	assert file_data.class_properties[0].line_number == 14
 
 	print "ALL TESTS OK"
