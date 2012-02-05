@@ -29,10 +29,11 @@ class VariableParser:
 			self.variables.append(VariableData(name, line_number, start, end))
 
 	def visit_VAR(self, node, source):
-		if getattr(node[0], "initializer", False):
-			self.add_var(node[0].value, node.lineno, node.start, node[0].initializer.end)
-		else:
-			self.add_var(node[0].value, node.lineno, node.start, node.end)
+		for subvar_node in node:
+			if getattr(subvar_node, "initializer", False):
+				self.add_var(subvar_node.value, subvar_node.lineno, subvar_node.start, subvar_node.initializer.end)
+			else:
+				self.add_var(subvar_node.value, subvar_node.lineno, subvar_node.start, subvar_node.end)
 
 
 if __name__ == "__main__":

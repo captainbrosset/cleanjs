@@ -1,4 +1,19 @@
 results = {
+	"visibility.js": {
+		"messages": [
+			'18 The name of variable t is too short',
+			"8 Name k doesn't mean anything",
+			"18 Name t doesn't mean anything",
+			'16 Variable d in method test is declared but never used',
+			"16 Name b doesn't mean anything",
+			'16 Variable b in method test is declared but never used',
+			"16 Name c doesn't mean anything",
+			"16 Name d doesn't mean anything",
+			'16 Variable a in method test is declared but never used',
+			"8 Name l doesn't mean anything",
+			'16 Variable c in method test is declared but never used'
+		]	
+	},
 	"apple.js": {
 		"messages": [
 			'4 Class property a is initialized but never used',
@@ -145,7 +160,11 @@ results = {
 			'579 There are more than 30% of comments in function sendRequest (40.0%). Make the code simpler.',
 			'582 You have 3 subsequent lines of comments in a row. Are you trying to explain something complex?',
 			'6 You are using some kind of separator characters in your comment, probably in an attempt to separate some complex code ... why not making it simpler in the first place?',
-			'601 Function cancel returns more than 2 values (3).'
+			'601 Function cancel returns more than 2 values (3).',
+			'238 Variable headers in method copy is declared but never used',
+			'647 Variable max in method fireRequestIfNeeded is declared but never used',
+			'604 Variable idx in method cancel is declared but never used',
+			'238 Variable listeners in method copy is declared but never used'
 		]
 	},
 	"syntaxerror.js": {

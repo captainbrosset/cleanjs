@@ -10,7 +10,7 @@ class Reviewer():
 	def get_regexp_to_find_identifier_usage(self, name):
 		name = self.escape_identifier_for_regexp(name)
 		
-		before_identifier = "(?:^|[\s\[\]\(\)\+\-\{\};:,]{1})"
+		before_identifier = "(?:^|[\s\[\]\(\)\+\-\{\};:,!]{1})"
 		after_identifier = "(?:[\s\[\]\(\)\.\+\-\{\};:,]{1}|$)"
 
 		return before_identifier + "(" + name + ")" + after_identifier
@@ -75,5 +75,11 @@ if __name__ == "__main__":
 	""")) == 8
 
 	assert len(reviewer.find_identifier_occurences("test", """test""")) == 1
+
+	assert len(reviewer.find_identifier_occurences("someBoolean", """
+	if (!someBoolean) {
+		//do stuff
+	}
+	""")) == 1
 
 	print "ALL TESTS OK"

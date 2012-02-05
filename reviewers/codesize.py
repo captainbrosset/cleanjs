@@ -52,7 +52,6 @@ class Reviewer():
 	def review_variable_name_size(self, functions, message_bag):
 		for function in functions:
 			for var in function.variables:
-
 				name = var.name
 				line_number = var.line_number
 
