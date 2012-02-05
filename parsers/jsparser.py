@@ -183,5 +183,17 @@ if __name__ == "__main__":
 	for f in function_visitor.functions:
 		function_names.append(f.name)
 	assert "".join(sorted(function_names)) == "MyClassaveryloingnameforafunctionisnotverygoodconstructorInnerFunctionctrlMgrdoSomethinggetSomethinghasWingssetSomethingttest", "Wrong functions found in the file"
-		
+	
+	function_return_code = """
+	function test() {
+		return doSomething();
+	}
+
+	var anotherTest = function() {
+		return object.doSomething();
+	}
+	"""
+	parser = JSFileParser(function_return_code)
+	parser.parse()
+
 	print "ALL TESTS OK"

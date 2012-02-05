@@ -24,5 +24,6 @@ MyClass.prototype = {
 
 	setProp: function(prop) {
 		this._prop = prop;
+		return doSomething();
 	}
 };
