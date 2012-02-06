@@ -67,6 +67,7 @@ class JSFileParser:
 		for visitor in self.visitors:
 			visitor_func = getattr(visitor, function_name, None)
 			visitor_anynode_func = getattr(visitor, "visit_ANY", None)
+
 			if visitor_func and node:
 				visitor_func(node, source)
 			elif visitor_anynode_func and node:
@@ -195,5 +196,10 @@ if __name__ == "__main__":
 	"""
 	parser = JSFileParser(function_return_code)
 	parser.parse()
+
+	var_usage = """var a = multiply/2;
+	var b = a*multiply+(multiply/multiply)
+	"""
+	JSFileParser(var_usage)
 
 	print "ALL TESTS OK"

@@ -1,4 +1,12 @@
 results = {
+	"varargsusage.js": {
+		"messages": {
+			"7 Name b doesn't mean anything",
+			'8 Variable c in method computeSomething is declared but never used',
+			'1 It seems this comment tries to explain a piece of code that has several responsibilities',
+			"8 Name c doesn't mean anything"
+		}
+	},
 	"argument.js": {
 		"messages": [
 			'2 Argument context in method $constructor is never directly used, only through the "arguments" keyword, this may make it harder to read',
@@ -169,9 +177,7 @@ results = {
 			'6 You are using some kind of separator characters in your comment, probably in an attempt to separate some complex code ... why not making it simpler in the first place?',
 			'601 Function cancel returns more than 2 values (3).',
 			'238 Variable headers in method copy is declared but never used',
-			'647 Variable max in method fireRequestIfNeeded is declared but never used',
-			'604 Variable idx in method cancel is declared but never used',
-			'238 Variable listeners in method copy is declared but never used'
+			'604 Variable idx in method cancel is declared but never used'
 		]
 	},
 	"syntaxerror.js": {
