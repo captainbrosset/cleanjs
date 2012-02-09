@@ -13,15 +13,30 @@ class ParsingError(Exception):
 	def get_line_number(self, error):
 		return int(str(error).split("\n")[1].split(":")[1])
 
-class JSFileParser:
-	"""The js file parser can parse js source code and iterate over its AST.
+class JSFileParser(object):
+	def __init__(self):
+		self.parsing_error = None
+	
+	def is_parsed(self):
+		return self.parsing_error == None
+
+	def parse(self, source):
+		ast = None
+		try:
+			ast = jsparser.parse(source)
+		except jsparser.ParseError as error:
+			self.parsing_error = ParsingError(error)
+		return ast
+
+class JSFileVisitorHandler(object):
+	"""The js file visitor can visit a parsed js source code and iterate over its AST.
 	It can accept any number of visitors (via add_visitor).
 	
 	Example:
 
-	parser = JSFileParser(content)
-	parser.add_visitor(MyVisitor())
-	parser.parse()"""
+	visitor_handler = JSFileVisitorHandler(content)
+	visitor_handler.add_visitor(MyVisitor())
+	visitor_handler.visit()"""
 	
 	CHILD_ATTRS = ['value', 'thenPart', 'elsePart', 'expression', 'body','exception', 'initializer',
 	'tryBlock', 'condition','update', 'iterator', 'object', 'setup', 'discriminant', 'finallyBlock',
@@ -31,25 +46,12 @@ class JSFileParser:
 		self.visited = list()
 		self.source = source
 		self.visitors = []
-		try:
-			self.root = jsparser.parse(self.source)
-		except jsparser.ParseError as error:
-			raise ParsingError(error)
-	
-	def review(self, file_data, message_bag):
-		try:
-			ast = jsparser.parse(file_data.content)
-		except jsparser.ParseError as error:
-			message_bag.add_error(self, self.extract_error_msg(error), self.extract_error_line(error))
 
+		self.parser = JSFileParser()
+		self.root = self.parser.parse(self.source)
+	
 	def get_visitors(self):
 		return self.visitors
-
-	def look4Childen(self, node):
-		for attr in self.CHILD_ATTRS:
-			child = getattr(node, attr, None)
-			if isinstance(child, jsparser.Node):
-				self.visit(child)
 
 	def add_visitor(self, visitor):
 		self.visitors.append(visitor)
@@ -75,12 +77,21 @@ class JSFileParser:
 			elif visitor_func and not node:
 				visitor_func(source)
 
-	def parse(self):
-		self.exec_preprocess_visitors(self.source)
-		self.visit()
-		self.exec_postprocess_visitors(self.source)
+	def visit(self):
+		if self.parser.is_parsed():
+			self.exec_preprocess_visitors(self.source)
+			self._walk_node()
+			self.exec_postprocess_visitors(self.source)
+		else:
+			raise self.parser.error
+	
+	def _look_for_childen(self, node):
+		for attr in self.CHILD_ATTRS:
+			child = getattr(node, attr, None)
+			if isinstance(child, jsparser.Node):
+				self._walk_node(child)
 
-	def visit(self, root=None):
+	def _walk_node(self, root=None):
 		if not root:
 			root = self.root
 		
@@ -91,9 +102,9 @@ class JSFileParser:
 		
 		self.exec_visitors_on_node(root, self.source)
 			
-		self.look4Childen(root)
+		self._look_for_childen(root)
 		for node in root:
-			self.visit(node)
+			self._walk_node(node)
 		
 
 if __name__ == "__main__":
@@ -171,7 +182,7 @@ if __name__ == "__main__":
 			}
 		}
 	}"""
-	parser = JSFileParser(content)
+	parser = JSFileVisitorHandler(content)
 	
 	from functionparser import FunctionParser
 	function_visitor = FunctionParser()
@@ -194,12 +205,19 @@ if __name__ == "__main__":
 		return object.doSomething();
 	}
 	"""
-	parser = JSFileParser(function_return_code)
+	parser = JSFileVisitorHandler(function_return_code)
 	parser.parse()
 
 	var_usage = """var a = multiply/2;
 	var b = a*multiply+(multiply/multiply)
 	"""
-	JSFileParser(var_usage)
+	JSFileVisitorHandler(var_usage)
+
+	bare_return = "return object.doSomething();"
+	try:
+		JSFileVisitorHandler(bare_return)
+		assert False, "Should have failed"
+	except jsparser.ParseError as error:
+		assert True
 
 	print "ALL TESTS OK"

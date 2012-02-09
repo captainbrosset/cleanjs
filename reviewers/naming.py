@@ -42,6 +42,11 @@ class Reviewer():
 		all_objects = vars + functions
 
 		for object in all_objects:
+			# Name might be a nodejs var assignment, in which case it's fine
+			if getattr(object, "is_nodejs_require", False):
+				if object.is_nodejs_require:
+					continue
+
 			words = extractwords.get_all_words_from_line(object.name)
 			if getattr(object, "signature", None):
 				for arg in object.signature:

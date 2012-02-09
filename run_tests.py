@@ -42,11 +42,11 @@ def run_integration_tests():
 
 			# Gather data about the file to be reviewed
 			file_data = None
-			try:
-				file_data = fileparser.get_file_data_from_file(script_dir + os.sep + item)
-			except Exception as error:
-				print error
-				break;
+			#try:
+			file_data = fileparser.get_file_data_from_file(script_dir + os.sep + item)
+			#except Exception as error:
+			#	print error
+			#	break;
 
 			# Review the file
 			result = reviewer.review(file_data)

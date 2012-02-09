@@ -1,4 +1,5 @@
 results = {
+	"shortnodename.js": {},
 	"oneline.js": {
 		"messages": [
 			"1 Name b doesn't mean anything",

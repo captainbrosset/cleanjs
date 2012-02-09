@@ -1,6 +1,6 @@
 import re
 
-from jsparser import JSFileParser
+from jsparser import JSFileVisitorHandler
 from lineparser import LineParser, FileLines
 from functionparser import FunctionParser
 from variableparser import VariableParser
@@ -35,21 +35,21 @@ def get_file_data_from_content(src_file_name, src_file_content):
 	"""Use this to gather data for file, given its content.
 	Will raise a jsparser.ParsingError if the syntax is incorrect"""
 
-	parser = JSFileParser(src_file_content)
+	visitor_handler = JSFileVisitorHandler(src_file_content)
 
 	line_parser = LineParser()
-	parser.add_visitor(line_parser)
+	visitor_handler.add_visitor(line_parser)
 
 	function_parser = FunctionParser()
-	parser.add_visitor(function_parser)
+	visitor_handler.add_visitor(function_parser)
 
 	variable_parser = VariableParser()
-	parser.add_visitor(variable_parser)
+	visitor_handler.add_visitor(variable_parser)
 	
 	class_property_parser = ClassPropertyParser()
-	parser.add_visitor(class_property_parser)
+	visitor_handler.add_visitor(class_property_parser)
 
-	parser.parse()
+	visitor_handler.visit()
 	
 	src_file_functions = function_parser.functions
 	src_file_variables = variable_parser.variables

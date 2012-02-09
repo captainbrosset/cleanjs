@@ -43,7 +43,7 @@ class FunctionData(visitor.Entity):
 		return "Function " + self.name + ", line " + str(self.line_number) + " (" + str(self.signature) + ") (" + str(len(self.lines.all_lines)) + " lines of code)"
 
 
-class FunctionParser:
+class FunctionParser(object):
 	"""
 	Parser/visitor for functions
 	"""
@@ -59,14 +59,14 @@ class FunctionParser:
 		function = FunctionData(name, inner_body, line_number, signature, inner_body_start_pos, inner_body_end_pos, [], False)
 		self.functions.append(function)
 
-	def add_var(self, function, name, line_number, start, end):
+	def add_var(self, function, name, is_nodejs_require, line_number, start, end):
 		is_already_there = False
 		for var in function.variables:
 			if var.name == name and var.line_number == line_number:
 				is_already_there = True
 		
 		if not is_already_there:
-			function.variables.append(VariableData(name, line_number, start, end))
+			function.variables.append(VariableData(name, is_nodejs_require, line_number, start, end))
 
 	def get_last_function(self):
 		if len(self.functions) > 0:
@@ -89,11 +89,10 @@ class FunctionParser:
 
 	def visit_VAR(self, node, source):
 		if self.is_in_function(node.start):
-			for subvar_node in node:
-				if getattr(subvar_node, "initializer", False):
-					self.add_var(self.get_last_function(), subvar_node.value, subvar_node.lineno, subvar_node.start, subvar_node.initializer.end)
-				else:
-					self.add_var(self.get_last_function(), subvar_node.value, subvar_node.lineno, subvar_node.start, subvar_node.end)
+			variable_parser = VariableParser()
+			variables = variable_parser.extract_variables(node)
+			for variable in variables:
+				self.add_var(self.get_last_function(), variable["name"], variable["is_nodejs_require"], variable["line_number"], variable["start_pos"], variable["end_pos"])
 
 	def visit_RETURN(self, node, source):
 		functions = self.get_functions_nesting(node.start)
