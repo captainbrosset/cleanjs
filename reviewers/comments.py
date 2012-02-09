@@ -133,7 +133,7 @@ if __name__ == "__main__":
 		line1 = MockLine("this is something ..")
 		line2 = MockLine("this is something ----")
 		line3 = MockLine("this is something --#-~-")
-		line4 = MockLine("// \\\\ ...")
+		line4 = MockLine("// \\\\ ....")
 		lines = []
 		lines.append(line1)
 		lines.append(line2)

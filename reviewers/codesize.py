@@ -19,9 +19,14 @@ class Reviewer():
 	def get_name(self):
 		return "code size"
 
+	def is_line_too_long(self, line):
+		if line[-1:] == "\n":
+			line = line[0:-1]
+		return len(line) > Reviewer.ERROR_MAX_LINE_LENGTH
+
 	def review_line_length(self, lines, message_bag):
 		for line in lines:
-			if len(line.complete_line) > Reviewer.ERROR_MAX_LINE_LENGTH:
+			if self.is_line_too_long(line.complete_line):
 				message_bag.add_error(self, "Line is more than " + str(Reviewer.ERROR_MAX_LINE_LENGTH) + " character long (" + str(len(line.complete_line)) + "). This is hard to read.", line.line_number)
 
 	def review_nb_of_arguments(self, functions, message_bag):
@@ -99,4 +104,10 @@ class Reviewer():
 
 if __name__ == "__main__":
 
-	print "NO TESTS TO RUN"
+	reviewer = Reviewer()
+
+	assert reviewer.is_line_too_long("") == False
+	assert reviewer.is_line_too_long("qisjd qosidhgiuq gsdigf qsdiughq isudhg qsdgo\n") == False
+	assert reviewer.is_line_too_long("//3456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890\n") == False
+
+	print "ALL TESTS OK"

@@ -1,4 +1,5 @@
 results = {
+	"linelength.js": {},
 	"varargsusage.js": {
 		"messages": {
 			"7 Name b doesn't mean anything",
