@@ -1,12 +1,24 @@
 results = {
+	"oneline.js": {
+		"messages": [
+			"1 Name b doesn't mean anything",
+			'1 Line is more than 120 character long (1368). This is hard to read.',
+			'1 Function checkBrowser is getting complex. There may be too much logic going on. Think about splitting.',
+			"1 Name f doesn't mean anything",
+			'1 The name of argument c is less than 2 characters (1). This is way too short! Noone will understand what you mean',
+			"1 Name c doesn't mean anything",
+			"1 Name c doesn't mean anything",
+			"1 Name d doesn't mean anything"
+		]
+	},
 	"linelength.js": {},
 	"varargsusage.js": {
-		"messages": {
+		"messages": [
 			"7 Name b doesn't mean anything",
 			'8 Variable c in method computeSomething is declared but never used',
 			'1 It seems this comment tries to explain a piece of code that has several responsibilities',
 			"8 Name c doesn't mean anything"
-		}
+		]
 	},
 	"argument.js": {
 		"messages": [
@@ -78,6 +90,9 @@ results = {
 	"simple.js": {
 		"rating": "F-",
 		"messages": [
+			'36 Function MyClass is empty. Is it really needed?',
+			'24 Function t is empty. Is it really needed?',
+			'26 Function averyloingnameforafunctionisnotverygood is empty. Is it really needed?',
 			"10 Function setSomething starts with 'set'. This usually means an argument is passed, but none was found.",
 			'10 There are more than 30% of comments in function setSomething (60.0%). Make the code simpler.',
 			'12 Variable a in method setSomething is declared but never used',
@@ -136,6 +151,10 @@ results = {
 	"sproutcore-ajax.js": {
 		"rating": "F-",
 		"messages": [
+			'214 Function didReceive is empty. Is it really needed?',
+			'193 Function didSend is empty. Is it really needed?',
+			'203 Function willReceive is empty. Is it really needed?',
+			'179 Function willSend is empty. Is it really needed?',
 			'1 There are more than 300 lines in the file (666) ! Surely the file has more than one responsibility',
 			'1 You are using some kind of separator characters in your comment, probably in an attempt to separate some complex code ... why not making it simpler in the first place?',
 			'133 It seems this comment tries to explain a piece of code that has several responsibilities',

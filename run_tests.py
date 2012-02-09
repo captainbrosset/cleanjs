@@ -36,7 +36,7 @@ def run_integration_tests():
 		if item[-3:] == ".js":
 			print "- " + item
 
-			if not expected_results[item]:
+			if not expected_results.has_key(item):
 				print "seems to be a new file for which no reference data exist"
 				continue
 

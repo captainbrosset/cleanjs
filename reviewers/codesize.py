@@ -44,10 +44,13 @@ class Reviewer():
 		elif nb > Reviewer.WARN_MAX_FILE_line_number:
 			message_bag.add_warning(self, "There are more than " + str(Reviewer.WARN_MAX_FILE_line_number) + " lines in the file (" + str(nb) + ") ! If possible, please try to refactor", 1)
 
+	def is_function_empty(self, function):
+		return function.body.strip() == ""
+
 	def review_line_number_in_functions(self, file_functions, message_bag):
-		for function in file_functions:			
+		for function in file_functions:
 			nb = len(function.lines.get_code_lines())
-			if nb == 0:
+			if self.is_function_empty(function):
 				message_bag.add_warning(self, "Function " + function.name + " is empty. Is it really needed?", function.line_number)
 			elif nb > Reviewer.ERROR_MAX_FUNCTION_line_number:
 				message_bag.add_error(self, "There are more than " + str(Reviewer.ERROR_MAX_FUNCTION_line_number) + " lines in function " + function.name + " (" + str(nb) + ")! Surely the function has more than one responsibility", function.line_number)
