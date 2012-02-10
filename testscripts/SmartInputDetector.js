@@ -10,7 +10,7 @@ malica.SmartInputDetector = {
 	/**
 	 * @param {String} inputText The text as typed by the user, which we want to detect from
 	 * @return {Object} Returns an object with 2 properties: url and description,
-	 * depending on what we could parse, only one, both or none of them cna be defined
+	 * depending on what we could parse, only one, both or none of them can be defined
 	 */
 	detect: function(inputText) {
 		var result = {

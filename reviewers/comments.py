@@ -10,8 +10,11 @@ class Reviewer():
 	SEPARATOR_CHARACTERS = ["-", "\|", "!", "#", "\.", "\*", "=", "/", "~", "+", "\\"]
 	MAX_NUMBER_OF_SEPARATOR_CHARACTERS_IN_COMMENTS = 4
 
-	WARN_MAX_NB_OF_BUTIFORAND_CONDITION = 1
-	ERROR_MAX_NB_OF_BUTIFORAND_CONDITION = 3
+	WARN_MAX_NB_OF_BUTIFORAND_CONDITION = 2
+	ERROR_MAX_NB_OF_BUTIFORAND_CONDITION = 4
+
+	def __init__(self, config_reader=None):
+		self.config_reader = config_reader
 
 	def get_name(self):
 		return "comments"
@@ -94,7 +97,7 @@ class Reviewer():
 		#  'if', 'but', 'and','or', then it's likely that the commented code has more than one responsibility
 		comment_blocks = self.get_all_comment_blocks(lines)
 		for comment in comment_blocks:
-			nb_of_conditions = len(re.findall(" and | or | but | if ", comment["comment"]))
+			nb_of_conditions = len(re.findall(" and | or | but | if | otherwise ", comment["comment"]))
 			if nb_of_conditions > Reviewer.WARN_MAX_NB_OF_BUTIFORAND_CONDITION:
 				message_bag.add_warning(self, "It seems this comment tries to explain a piece of code that has several responsibilities", comment["line_number"])
 			elif nb_of_conditions > Reviewer.ERROR_MAX_NB_OF_BUTIFORAND_CONDITION:
