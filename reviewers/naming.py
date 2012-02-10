@@ -10,6 +10,9 @@ class Reviewer():
 	NB_OF_CHARS_IN_NAME_BEFORE_CAMELCASE = 15
 	# Set to true to connect to the real dictionary
 	DICT_WORD_CHECKING = False
+
+	def __init__(self, config_reader=None):
+		self.config_reader = config_reader
 	
 	def get_name(self):
 		return "naming"

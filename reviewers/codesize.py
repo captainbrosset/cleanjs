@@ -16,6 +16,9 @@ class Reviewer():
 	ERROR_MAX_ARGUMENT_NB = 10
 	ERROR_MAX_LINE_LENGTH = 120
 
+	def __init__(self, config_reader=None):
+		self.config_reader = config_reader
+
 	def get_name(self):
 		return "code size"
 
@@ -27,22 +30,27 @@ class Reviewer():
 	def review_line_length(self, lines, message_bag):
 		for line in lines:
 			if self.is_line_too_long(line.complete_line):
-				message_bag.add_error(self, "Line is more than " + str(Reviewer.ERROR_MAX_LINE_LENGTH) + " character long (" + str(len(line.complete_line)) + "). This is hard to read.", line.line_number)
+				message_string = self.config_reader.get("codesize", "line_too_long", Reviewer.ERROR_MAX_LINE_LENGTH, len(line.complete_line))
+				message_bag.add_error(self, message_string, line.line_number)
 
 	def review_nb_of_arguments(self, functions, message_bag):
 		for function in functions:
 			if len(function.signature) > Reviewer.ERROR_MAX_ARGUMENT_NB:
-				message_bag.add_error(self, "There are more than " + str(Reviewer.ERROR_MAX_ARGUMENT_NB) + " arguments in function " + function.name + " (" + str(len(function.signature)) + ")! Pass an object instead", function.line_number)
+				message_string = self.config_reader.get("codesize", "too_many_function_arguments_error", Reviewer.ERROR_MAX_ARGUMENT_NB, function.name, len(function.signature))
+				message_bag.add_error(self, message_string, function.line_number)
 			elif len(function.signature) > Reviewer.WARN_MAX_ARGUMENT_NB:
-				message_bag.add_warning(self, "There are more than " + str(Reviewer.WARN_MAX_ARGUMENT_NB) + " arguments in function " + function.name + " (" + str(len(function.signature)) + ")! Why not wrapping them in a nice class?", function.line_number)
+				message_string = self.config_reader.get("codesize", "too_many_function_arguments_warning", Reviewer.WARN_MAX_ARGUMENT_NB, function.name, len(function.signature))
+				message_bag.add_warning(self, message_string, function.line_number)
 	
 	def review_line_number_in_file(self, lines, message_bag):
 		# FIXME: comment lines are NOT ignored, should be?!
 		nb = len(lines.all_lines)
 		if nb > Reviewer.ERROR_MAX_FILE_line_number:
-			message_bag.add_error(self, "There are more than " + str(Reviewer.ERROR_MAX_FILE_line_number) + " lines in the file (" + str(nb) + ") ! Surely the file has more than one responsibility", 1)
+			message_string = self.config_reader.get("codesize", "too_many_lines_in_file_error", Reviewer.ERROR_MAX_FILE_line_number, nb)
+			message_bag.add_error(self, message_string, 1)
 		elif nb > Reviewer.WARN_MAX_FILE_line_number:
-			message_bag.add_warning(self, "There are more than " + str(Reviewer.WARN_MAX_FILE_line_number) + " lines in the file (" + str(nb) + ") ! If possible, please try to refactor", 1)
+			message_string = self.config_reader.get("codesize", "too_many_lines_in_file_warning", Reviewer.WARN_MAX_FILE_line_number, nb)
+			message_bag.add_warning(self, message_string, 1)
 
 	def is_function_empty(self, function):
 		return function.body.strip() == ""
@@ -50,12 +58,18 @@ class Reviewer():
 	def review_line_number_in_functions(self, file_functions, message_bag):
 		for function in file_functions:
 			nb = len(function.lines.get_code_lines())
+
 			if self.is_function_empty(function):
-				message_bag.add_warning(self, "Function " + function.name + " is empty. Is it really needed?", function.line_number)
+				message_string = self.config_reader.get("codesize", "empty_function", function.name)
+				message_bag.add_warning(self, message_string, function.line_number)
+			
 			elif nb > Reviewer.ERROR_MAX_FUNCTION_line_number:
-				message_bag.add_error(self, "There are more than " + str(Reviewer.ERROR_MAX_FUNCTION_line_number) + " lines in function " + function.name + " (" + str(nb) + ")! Surely the function has more than one responsibility", function.line_number)
+				message_string = self.config_reader.get("codesize", "too_many_lines_in_function_error", Reviewer.ERROR_MAX_FUNCTION_line_number, function.name, nb)
+				message_bag.add_error(self, message_string, function.line_number)
+			
 			elif nb > Reviewer.WARN_MAX_FUNCTION_line_number:
-				message_bag.add_warning(self, "There are more than " + str(Reviewer.WARN_MAX_FUNCTION_line_number) + " lines in function " + function.name + " (" + str(nb) + ")! If possible, please try to refactor it", function.line_number)
+				message_string = self.config_reader.get("codesize", "too_many_lines_in_function_warning", Reviewer.WARN_MAX_FUNCTION_line_number, function.name, nb)
+				message_bag.add_warning(self, message_string, function.line_number)
 
 	def review_variable_name_size(self, functions, message_bag):
 		for function in functions:
@@ -64,22 +78,32 @@ class Reviewer():
 				line_number = var.line_number
 
 				if variablelength.is_variable_name_too_short(name, function.body):
-					message_bag.add_error(self, "The name of variable " + name + " is too short", line_number)
-				if len(name) > Reviewer.ERROR_MAX_NAME_SIZE:
-					message_bag.add_error(self, "The name of variable " + name + " is more than " + str(Reviewer.ERROR_MAX_NAME_SIZE) + " characters (" + str(len(name)) + "). This is too long", line_number)
-				elif len(name) > Reviewer.WARN_MAX_NAME_SIZE:
-					message_bag.add_warning(self, "The name of variable " + name + " is more than " + str(Reviewer.WARN_MAX_NAME_SIZE) + " characters (" + str(len(name)) + "). This may make it harder to read", line_number)
+					message_string = self.config_reader.get("codesize", "variable_too_short_error", name)
+					message_bag.add_error(self, message_string, line_number)
+								
+				if len(name) > Reviewer.WARN_MAX_NAME_SIZE:
+					self.ouput_name_too_long_message("variable", name, line_number, message_bag)
+
+	def ouput_name_too_long_message(self, type, name, line_number, message_bag):
+		if len(name) > Reviewer.ERROR_MAX_NAME_SIZE:
+			message_string = self.config_reader.get("codesize", "name_too_long_error", type, name, Reviewer.ERROR_MAX_NAME_SIZE, len(name))
+			message_bag.add_error(self, message_string, line_number)
+		
+		elif len(name) > Reviewer.WARN_MAX_NAME_SIZE:
+			message_string = self.config_reader.get("codesize", "name_too_long_warning", type, name, Reviewer.WARN_MAX_NAME_SIZE, len(name))
+			message_bag.add_warning(self, message_string, line_number)
 
 	def review_name_size(self, name, type, line_number, message_bag):
-		name_length = len(name)
-		if name_length > Reviewer.ERROR_MAX_NAME_SIZE:
-			message_bag.add_error(self, "The name of " + type + " " + name + " is more than " + str(Reviewer.ERROR_MAX_NAME_SIZE) + " characters (" + str(name_length) + "). This is too long", line_number)
-		elif name_length > Reviewer.WARN_MAX_NAME_SIZE:
-			message_bag.add_warning(self, "The name of " + type + " " + name + " is more than " + str(Reviewer.WARN_MAX_NAME_SIZE) + " characters (" + str(name_length) + "). This may make it harder to read", line_number)
-		if name_length < Reviewer.ERROR_MIN_NAME_SIZE:
-			message_bag.add_error(self, "The name of " + type + " " + name + " is less than " + str(Reviewer.ERROR_MIN_NAME_SIZE) + " characters (" + str(name_length) + "). This is way too short! Noone will understand what you mean", line_number)
-		elif name_length < Reviewer.WARN_MIN_NAME_SIZE:
-			message_bag.add_warning(self, "The name of " + type + " " + name + " is less than " + str(Reviewer.WARN_MIN_NAME_SIZE) + " characters (" + str(name_length) + "). Think about making names self explanatory", line_number)		
+		if len(name) > Reviewer.WARN_MAX_NAME_SIZE:
+			self.ouput_name_too_long_message(type, name, line_number, message_bag)
+		
+		if len(name) < Reviewer.ERROR_MIN_NAME_SIZE:
+			message_string = self.config_reader.get("codesize", "name_too_short_error", type, name, Reviewer.ERROR_MIN_NAME_SIZE, len(name))
+			message_bag.add_error(self, message_string, line_number)
+		
+		elif len(name) < Reviewer.WARN_MIN_NAME_SIZE:
+			message_string = self.config_reader.get("codesize", "name_too_short_warning", type, name, Reviewer.WARN_MIN_NAME_SIZE, len(name))
+			message_bag.add_warning(self, message_string, line_number)		
 
 	def review_function_name_size(self, functions, message_bag):
 		for function in functions:

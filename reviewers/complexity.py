@@ -7,7 +7,10 @@ class Reviewer():
 	ERROR_MAX_NB_OF_CONDITIONS_IN_IF = 2
 	ERROR_MAX_NB_OF_RETURNS_IN_FUNCTION = 5
 	WARN_MAX_NB_OF_RETURNS_IN_FUNCTION = 2
-	
+
+	def __init__(self, config_reader=None):
+		self.config_reader = config_reader
+
 	def get_name(self):
 		return "complexity"
 	

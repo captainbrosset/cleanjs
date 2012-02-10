@@ -1,6 +1,10 @@
 import re
 
 class Reviewer():
+
+	def __init__(self, config_reader=None):
+		self.config_reader = config_reader
+	
 	def get_name(self):
 		return "formatting"
 	

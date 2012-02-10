@@ -1,18 +1,23 @@
+import os
+
 import codesize, comments, complexity, formatting, naming, unused, general
 from messagebag import MessageBag
+from config.reader import ReviewerConfigReader
 
 def review(file_data):
 	"""Takes in a FileData instance, runs all reviewers on it, and returns a reviewers.reviewer.ReviewedFile instance"""
 
+	config_reader = ReviewerConfigReader("reviewers" + os.sep + "config" + os.sep + "messages.cfg")
+	
 	message_bag = MessageBag()
 
-	general.Reviewer().review(file_data, message_bag)
-	codesize.Reviewer().review(file_data, message_bag)
-	comments.Reviewer().review(file_data, message_bag)
-	complexity.Reviewer().review(file_data, message_bag)
-	formatting.Reviewer().review(file_data, message_bag)
-	naming.Reviewer().review(file_data, message_bag)
-	unused.Reviewer().review(file_data, message_bag)
+	general.Reviewer(config_reader).review(file_data, message_bag)
+	codesize.Reviewer(config_reader).review(file_data, message_bag)
+	comments.Reviewer(config_reader).review(file_data, message_bag)
+	complexity.Reviewer(config_reader).review(file_data, message_bag)
+	formatting.Reviewer(config_reader).review(file_data, message_bag)
+	naming.Reviewer(config_reader).review(file_data, message_bag)
+	unused.Reviewer(config_reader).review(file_data, message_bag)
 
 	return ReviewedFile(message_bag)
 
