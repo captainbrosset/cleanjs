@@ -13,8 +13,7 @@ class Reviewer():
 		max = 0
 		average = 0
 		for function in functions:
-			# FIXME: need to take advantage of the new functions structured data to avoid parsing with the regexp here
-			function_length = len(re.findall("^.*\S+.*$", function.body, flags=re.MULTILINE))
+			function_length = len(function.lines.get_code_and_comments_lines())
 			average += function_length
 			if function_length > max:
 				max = function_length

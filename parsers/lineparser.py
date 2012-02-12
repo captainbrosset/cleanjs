@@ -38,40 +38,62 @@ class FileLines(object):
 	- all_lines: an array of all the lines in the file. Each element of this array is of type Line"""
 	
 	def __init__(self, all_lines, start_pos=0, end_pos=float("inf")):
-		self.all_lines = all_lines
+		self._all_lines = all_lines
 		self.start_pos = start_pos
 		self.end_pos = end_pos
 	
 	def __repr__(self):
 		return str(len(self.all_lines)) + " lines of code\n" + str(self.all_lines)
 
+	def __getattr__(self, name):
+		"""The FileLines instance is computed once for the whole file, and then given
+		to objects like functions, etc ...
+		Overriding the __getattr__ allows to return the proper number of lines of
+		code"""
+		if name == "all_lines":
+			if self.start_pos and self.end_pos:
+				all_lines = []
+				for line in self._all_lines:
+					if self.is_line_in_range(line):
+						all_lines.append(line)
+				return all_lines
+			else:
+				return self._all_lines
+
 	def is_line_in_range(self, line):
 		return line.start_pos >= self.start_pos and line.end_pos <= self.end_pos
 
 	def get_code_lines(self):
 		lines = []
-		for line in self.all_lines:
+		for line in self._all_lines:
 			if line.has_code() and self.is_line_in_range(line):
 				lines.append(line)
 		return lines
 	
 	def get_whole_code(self):
 		code = ""
-		for line in self.all_lines:
+		for line in self._all_lines:
 			if line.has_code() and self.is_line_in_range(line):
 				code += line.code + "\n"
 		return code
 
+	def get_code_and_comments_lines(self):
+		lines = []
+		for line in self._all_lines:
+			if (line.has_comments() or line.has_code()) and self.is_line_in_range(line):
+				lines.append(line)
+		return lines
+
 	def get_comments_lines(self):
 		lines = []
-		for line in self.all_lines:
+		for line in self._all_lines:
 			if line.has_comments() and self.is_line_in_range(line):
 				lines.append(line)
 		return lines
 
 	def get_empty_lines(self):
 		lines = []
-		for line in self.all_lines:
+		for line in self._all_lines:
 			if line.is_empty() and self.is_line_in_range(line):
 				lines.append(line)
 		return lines
@@ -161,6 +183,9 @@ class LineParser(object):
 			
 			comments_to_add = ""
 			code_to_add = ""
+
+		# Last line end_pos
+		lines[len(lines)-1]["end_pos"] = index
 
 		line_objects = []
 		for index, line in enumerate(lines):

@@ -43,6 +43,23 @@ class FunctionData(visitor.Entity):
 		return "Function " + self.name + ", line " + str(self.line_number) + " (" + str(self.signature) + ") (" + str(len(self.lines.all_lines)) + " lines of code)"
 
 
+class FunctionBody(object):
+	def __init__(self, source, start_pos, end_pos):
+		self.outer_body = source[start_pos:end_pos]
+		self.inner_body = self.extract_inner_body()
+		self.start_pos = self.get_inner_start_pos(start_pos)
+		self.end_pos = self.get_inner_end_pos(end_pos)
+
+	def extract_inner_body(self):
+		return self.outer_body[self.outer_body.find("{")+1:self.outer_body.rfind("}")]
+	
+	def get_inner_start_pos(self, start_pos):
+		return start_pos + self.outer_body.find("{") + 1
+
+	def get_inner_end_pos(self, end_pos):
+		return end_pos - 1
+
+
 class FunctionParser(object):
 	"""
 	Parser/visitor for functions
@@ -51,12 +68,10 @@ class FunctionParser(object):
 	def __init__(self):
 		self.functions = []
 
-	def add_function(self, name, body, line_number, signature, start_pos, end_pos, source):
-		inner_body_start_pos = start_pos + body.find("{") + 1
-		inner_body_end_pos = end_pos - 1
-		inner_body = body[body.find("{")+1:body.rfind("}")]
+	def add_function(self, name, line_number, signature, start_pos, end_pos, source):
+		body = FunctionBody(source, start_pos, end_pos)
 
-		function = FunctionData(name, inner_body, line_number, signature, inner_body_start_pos, inner_body_end_pos, [], False)
+		function = FunctionData(name, body.inner_body, line_number, signature, body.start_pos, body.end_pos, [], False)
 		self.functions.append(function)
 
 	def add_var(self, function, name, is_nodejs_require, line_number, start, end):
@@ -102,13 +117,13 @@ class FunctionParser(object):
 	def visit_FUNCTION(self, node, source):
 		# Named functions only, the getattr returns None if name doesn't exist
 		if node.type == "FUNCTION" and getattr(node, "name", None):
-			self.add_function(node.name, source[node.start:node.end], node.lineno, node.params, node.start, node.end, source)
+			self.add_function(node.name, node.lineno, node.params, node.start, node.end, source)
 
 	def visit_IDENTIFIER(self, node, source):
 		# Anonymous functions declared with var name = function() {};
 		try:
 			if node.type == "IDENTIFIER" and hasattr(node, "initializer") and node.initializer.type == "FUNCTION":
-				self.add_function(node.name, source[node.start:node.initializer.end], node.lineno, node.initializer.params, node.start, node.initializer.end, source)
+				self.add_function(node.name, node.lineno, node.initializer.params, node.start, node.initializer.end, source)
 		except Exception as e:
 			pass
 		
@@ -121,13 +136,13 @@ class FunctionParser(object):
 
 	def visit_ASSIGN(self, node, source):
 		if node[1].type == "FUNCTION":
-			self.add_function(node[0].value, source[node[1].start:node[1].end], node[1].lineno, node[1].params, node[1].start, node[1].end, source)
+			self.add_function(node[0].value, node[1].lineno, node[1].params, node[1].start, node[1].end, source)
 
 	def visit_PROPERTY_INIT(self, node, source):
 		# Anonymous functions declared as a property of an object
 		try:
 			if node.type == "PROPERTY_INIT" and node[1].type == "FUNCTION":
-				self.add_function(node[0].value, source[node.start:node[1].end], node[0].lineno, node[1].params, node.start, node[1].end, source)
+				self.add_function(node[0].value, node[0].lineno, node[1].params, node[1].start, node[1].end, source)
 		except Exception as e:
 			pass
 

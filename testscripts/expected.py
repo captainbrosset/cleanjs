@@ -132,7 +132,7 @@ results = {
 			"43 Name mgr doesn't mean anything",
 			'47 Found an IF statement with more than 2 AND or OR! Wrap them in a function like isABC()',
 			'49 The name of variable a is too short',
-			'50 There are more than 30% of comments in function doSomething (50.0%). Make the code simpler.',
+			'50 There are more than 30% of comments in function doSomething (100.0%). Make the code simpler.',
 			'58 Line has both code and comments. This is usually a sign that you need to explain a complex piece of code.',
 			'59 Line has both code and comments. This is usually a sign that you need to explain a complex piece of code.',
 			'64 Function complex returns more than 2 values (4).',
@@ -172,7 +172,7 @@ results = {
 			'235 The name of variable ret is too short',
 			'269 Function header is getting complex. There may be too much logic going on. Think about splitting.',
 			'269 Function header returns more than 2 values (4).',
-			'269 There are more than 20 lines in function header (24)! If possible, please try to refactor it',
+			'269 There are more than 20 lines in function header (23)! If possible, please try to refactor it',
 			'27 Line has both code and comments. This is usually a sign that you need to explain a complex piece of code.',
 			'29 You are using some kind of separator characters in your comment, probably in an attempt to separate some complex code ... why not making it simpler in the first place?',
 			'29 You have 3 subsequent lines of comments in a row. Are you trying to explain something complex?',
@@ -193,6 +193,7 @@ results = {
 	"syntaxerror.js": {
 		"rating": "C",
 		"messages": [
+			'1 There are more than 30% of comments in function test (50.0%). Make the code simpler.',
 			'1 Argument b in method test is never used',
 			"1 Name b doesn't mean anything",
 			'1 The name of argument a is less than 2 characters (1). This is way too short! Noone will understand what you mean',

@@ -76,6 +76,10 @@ def get_file_data_from_file(src_file_name):
 
 if __name__ == "__main__":
 	content = """
+	function test() {
+		// this is a test function
+		var a = 1;
+	}
 	/**
 	 * This is a test class
 	 * @param {String} test
@@ -110,11 +114,22 @@ if __name__ == "__main__":
 
 	assert file_data.name == name
 	assert file_data.content == content
-	assert len(file_data.lines.all_lines) == 30
-	assert len(file_data.functions) == 2
-	assert len(file_data.variables) == 4
+	assert len(file_data.lines.all_lines) == 34
+	assert len(file_data.functions) == 3
+	assert len(file_data.variables) == 5
 
 	assert len(file_data.class_properties) == 1
-	assert file_data.class_properties[0].line_number == 14
+	assert file_data.class_properties[0].line_number == 18
+
+	for function in file_data.functions:
+		assert function.body == file_data.content[function.start_pos:function.end_pos]
+
+	content = """var a = {
+		test: function() {
+			return true;
+		}
+	};"""
+	file_data = get_file_data_from_content("test", content)
+	assert len(file_data.functions[0].lines.get_code_and_comments_lines()) == 1
 
 	print "ALL TESTS OK"
