@@ -83,7 +83,7 @@ class JSFileVisitorHandler(object):
 			self._walk_node()
 			self.exec_postprocess_visitors(self.source)
 		else:
-			raise self.parser.error
+			raise self.parser.parsing_error
 	
 	def _look_for_childen(self, node):
 		for attr in self.CHILD_ATTRS:

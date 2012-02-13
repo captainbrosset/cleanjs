@@ -27,7 +27,11 @@ report_name = sys.argv[2]
 
 # Gather data about the file to be reviewed
 from parsers import fileparser
-file_data = fileparser.get_file_data_from_file(file_name)
+try:
+	file_data = fileparser.get_file_data_from_file(file_name)
+except Exception as error:
+	print error
+	exit()
 
 # Review the file
 from reviewers import reviewer

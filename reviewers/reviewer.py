@@ -4,10 +4,17 @@ import codesize, comments, complexity, formatting, naming, unused, general
 from messagebag import MessageBag
 from config.reader import ReviewerConfigReader
 
+def _get_config_file_path():
+	root_dir = os.getcwd()
+	if root_dir[-7:] != "cleanjs" and root_dir[-8:] != "cleanjs" + os.sep:
+		root_dir = root_dir + os.sep + "cleanjs"
+
+	return root_dir + os.sep + "reviewers" + os.sep + "config" + os.sep + "messages.cfg"
+
 def review(file_data):
 	"""Takes in a FileData instance, runs all reviewers on it, and returns a reviewers.reviewer.ReviewedFile instance"""
 
-	config_reader = ReviewerConfigReader("reviewers" + os.sep + "config" + os.sep + "messages.cfg")
+	config_reader = ReviewerConfigReader(_get_config_file_path())
 	
 	message_bag = MessageBag()
 
