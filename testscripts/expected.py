@@ -1,4 +1,9 @@
 results = {
+	"emptyfunction.js": {
+		"messages": [
+			'2 Function myFunction is empty. Is it really needed?'
+		]
+	},
 	"shortnodename.js": {},
 	"oneline.js": {
 		"messages": [

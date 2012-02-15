@@ -4,7 +4,7 @@ class attrdict(dict):
 		dict.__init__(self, *args, **kwargs)
 		self.__dict__ = self
 
-import sys
+import sys, os
 
 try:
 	import sublime, sublime_plugin
@@ -35,7 +35,7 @@ class CleanjsCommand(sublime_plugin.TextCommand):
 			self.show_messages_to_panel(str(error), PANEL_KEY)
 			return
 
-		result = reviewer.review(file_data)
+		result = reviewer.review(file_data, working_dir=sublime.packages_path() + os.sep + "cleanjs")
 
 		text = self.get_full_report_from_result(result)
 
