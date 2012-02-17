@@ -1,4 +1,5 @@
 results = {
+	"nested.js": {},
 	"emptyfunction.js": {
 		"messages": [
 			'2 Function myFunction is empty. Is it really needed?'
@@ -9,7 +10,6 @@ results = {
 		"messages": [
 			"1 Name b doesn't mean anything",
 			'1 Line is more than 120 character long (1368). This is hard to read.',
-			'1 Function checkBrowser is getting complex. There may be too much logic going on. Think about splitting.',
 			"1 Name f doesn't mean anything",
 			'1 The name of argument c is less than 2 characters (1). This is way too short! Noone will understand what you mean',
 			"1 Name c doesn't mean anything",
@@ -84,6 +84,7 @@ results = {
 	"ImageResizer.js": {
 		"rating": "B",
 		"messages": [
+			'40 Function _resizeAPhoto is getting complex (cyclomatic complexity of 8). There may be too much logic going on. Think about splitting.',
 			'22 The name of variable img is too short',
 			"28 It seems this comment is very similar to the code directly beneath it. Don't you think you can get rid of it?",
 			'46 Found an IF statement with more than 1 AND or OR! Could you extract this in a function like isABC()?',
@@ -132,15 +133,15 @@ results = {
 			'28 There are more than 5 arguments in function test (7)! Why not wrapping them in a nice class?',
 			'30 Found an IF statement with more than 1 AND or OR! Could you extract this in a function like isABC()?',
 			"4 Function hasWings starts with 'is/has/get'. This usually means a return value is expected, but none was found.",
-			'43 Function ctrlMgr is getting complex. There may be too much logic going on. Think about splitting.',
 			"43 Name ctrl doesn't mean anything",
 			"43 Name mgr doesn't mean anything",
+			'43 Function ctrlMgr is getting complex (cyclomatic complexity of 9). There may be too much logic going on. Think about splitting.',
 			'47 Found an IF statement with more than 2 AND or OR! Wrap them in a function like isABC()',
 			'49 The name of variable a is too short',
 			'50 There are more than 30% of comments in function doSomething (100.0%). Make the code simpler.',
 			'58 Line has both code and comments. This is usually a sign that you need to explain a complex piece of code.',
 			'59 Line has both code and comments. This is usually a sign that you need to explain a complex piece of code.',
-			'64 Function complex returns more than 2 values (4).',
+			'64 Function complex returns more than 2 values (3).',
 			"69 It seems this comment is very similar to the code directly beneath it. Don't you think you can get rid of it?"
 		]
 	},
@@ -175,7 +176,6 @@ results = {
 			'217 You have 3 subsequent lines of comments in a row. Are you trying to explain something complex?',
 			'225 Line is more than 120 character long (186). This is hard to read.',
 			'235 The name of variable ret is too short',
-			'269 Function header is getting complex. There may be too much logic going on. Think about splitting.',
 			'269 Function header returns more than 2 values (4).',
 			'269 There are more than 20 lines in function header (23)! If possible, please try to refactor it',
 			'27 Line has both code and comments. This is usually a sign that you need to explain a complex piece of code.',

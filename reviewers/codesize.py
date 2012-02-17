@@ -4,10 +4,10 @@ from helpers import variablelength
 from helpers import wordmeaning
 
 class Reviewer():
-	WARN_MAX_FILE_line_number = 150
-	ERROR_MAX_FILE_line_number = 300
-	WARN_MAX_FUNCTION_line_number = 20
-	ERROR_MAX_FUNCTION_line_number = 50
+	WARN_MAX_FILE_LINE_NUMBER = 150
+	ERROR_MAX_FILE_LINE_NUMBER = 300
+	WARN_MAX_FUNCTION_LINE_NUMBER = 20
+	ERROR_MAX_FUNCTION_LINE_NUMBER = 50
 	WARN_MIN_NAME_SIZE = 3
 	ERROR_MIN_NAME_SIZE = 2
 	WARN_MAX_NAME_SIZE = 35
@@ -45,11 +45,11 @@ class Reviewer():
 	def review_line_number_in_file(self, lines, message_bag):
 		# FIXME: comment lines are NOT ignored, should be?!
 		nb = len(lines.all_lines)
-		if nb > Reviewer.ERROR_MAX_FILE_line_number:
-			message_string = self.config_reader.get("codesize", "too_many_lines_in_file_error", Reviewer.ERROR_MAX_FILE_line_number, nb)
+		if nb > Reviewer.ERROR_MAX_FILE_LINE_NUMBER:
+			message_string = self.config_reader.get("codesize", "too_many_lines_in_file_error", Reviewer.ERROR_MAX_FILE_LINE_NUMBER, nb)
 			message_bag.add_error(self, message_string, 1)
-		elif nb > Reviewer.WARN_MAX_FILE_line_number:
-			message_string = self.config_reader.get("codesize", "too_many_lines_in_file_warning", Reviewer.WARN_MAX_FILE_line_number, nb)
+		elif nb > Reviewer.WARN_MAX_FILE_LINE_NUMBER:
+			message_string = self.config_reader.get("codesize", "too_many_lines_in_file_warning", Reviewer.WARN_MAX_FILE_LINE_NUMBER, nb)
 			message_bag.add_warning(self, message_string, 1)
 
 	def is_function_empty(self, function):
@@ -63,12 +63,12 @@ class Reviewer():
 				message_string = self.config_reader.get("codesize", "empty_function", function.name)
 				message_bag.add_warning(self, message_string, function.line_number)
 			
-			elif nb > Reviewer.ERROR_MAX_FUNCTION_line_number:
-				message_string = self.config_reader.get("codesize", "too_many_lines_in_function_error", Reviewer.ERROR_MAX_FUNCTION_line_number, function.name, nb)
+			elif nb > Reviewer.ERROR_MAX_FUNCTION_LINE_NUMBER:
+				message_string = self.config_reader.get("codesize", "too_many_lines_in_function_error", Reviewer.ERROR_MAX_FUNCTION_LINE_NUMBER, function.name, nb)
 				message_bag.add_error(self, message_string, function.line_number)
 			
-			elif nb > Reviewer.WARN_MAX_FUNCTION_line_number:
-				message_string = self.config_reader.get("codesize", "too_many_lines_in_function_warning", Reviewer.WARN_MAX_FUNCTION_line_number, function.name, nb)
+			elif nb > Reviewer.WARN_MAX_FUNCTION_LINE_NUMBER:
+				message_string = self.config_reader.get("codesize", "too_many_lines_in_function_warning", Reviewer.WARN_MAX_FUNCTION_LINE_NUMBER, function.name, nb)
 				message_bag.add_warning(self, message_string, function.line_number)
 
 	def review_variable_name_size(self, functions, message_bag):
@@ -136,5 +136,6 @@ if __name__ == "__main__":
 	assert reviewer.is_line_too_long("") == False
 	assert reviewer.is_line_too_long("qisjd qosidhgiuq gsdigf qsdiughq isudhg qsdgo\n") == False
 	assert reviewer.is_line_too_long("//3456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890\n") == False
+	assert reviewer.is_line_too_long("//3456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890f") == True
 
 	print "ALL TESTS OK"

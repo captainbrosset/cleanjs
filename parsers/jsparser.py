@@ -38,9 +38,9 @@ class JSFileVisitorHandler(object):
 	visitor_handler.add_visitor(MyVisitor())
 	visitor_handler.visit()"""
 	
-	CHILD_ATTRS = ['value', 'thenPart', 'elsePart', 'expression', 'body','exception', 'initializer',
-	'tryBlock', 'condition','update', 'iterator', 'object', 'setup', 'discriminant', 'finallyBlock',
-	'tryBlock', 'varDecl', 'target']
+	CHILD_ATTRS = ['value', 'thenPart', 'elsePart', 'expression', 'body', 'exception', 'initializer',
+    'tryBlock', 'condition', 'update', 'iterator', 'object', 'setup', 'discriminant', 'finallyBlock',
+    'catchClauses', 'varDecl', 'target', 'cases', 'caseLabel', 'statements', 'varDecls', 'funDecls']
 
 	def __init__(self, source):
 		self.visited = list()
@@ -85,29 +85,102 @@ class JSFileVisitorHandler(object):
 		else:
 			raise self.parser.parsing_error
 	
-	def _look_for_childen(self, node):
-		for attr in self.CHILD_ATTRS:
-			child = getattr(node, attr, None)
-			if isinstance(child, jsparser.Node):
-				self._walk_node(child)
-
 	def _walk_node(self, root=None):
 		if not root:
 			root = self.root
 		
 		if id(root) in self.visited:
 			return
-		
 		self.visited.append(id(root))
-		
+
 		self.exec_visitors_on_node(root, self.source)
-			
-		self._look_for_childen(root)
+
+		for attr in self.CHILD_ATTRS:
+			child = getattr(root, attr, None)
+			if isinstance(child, jsparser.Node):
+				self._walk_node(child)
+			if isinstance(child, list):
+				for c in child:
+					if isinstance(c, jsparser.Node):
+						self._walk_node(c)
+
 		for node in root:
 			self._walk_node(node)
 		
 
 if __name__ == "__main__":
+	from functionparser import FunctionParser
+
+	inner_function = """
+	function ctrlMgr() {
+		if(true) {
+			if(true) {
+				while(true) {
+					if(something || somethingelse && (anotherthing || !what)) {
+						if(test) {
+							var a = {
+								doSomething: function() {
+									// test
+								}
+							};
+							return a;
+						} else {
+							return 1;
+						}
+					} // end if
+				} // end while
+			}
+		}
+	}
+	"""
+	handler = JSFileVisitorHandler(inner_function)
+	function_visitor = FunctionParser()
+	handler.add_visitor(function_visitor)	
+	handler.visit()
+	assert function_visitor.functions[0].variables[0].name == "a"
+
+	complex_code = """
+	function name() {
+		if(test && test2 || true) {
+			while(true) {
+				for(var i = 0; i < 4; i ++) {
+					try {
+						switch (test) {
+							case 1:
+								alert("")
+							break;
+							default:
+								alert("");
+							break;
+						}
+					} catch (e) {
+						alert("")
+					}
+				}
+			}
+		}
+		return 3;
+	}
+	"""
+	handler = JSFileVisitorHandler(complex_code)
+	function_visitor = FunctionParser()
+	handler.add_visitor(function_visitor)	
+	handler.visit()
+	assert function_visitor.functions[0].complexity == 10
+	assert function_visitor.functions[0].has_return == True
+
+	return_code = """
+	Apple.prototype.getInfo = function() {
+    return this.color + ' ' + this.type + ' apple';
+	};
+	"""
+	handler = JSFileVisitorHandler(return_code)
+	function_visitor = FunctionParser()
+	handler.add_visitor(function_visitor)	
+	handler.visit()
+	assert function_visitor.functions[0].complexity == 1
+	assert function_visitor.functions[0].has_return == True
+
 	content = """
 	//TODO: do something here
 	// There are plenty of things to explain about this file, because it is very very complex
@@ -184,11 +257,10 @@ if __name__ == "__main__":
 	}"""
 	parser = JSFileVisitorHandler(content)
 	
-	from functionparser import FunctionParser
 	function_visitor = FunctionParser()
 	parser.add_visitor(function_visitor)
 			
-	parser.parse()
+	parser.visit()
 		
 	assert len(function_visitor.functions) == 10, "Wrong number of functions in the file"
 	function_names = []
@@ -206,18 +278,15 @@ if __name__ == "__main__":
 	}
 	"""
 	parser = JSFileVisitorHandler(function_return_code)
-	parser.parse()
+	assert parser.parser.parsing_error == None
+	parser.visit()
 
 	var_usage = """var a = multiply/2;
 	var b = a*multiply+(multiply/multiply)
 	"""
 	JSFileVisitorHandler(var_usage)
 
-	bare_return = "return object.doSomething();"
-	try:
-		JSFileVisitorHandler(bare_return)
-		assert False, "Should have failed"
-	except jsparser.ParseError as error:
-		assert True
+	handler = JSFileVisitorHandler("return object.doSomething();")
+	assert handler.parser.parsing_error != None
 
 	print "ALL TESTS OK"

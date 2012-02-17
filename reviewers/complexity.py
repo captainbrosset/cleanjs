@@ -1,8 +1,8 @@
 import re
 
 class Reviewer():
-	WARN_MAX_NB_OF_STATEMENTS_IN_FUNCTION = 5
-	ERROR_MAX_NB_OF_STATEMENTS_IN_FUNCTION = 10
+	WARN_MAX_COMPLEXITY = 7
+	ERROR_MAX_COMPLEXITY = 10
 	WARN_MAX_NB_OF_CONDITIONS_IN_IF = 1
 	ERROR_MAX_NB_OF_CONDITIONS_IN_IF = 2
 	ERROR_MAX_NB_OF_RETURNS_IN_FUNCTION = 5
@@ -13,16 +13,15 @@ class Reviewer():
 
 	def get_name(self):
 		return "complexity"
-	
+
 	def review_functions_complexity(self, functions, message_bag):
 		for function in functions:
-			statements = re.findall("if[\s]*\(|else[\s]*\{|else if[\s]*\(|while[\s]*\(|for[\s]*\(|switch[\s]*\(", function.body)
-			if len(statements) > Reviewer.ERROR_MAX_NB_OF_STATEMENTS_IN_FUNCTION:
-				message_bag.add_error(self, "Function " + function.name + " is too complex. There are too many statements involved in its logic", function.line_number)
-			elif len(statements) > Reviewer.WARN_MAX_NB_OF_STATEMENTS_IN_FUNCTION:
-				message_bag.add_warning(self, "Function " + function.name + " is getting complex. There may be too much logic going on. Think about splitting.", function.line_number)
+			if function.complexity > Reviewer.ERROR_MAX_COMPLEXITY:
+				message_bag.add_error(self, "Function " + function.name + " is too complex (cyclomatic complexity of " + str(function.complexity) + "). There are too many statements involved in its logic", function.line_number)
+			elif function.complexity > Reviewer.WARN_MAX_COMPLEXITY:
+				message_bag.add_warning(self, "Function " + function.name + " is getting complex (cyclomatic complexity of " + str(function.complexity) + "). There may be too much logic going on. Think about splitting.", function.line_number)
 			
-			returns = re.findall("return ", function.body)
+			returns = re.findall("return ", function.lines.get_whole_code())
 			if len(returns) > Reviewer.ERROR_MAX_NB_OF_RETURNS_IN_FUNCTION:
 				message_bag.add_error(self, "Function " + function.name + " returns more than " + str(Reviewer.ERROR_MAX_NB_OF_RETURNS_IN_FUNCTION) + " values (" + str(len(returns)) + ").", function.line_number)
 			elif len(returns) > Reviewer.WARN_MAX_NB_OF_RETURNS_IN_FUNCTION:
