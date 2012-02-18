@@ -12,7 +12,9 @@ class FunctionData(visitor.Entity):
 	- body: the text of the body of the function
 	- variables: all variables declared in the function. Type parsers.variableparser.VariableData
 	- has_return: whether the function has at least one return statement
-	- lines: an instance of parsers.lineparser.LineParser.LineData"""
+	- lines: an instance of parsers.lineparser.FileLines
+	- complexity: an integer showing the cyclomatic complexity of the function (minimum 1)
+	- identifiers_usage: meant to be used through the get_identifier_usage(name) function to know where a given name is used in the function"""
 	
 	def __init__(self, name, body, line_number, signature, start_pos, end_pos, variables, has_return):
 		super(FunctionData, self).__init__(line_number, start_pos, end_pos)
@@ -29,6 +31,12 @@ class FunctionData(visitor.Entity):
 
 		self.identifiers_usage = {}
 	
+	def has_variable(self, name):
+		for var in self.variables:
+			if var.name == name:
+				return True
+		return False
+
 	def ensure_identifier_usage_exists(self, name):
 		if not self.identifiers_usage.has_key(name):
 			self.identifiers_usage[name] = []
@@ -92,7 +100,7 @@ class FunctionParser(object):
 		for function in self.functions:
 			if function.end_pos > position and function.start_pos < position:
 				functions.append(function)
-		return sorted(functions, key=lambda f: f.start_pos)
+		return sorted(functions, key=lambda f: -f.start_pos)
 
 	def increase_function_complexity(self, node):
 		functions = self.get_functions_nesting(node.start)
@@ -137,11 +145,10 @@ class FunctionParser(object):
 		
 		functions = self.get_functions_nesting(node.start)
 		if len(functions) > 0:
-			# FIXME: this is not enough, see issue #34, if a function uses "foo" but doesn't declare it or have it
-			# has its arguments, then it should be reported in the parent function that it is in fact used
-			# The array of functions here is contains a list of nested functions (deepest nested first)
-			# For info #34's example is actually not showing the problem
-			functions[0].increment_identifiers_usage(node.value, node.lineno)
+			for function in functions:
+				function.increment_identifiers_usage(node.value, node.lineno)
+				if function.has_variable(node.value):
+					break
 
 	def visit_ASSIGN(self, node, source):
 		if node[1].type == "FUNCTION":
@@ -157,4 +164,63 @@ class FunctionParser(object):
 
 
 if __name__ == "__main__":
-	print "NO TESTS TO RUN"
+
+	# Testing that the function body inner code extractor works
+
+	function_code = """function test() {
+		var a = 1;
+		a += 1;
+		return a;
+	}"""
+	whole_code = "var w = window;" + function_code + "test(w);"
+	body = FunctionBody(whole_code, 15, 15 + len(function_code))
+	assert body.outer_body == function_code
+	assert body.inner_body == """
+		var a = 1;
+		a += 1;
+		return a;
+	"""
+	assert body.start_pos == 32
+	assert body.end_pos == 69
+
+	# Testing that functions nested within each other are reported correctly
+
+	parser = FunctionParser()
+	parser.add_function("function1", 1, [], 1, 50, "")
+	parser.add_function("nestedInFunction1", 3, [], 10, 30, "")
+	parser.add_function("function2", 5, [], 60, 100, "")
+	parser.add_function("nestedInFunction2", 7, [], 80, 90, "")
+	parser.add_function("nestedInNestedFunction2", 9, [], 85, 89, "")
+	nesting = parser.get_functions_nesting(86)
+	assert len(nesting) == 3
+	assert nesting[0].name == "nestedInNestedFunction2"
+	assert nesting[1].name == "nestedInFunction2"
+	assert nesting[2].name == "function2"
+
+	# Testing that identifiers used in functions are reported in the right functions
+	# Including parent functions in case identifier is global and is defined in parent function
+
+	class Mock:
+		__init__ = lambda self, **kw: setattr(self, '__dict__', kw)
+
+	parser = FunctionParser()
+	parser.add_function("rootFunction", 1, [], 1, 70, "")
+	parser.add_function("parentFunction", 1, [], 2, 50, "")
+	parser.add_var(parser.functions[1], "variableDefinedInParentFunction", False, 3, 5, 6)
+	parser.add_function("childFunction", 3, [], 10, 30, "")
+	parser.add_var(parser.functions[2], "variableDefinedInChildFunction", False, 3, 12, 15)
+
+	identifier = Mock(type="IDENTIFIER", value="variableDefinedInParentFunction", lineno=4, start=20, end=22)
+	parser.visit_IDENTIFIER(identifier, "")
+
+	assert len(parser.functions) == 3
+	assert len(parser.functions[0].variables) == 0
+	assert len(parser.functions[1].variables) == 1
+	assert parser.functions[1].variables[0].name == "variableDefinedInParentFunction"
+	assert len(parser.functions[2].variables) == 1
+	assert parser.functions[2].variables[0].name == "variableDefinedInChildFunction"
+
+	assert parser.functions[2].identifiers_usage.has_key("variableDefinedInParentFunction")
+	assert parser.functions[1].identifiers_usage.has_key("variableDefinedInParentFunction"), "Variable is used in nested function but defined in parent, should be reported as used in parent"
+
+	print "ALL TESTS OK"

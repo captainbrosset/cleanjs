@@ -1,5 +1,6 @@
 results = {
-	"nested.js": {},
+	"nested.js": {
+	},
 	"emptyfunction.js": {
 		"messages": [
 			'2 Function myFunction is empty. Is it really needed?'
