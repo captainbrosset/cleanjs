@@ -22,14 +22,17 @@ class Reviewer():
 	def get_name(self):
 		return "code size"
 
-	def is_line_too_long(self, line):
+	def is_line_too_long(self, line_object):
+		line = line_object.complete_line
+		string_literal_length = line_object.max_string_length
 		if line[-1:] == "\n":
 			line = line[0:-1]
-		return len(line) > Reviewer.ERROR_MAX_LINE_LENGTH
+		# Hmmm ... not sure how to deal with long string literals ... here, just checking that the string is less than the max - 10
+		return len(line) > Reviewer.ERROR_MAX_LINE_LENGTH and string_literal_length < Reviewer.ERROR_MAX_LINE_LENGTH - 10
 
 	def review_line_length(self, lines, message_bag):
 		for line in lines:
-			if self.is_line_too_long(line.complete_line):
+			if self.is_line_too_long(line):
 				message_string = self.config_reader.get("codesize", "line_too_long", Reviewer.ERROR_MAX_LINE_LENGTH, len(line.complete_line))
 				message_bag.add_error(self, message_string, line.line_number)
 
@@ -133,9 +136,16 @@ if __name__ == "__main__":
 
 	reviewer = Reviewer()
 
-	assert reviewer.is_line_too_long("") == False
-	assert reviewer.is_line_too_long("qisjd qosidhgiuq gsdigf qsdiughq isudhg qsdgo\n") == False
-	assert reviewer.is_line_too_long("//3456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890\n") == False
-	assert reviewer.is_line_too_long("//3456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890f") == True
+	class MockLine:
+		def __init__(self, complete_line, max_string_length):
+			self.complete_line = complete_line
+			self.max_string_length = max_string_length
+
+	assert reviewer.is_line_too_long(MockLine("", 0)) == False
+	assert reviewer.is_line_too_long(MockLine("qisjd qosidhgiuq gsdigf qsdiughq isudhg qsdgo\n", 0)) == False
+	assert reviewer.is_line_too_long(MockLine("//3456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890\n", 0)) == False
+	assert reviewer.is_line_too_long(MockLine("//3456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890f", 0)) == True
+
+	assert reviewer.is_line_too_long(MockLine("var a = 'this is a very long string that in javascript cannot wrap of course on multiple lines, so shouldnt trigger a warning';", 116)) == False
 
 	print "ALL TESTS OK"

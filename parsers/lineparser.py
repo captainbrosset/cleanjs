@@ -1,15 +1,22 @@
 import re
 
 class Line(object):
-	"""A line object, containing its line_number, string of code if any, and string of comments if any"""
+	"""A line object, has the following attributes:
+	- line_number,
+	- start and end positions
+	- the complete line of code (containing every character as typed)
+	- the code only
+	- the comments only
+	- the maximum length of string literals (I know, this sounds strange, but it's useful)"""
 	
-	def __init__(self, line_number, start_pos, end_pos, complete_line, code, comments):
+	def __init__(self, line_number, start_pos, end_pos, complete_line, code, comments, max_string_length):
 		self.complete_line = complete_line
 		self.line_number = line_number
 		self.start_pos = start_pos
 		self.end_pos = end_pos
 		self.code = code
 		self.comments = comments
+		self.max_string_length = max_string_length
 	
 	def __repr__(self):
 		return "  - line " + str(self.line_number) + " | " + self.complete_line
@@ -110,10 +117,10 @@ class LineParser(object):
 		self.file_lines = self.parse(src)
 
 	def visit_REGEXP(self, node, src):
-		self.regexps.append((node.start, node.end))
+		self.regexps.append((node.start, node.end, node.lineno))
 
 	def visit_STRING(self, node, src):
-		self.strings.append((node.start, node.end))
+		self.strings.append((node.start, node.end, node.lineno))
 
 	def is_inside_string(self, position):
 		for string in self.strings:
@@ -121,6 +128,15 @@ class LineParser(object):
 				return True
 		return False
 	
+	def get_string_length_on_line(self, line_nb):
+		length = 0
+		for string in self.strings:
+			if line_nb == string[2]:
+				line_length = string[1] - string[0]
+				if line_length > length:
+					length = line_length
+		return length
+
 	def is_inside_regexp(self, position):
 		for regexp in self.regexps:
 			if position >= regexp[0] and position <= regexp[1]:
@@ -189,7 +205,7 @@ class LineParser(object):
 
 		line_objects = []
 		for index, line in enumerate(lines):
-			line_objects.append(Line(index+1, line["start_pos"], line["end_pos"], all_lines[index], line["code"].strip(), line["comments"].strip()))
+			line_objects.append(Line(index+1, line["start_pos"], line["end_pos"], all_lines[index], line["code"].strip(), line["comments"].strip(), self.get_string_length_on_line(index+1)))
 
 		return FileLines(line_objects)
 
@@ -254,10 +270,11 @@ if __name__ == "__main__":
 
 	# Mocking the fact that the visitor detected all strings and regexps, so that the line parser can
 	# avoid detecting comments inside strings and regexps
-	parser.strings = [(75,88)]
+	parser.strings = [(75,87, 5)]
 	parser.regexps = [(135,145)]
 	file_lines = parser.parse(tricky_file_content)
 
+	assert parser.get_string_length_on_line(5) == 12
 	assert len(file_lines.all_lines) == 8, "total number of lines is incorrect. Expected 8, found " + str(len(file_lines.all_lines))
 	assert len(file_lines.get_comments_lines()) == 2, "total number of comments lines is incorrect. Expected 2, found " + str(len(file_lines.get_comments_lines()))
 
