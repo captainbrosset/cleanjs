@@ -31,20 +31,16 @@ class FileData():
 			report += function.toString()
 		return report
 
-def parse_lines(src_file_content):
+def get_file_data_from_content(src_file_name, src_file_content):
+	"""Use this to gather data for file, given its content.
+	Will raise a jsparser.ParsingError if the syntax is incorrect"""
+
 	visitor_handler = JSFileVisitorHandler(src_file_content)
-	
+
 	line_parser = LineParser()
 	visitor_handler.add_visitor(line_parser)
 
-	visitor_handler.visit()
-	
-	return line_parser.file_lines
-
-def parse_jscode(src_file_content, src_file_lines):
-	visitor_handler = JSFileVisitorHandler(src_file_content)
-
-	function_parser = FunctionParser(src_file_lines)
+	function_parser = FunctionParser()
 	visitor_handler.add_visitor(function_parser)
 
 	variable_parser = VariableParser()
@@ -58,22 +54,16 @@ def parse_jscode(src_file_content, src_file_lines):
 	src_file_functions = function_parser.functions
 	src_file_variables = variable_parser.variables
 	src_file_class_properties = class_property_parser.properties
-	
-	return (src_file_functions, src_file_variables, src_file_class_properties)
+	src_file_lines = line_parser.file_lines
 
-def get_file_data_from_content(src_file_name, src_file_content):
-	"""Use this to gather data for file, given its content.
-	Will raise a jsparser.ParsingError if the syntax is incorrect"""
-
-	# Phase 1, parse lines
-	src_file_lines = parse_lines(src_file_content)
-
-	# Phase 2, parse JS code
-	parsed_jscode = parse_jscode(src_file_content, src_file_lines.all_lines)
-	
-	src_file_functions = parsed_jscode[0]
-	src_file_variables = parsed_jscode[1]
-	src_file_class_properties = parsed_jscode[2]
+	# Trick to give the right FileLines to each function
+	# The thing is now we only parse lines once, not once for the file and then once per function
+	# So, we have to give the total lines to each function to make it simple for reviewers then to
+	# get lines for a function.
+	# Therefore, the FileLines can accept an "start/stop" argument to know where to look in the lines
+	# FIXME: this shouldn't be handled here though
+	for function in src_file_functions:
+		function.lines = FileLines(src_file_lines.all_lines, function.start_pos, function.end_pos)
 
 	return FileData(src_file_name, src_file_content, src_file_lines, src_file_functions, src_file_variables, src_file_class_properties)
 
@@ -111,7 +101,7 @@ if __name__ == "__main__":
 		 */
 		getField : function() {
 			// Just simply return the field
-			var test = "aaa" + "wow";
+			var test = 1;
 			for(var i = 0; i < 4; i++) {
 				var something = test[i];
 			}
@@ -133,8 +123,6 @@ if __name__ == "__main__":
 
 	for function in file_data.functions:
 		assert function.body == file_data.content[function.start_pos:function.end_pos]
-
-	assert file_data.functions[2].lines.all_lines[1].max_string_length == 5
 
 	content = """var a = {
 		test: function() {

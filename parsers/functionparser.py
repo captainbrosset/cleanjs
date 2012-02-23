@@ -1,7 +1,7 @@
 import re
 
 from variableparser import VariableParser, VariableData
-from lineparser import LineParser, FileLines
+from lineparser import LineParser
 import visitor
 
 class FunctionData(visitor.Entity):
@@ -16,14 +16,14 @@ class FunctionData(visitor.Entity):
 	- complexity: an integer showing the cyclomatic complexity of the function (minimum 1)
 	- identifiers_usage: meant to be used through the get_identifier_usage(name) function to know where a given name is used in the function"""
 	
-	def __init__(self, name, body, line_number, signature, start_pos, end_pos, variables, has_return, parsed_lines):
+	def __init__(self, name, body, line_number, signature, start_pos, end_pos, variables, has_return):
 		super(FunctionData, self).__init__(line_number, start_pos, end_pos)
 
 		self.name = name
 		self.body = body
 		self.signature = signature
 
-		self.lines = FileLines(parsed_lines, start_pos, end_pos)
+		self.lines = None
 		self.variables = variables
 		self.has_return = has_return
 
@@ -75,14 +75,13 @@ class FunctionParser(object):
 	Parser/visitor for functions
 	"""
 
-	def __init__(self, parsed_lines):
+	def __init__(self):
 		self.functions = []
-		self.parsed_lines = parsed_lines
 
 	def add_function(self, name, line_number, signature, start_pos, end_pos, source):
 		body = FunctionBody(source, start_pos, end_pos)
 
-		function = FunctionData(name, body.inner_body, line_number, signature, body.start_pos, body.end_pos, [], False, self.parsed_lines)
+		function = FunctionData(name, body.inner_body, line_number, signature, body.start_pos, body.end_pos, [], False)
 		self.functions.append(function)
 
 	def add_var(self, function, name, is_nodejs_require, line_number, start, end):
@@ -186,7 +185,7 @@ if __name__ == "__main__":
 
 	# Testing that functions nested within each other are reported correctly
 
-	parser = FunctionParser(None)
+	parser = FunctionParser()
 	parser.add_function("function1", 1, [], 1, 50, "")
 	parser.add_function("nestedInFunction1", 3, [], 10, 30, "")
 	parser.add_function("function2", 5, [], 60, 100, "")
@@ -204,7 +203,7 @@ if __name__ == "__main__":
 	class Mock:
 		__init__ = lambda self, **kw: setattr(self, '__dict__', kw)
 
-	parser = FunctionParser(None)
+	parser = FunctionParser()
 	parser.add_function("rootFunction", 1, [], 1, 70, "")
 	parser.add_function("parentFunction", 1, [], 2, 50, "")
 	parser.add_var(parser.functions[1], "variableDefinedInParentFunction", False, 3, 5, 6)
