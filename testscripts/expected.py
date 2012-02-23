@@ -1,4 +1,9 @@
 results = {
+	"usedclassprop3.js": {
+		"messages": [
+			'2 Variable a in method Test is declared but never used'
+		]
+	},
 	"usedclassprop2.js": {
 		"messages": [
 			'3 Argument wow in method MyClass is never used'

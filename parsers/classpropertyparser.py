@@ -11,6 +11,7 @@ class ClassPropertyData(visitor.Entity):
 	def __init__(self, name, line_number, start_pos, end_pos):
 		super(ClassPropertyData, self).__init__(line_number, start_pos, end_pos)
 		self.name = name
+		self.initialized = False
 		self.usage = -1;
 	
 	def __repr__(self):
@@ -27,24 +28,21 @@ class ClassPropertyParser(object):
 		return None
 	
 	def add_property(self, name, line_number, start, end):
-		is_already_there = False
-		for property in self.properties:
-			if property.name == name and property.line_number == line_number:
-				is_already_there = True
-		
-		if not is_already_there:
-			self.properties.append(ClassPropertyData(name, line_number, start, end))
+		prop = self.get_property(name)
+		if not prop:
+			prop = ClassPropertyData(name, line_number, start, end)
+			self.properties.append(prop)
+		return prop
 
 	def visit_DOT(self, node, source):
 		if node[0].type == "THIS":
-			prop = self.get_property(node[1].value)
-			if prop:
-				prop.usage += 1
+			prop = self.add_property(node[1].value, node[1].lineno, node[1].start, node[1].end)
+			prop.usage += 1
 
 	def visit_ASSIGN(self, node, source):
 		if node[0].type == "DOT" and node[0][0].value == "this":
-			property_name = node[0].value
-			self.add_property(property_name, node[0].lineno, node[0].start, node[0].end)
+			prop = self.add_property(node[0].value, node[0].lineno, node[0].start, node[0].end)
+			prop.initialized = True
 
 if __name__ == "__main__":
 	print "NO TESTS TO RUN"

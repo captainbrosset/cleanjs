@@ -24,7 +24,7 @@ class Reviewer(object):
 	
 	def review_unused_class_properties(self, class_properties, lines, message_bag):
 		for prop in class_properties:
-			if prop.usage == 0:
+			if prop.initialized and prop.usage == 0:
 				message_bag.add_error(self, "Class property " + prop.name + " is initialized but never used", prop.line_number)
 
 	def review(self, file_data, message_bag):
