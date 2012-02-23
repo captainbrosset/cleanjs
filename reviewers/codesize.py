@@ -31,7 +31,7 @@ class Reviewer():
 		for line in lines:
 			if self.is_line_too_long(line.complete_line):
 				message_string = self.config_reader.get("codesize", "line_too_long", Reviewer.ERROR_MAX_LINE_LENGTH, len(line.complete_line))
-				message_bag.add_error(self, message_string, line.line_number)
+				message_bag.add_warning(self, message_string, line.line_number)
 
 	def review_nb_of_arguments(self, functions, message_bag):
 		for function in functions:
