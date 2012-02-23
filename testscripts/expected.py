@@ -1,4 +1,14 @@
 results = {
+	"usedclassprop2.js": {
+		"messages": [
+			'3 Argument wow in method MyClass is never used'
+		]
+	},
+	"usedclassprop.js": {
+		"messages": [
+			'3 Class property property2 is initialized but never used'
+		]
+	},
 	"nested.js": {
 	},
 	"emptyfunction.js": {

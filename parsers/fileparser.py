@@ -103,7 +103,7 @@ if __name__ == "__main__":
 			// Just simply return the field
 			var test = 1;
 			for(var i = 0; i < 4; i++) {
-				var something = test[i];
+				var something = test[i] ? this.someField:false;
 			}
 			return this.someField; // And some inline comment
 		}
@@ -123,6 +123,8 @@ if __name__ == "__main__":
 
 	for function in file_data.functions:
 		assert function.body == file_data.content[function.start_pos:function.end_pos]
+
+	assert file_data.class_properties[0].usage == 2
 
 	content = """var a = {
 		test: function() {
