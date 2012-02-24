@@ -58,7 +58,7 @@ results = {
 	},
 	"visibility.js": {
 		"messages": [
-			'18 The name of variable t is too short',
+			'18 The name of variable t is too short compared to the number of lines it\'s used on',
 			"8 Name k doesn't mean anything",
 			"18 Name t doesn't mean anything",
 			'16 Variable d in method test is declared but never used',
@@ -67,7 +67,6 @@ results = {
 			"16 Name c doesn't mean anything",
 			"16 Name d doesn't mean anything",
 			'16 Variable a in method test is declared but never used',
-			"8 Name l doesn't mean anything",
 			'16 Variable c in method test is declared but never used'
 		]	
 	},
@@ -107,7 +106,7 @@ results = {
 		"rating": "B",
 		"messages": [
 			'40 Function _resizeAPhoto is getting complex (cyclomatic complexity of 8). There may be too much logic going on. Think about splitting.',
-			'22 The name of variable img is too short',
+			'22 The name of variable img is too short compared to the number of lines it\'s used on',
 			"28 It seems this comment is very similar to the code directly beneath it. Don't you think you can get rid of it?",
 			'46 Found an IF statement with more than 1 AND or OR! Could you extract this in a function like isABC()?',
 			'5 It seems this comment tries to explain a piece of code that has several responsibilities',
@@ -159,7 +158,7 @@ results = {
 			"43 Name mgr doesn't mean anything",
 			'43 Function ctrlMgr is getting complex (cyclomatic complexity of 9). There may be too much logic going on. Think about splitting.',
 			'47 Found an IF statement with more than 2 AND or OR! Wrap them in a function like isABC()',
-			'49 The name of variable a is too short',
+			'49 The name of variable a is too short compared to the number of lines it\'s used on',
 			'50 There are more than 30% of comments in function doSomething (100.0%). Make the code simpler.',
 			'58 Line has both code and comments. This is usually a sign that you need to explain a complex piece of code.',
 			'59 Line has both code and comments. This is usually a sign that you need to explain a complex piece of code.',
@@ -197,7 +196,7 @@ results = {
 			'217 You are using some kind of separator characters in your comment, probably in an attempt to separate some complex code ... why not making it simpler in the first place?',
 			'217 You have 3 subsequent lines of comments in a row. Are you trying to explain something complex?',
 			'225 Line is more than 120 character long (186). This is hard to read.',
-			'235 The name of variable ret is too short',
+			'235 The name of variable ret is too short compared to the number of lines it\'s used on',
 			'269 Function header returns more than 2 values (4).',
 			'269 There are more than 20 lines in function header (23)! If possible, please try to refactor it',
 			'27 Line has both code and comments. This is usually a sign that you need to explain a complex piece of code.',

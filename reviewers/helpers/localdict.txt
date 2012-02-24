@@ -102,6 +102,7 @@ javascript
 js
 jscript
 key
+l
 layout
 length
 library
@@ -156,6 +157,7 @@ prevent
 processor
 processors
 project
+prompt
 prototype
 python
 quit
