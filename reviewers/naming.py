@@ -29,7 +29,7 @@ class Reviewer():
 		for function in functions:
 			name = function.name
 			is_gethasis = self.name_starts_with(name, "get") or self.name_starts_with(name, "is") or self.name_starts_with(name, "has")
-			if is_gethasis and not function.has_return:
+			if is_gethasis and function.nb_return == 0:
 				message_bag.add_error(self, "Function " + name + " starts with 'is/has/get'. This usually means a return value is expected, but none was found.", function.line_number);
 	
 	def review_set_function_arg(self, functions, message_bag):
@@ -104,16 +104,16 @@ if __name__ == "__main__":
 		assert len(bag.errors) == nb_expected_messages, msg
 
 	# Check that function starting with gethasis actually returns something
-	function1 = attrdict(name="getSomeStuff", line_number=0, has_return=True)
-	function2 = attrdict(name="isEmpty", line_number=0, has_return=True)
-	function3 = attrdict(name="hasHairs", line_number=0, has_return=True)
+	function1 = attrdict(name="getSomeStuff", line_number=0, nb_return=1)
+	function2 = attrdict(name="isEmpty", line_number=0, nb_return=1)
+	function3 = attrdict(name="hasHairs", line_number=0, nb_return=1)
 	check_gethasis_functions_and_assert_bag_contains([function1,function2,function3], 0, "Functions start with gethasis and returns something, should not output an error")
 
 	# Check that functions starting with is has or get, but not followed by capital letter do not trigger any message
-	function4 = attrdict(name="getho", line_number=0, has_return=True)
-	function5 = attrdict(name="israel", line_number=0, has_return=False)
-	function6 = attrdict(name="has", line_number=0, has_return=False)
-	function7 = attrdict(name="hasimut", line_number=0, has_return=True)
+	function4 = attrdict(name="getho", line_number=0, nb_return=1)
+	function5 = attrdict(name="israel", line_number=0, nb_return=0)
+	function6 = attrdict(name="has", line_number=0, nb_return=0)
+	function7 = attrdict(name="hasimut", line_number=0, nb_return=1)
 	check_gethasis_functions_and_assert_bag_contains([function4,function5,function6,function7], 0, "All these functions start with get/has/is but not camelcased, so should not even look into them")
 	
 	# Check that function starting with set actually take arguments

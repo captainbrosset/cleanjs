@@ -11,12 +11,12 @@ class FunctionData(visitor.Entity):
 	- signature: an array of argument names
 	- body: the text of the body of the function
 	- variables: all variables declared in the function. Type parsers.variableparser.VariableData
-	- has_return: whether the function has at least one return statement
+	- nb_return: number of return statement in the function
 	- lines: an instance of parsers.lineparser.FileLines
 	- complexity: an integer showing the cyclomatic complexity of the function (minimum 1)
 	- identifiers_usage: meant to be used through the get_identifier_usage(name) function to know where a given name is used in the function"""
 	
-	def __init__(self, name, body, line_number, signature, start_pos, end_pos, variables, has_return):
+	def __init__(self, name, body, line_number, signature, start_pos, end_pos, variables, nb_return):
 		super(FunctionData, self).__init__(line_number, start_pos, end_pos)
 
 		self.name = name
@@ -25,7 +25,7 @@ class FunctionData(visitor.Entity):
 
 		self.lines = None
 		self.variables = variables
-		self.has_return = has_return
+		self.nb_return = nb_return
 
 		self.complexity = 1
 
@@ -81,7 +81,7 @@ class FunctionParser(object):
 	def add_function(self, name, line_number, signature, start_pos, end_pos, source):
 		body = FunctionBody(source, start_pos, end_pos)
 
-		function = FunctionData(name, body.inner_body, line_number, signature, body.start_pos, body.end_pos, [], False)
+		function = FunctionData(name, body.inner_body, line_number, signature, body.start_pos, body.end_pos, [], 0)
 		self.functions.append(function)
 
 	def add_var(self, function, name, is_nodejs_require, line_number, start, end):
@@ -128,7 +128,7 @@ class FunctionParser(object):
 	def visit_RETURN(self, node, source):
 		functions = self.get_functions_nesting(node.start)
 		if len(functions) > 0:
-			functions[0].has_return = True
+			functions[0].nb_return += 1
 
 	def visit_FUNCTION(self, node, source):
 		# Named functions only, the getattr returns None if name doesn't exist

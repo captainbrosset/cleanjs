@@ -1,4 +1,10 @@
 results = {
+	"multiplenestedreturn.js": {
+		"messages": [
+			'16 Line is more than 120 character long (135). This is hard to read.',
+			'5 Line is more than 120 character long (123). This is hard to read.'
+		]
+	},
 	"usedclassprop3.js": {
 		"messages": [
 			'2 Variable a in method Test is declared but never used'
@@ -14,8 +20,7 @@ results = {
 			'3 Class property property2 is initialized but never used'
 		]
 	},
-	"nested.js": {
-	},
+	"nested.js": {},
 	"emptyfunction.js": {
 		"messages": [
 			'2 Function myFunction is empty. Is it really needed?'
@@ -30,7 +35,8 @@ results = {
 			'1 The name of argument c is less than 2 characters (1). This is way too short! Noone will understand what you mean',
 			"1 Name c doesn't mean anything",
 			"1 Name c doesn't mean anything",
-			"1 Name d doesn't mean anything"
+			"1 Name d doesn't mean anything",
+			'1 Function initVideoplayerWithElement returns more than 2 values (5).'
 		]
 	},
 	"linelength.js": {},

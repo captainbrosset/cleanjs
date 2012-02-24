@@ -21,11 +21,10 @@ class Reviewer():
 			elif function.complexity > Reviewer.WARN_MAX_COMPLEXITY:
 				message_bag.add_warning(self, "Function " + function.name + " is getting complex (cyclomatic complexity of " + str(function.complexity) + "). There may be too much logic going on. Think about splitting.", function.line_number)
 			
-			returns = re.findall("return ", function.lines.get_whole_code())
-			if len(returns) > Reviewer.ERROR_MAX_NB_OF_RETURNS_IN_FUNCTION:
-				message_bag.add_error(self, "Function " + function.name + " returns more than " + str(Reviewer.ERROR_MAX_NB_OF_RETURNS_IN_FUNCTION) + " values (" + str(len(returns)) + ").", function.line_number)
-			elif len(returns) > Reviewer.WARN_MAX_NB_OF_RETURNS_IN_FUNCTION:
-				message_bag.add_warning(self, "Function " + function.name + " returns more than " + str(Reviewer.WARN_MAX_NB_OF_RETURNS_IN_FUNCTION) + " values (" + str(len(returns)) + ").", function.line_number)
+			if function.nb_return > Reviewer.ERROR_MAX_NB_OF_RETURNS_IN_FUNCTION:
+				message_bag.add_error(self, "Function " + function.name + " returns more than " + str(Reviewer.ERROR_MAX_NB_OF_RETURNS_IN_FUNCTION) + " values (" + str(function.nb_return) + ").", function.line_number)
+			elif function.nb_return > Reviewer.WARN_MAX_NB_OF_RETURNS_IN_FUNCTION:
+				message_bag.add_warning(self, "Function " + function.name + " returns more than " + str(Reviewer.WARN_MAX_NB_OF_RETURNS_IN_FUNCTION) + " values (" + str(function.nb_return) + ").", function.line_number)
 	
 	def review_ifs_complexity(self, lines, message_bag):
 		for line in lines:

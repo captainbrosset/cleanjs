@@ -134,4 +134,19 @@ if __name__ == "__main__":
 	file_data = get_file_data_from_content("test", content)
 	assert len(file_data.functions[0].lines.get_code_and_comments_lines()) == 1
 
+	multi_return = """function parent() {
+		var prop = 0;
+		var child1 = function() {
+			return prop;
+		};
+		var child2 = function() {
+			return prop;
+		}
+		return prop;
+	}"""
+	file_data = get_file_data_from_content("multi", multi_return)
+	assert file_data.functions[0].nb_return == 1
+	assert file_data.functions[1].nb_return == 1
+	assert file_data.functions[2].nb_return == 1
+
 	print "ALL TESTS OK"

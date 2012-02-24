@@ -167,7 +167,7 @@ if __name__ == "__main__":
 	handler.add_visitor(function_visitor)	
 	handler.visit()
 	assert function_visitor.functions[0].complexity == 10
-	assert function_visitor.functions[0].has_return == True
+	assert function_visitor.functions[0].nb_return == 1
 
 	return_code = """
 	Apple.prototype.getInfo = function() {
@@ -179,7 +179,7 @@ if __name__ == "__main__":
 	handler.add_visitor(function_visitor)	
 	handler.visit()
 	assert function_visitor.functions[0].complexity == 1
-	assert function_visitor.functions[0].has_return == True
+	assert function_visitor.functions[0].nb_return == 1
 
 	content = """
 	//TODO: do something here
