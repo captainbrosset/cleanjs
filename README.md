@@ -1,3 +1,5 @@
+**UNMAINTAINED REPOSITORY** (issues are closed, no more development)
+
 WHAT IS THIS?
 ============
 
